@@ -1,0 +1,57 @@
+<div class="card-container card-element-@Element">
+    <div class="card-title"> 
+        <div> @Name </div>
+        <div> @Tier  </div>
+    </div>
+    <div class="card-image"> <img src="@ImgSrc"/> </div>
+    <div class="card-footer">
+        <div class="card-footer-up">
+            <div> @Hp </div>
+            <div> @Atk </div>
+            <div> @Def </div>
+            <div> @Spd </div>
+        </div>
+        <div class="card-footer-down">
+            @if (Passives != null) {
+                foreach (CardPassive passive in Passives)
+                {
+                    <UICardPassive />
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@code
+{
+    [Parameter]
+    public string Name { get; set; }
+    [Parameter]
+    public int Tier { get; set; }
+    [Parameter]
+    public int Hp { get; set; }
+    [Parameter]
+    public int Atk { get; set; }
+    [Parameter]
+    public int Def { get; set; }
+    [Parameter]
+    public double Spd { get; set; }
+    [Parameter]
+    public string ImgSrc { get; set; }
+    [Parameter]
+    public Rarity Rarity { get; set; }
+    [Parameter]
+    public AtkType AtkType { get; set; }
+    [Parameter]
+    public Element Element { get; set; }
+    [Parameter]
+    public List<Rune> Runes { get; set; }
+    [Parameter]
+    public List<CardPassive> Passives { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+    }
+}

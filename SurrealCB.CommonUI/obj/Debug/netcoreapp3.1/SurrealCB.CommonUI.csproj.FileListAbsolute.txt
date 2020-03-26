@@ -32,3 +32,7 @@ C:\Rikito\SurrealCB\SurrealCB.CommonUI\bin\Debug\netcoreapp3.1\SurrealCB.Data.pd
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\SurrealCB.CommonUI.csproj.CopyComplete
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\SurrealCB.CommonUI.dll
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\SurrealCB.CommonUI.pdb
+C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\RazorDeclaration\Components\UICard.razor.g.cs
+C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\RazorDeclaration\Components\UICardPassive.razor.g.cs
+C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\Components\UICard.razor.g.cs
+C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\Components\UICardPassive.razor.g.cs

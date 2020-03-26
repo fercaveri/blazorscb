@@ -753,3 +753,11 @@ ul.breadcrumb {
 .mat-toast-close-button .material-icons {
     color: white;
 }
+
+.card-container {
+    border: 1px solid black;
+}
+
+.card-title, .card-footer-up, .card-footer-down {
+    display: flex;
+}

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace SurrealCB.Data.Model
 {
@@ -6,7 +7,6 @@ namespace SurrealCB.Data.Model
     {
         public string Owner { get; set; }
         public int CurrentExp { get; set; }
-        public CardBoost[] LevelBoosts { get; set; }
-        public Rune[] Runes { get; set; }
+        public List<Rune> Runes { get; set; }
     }
 }

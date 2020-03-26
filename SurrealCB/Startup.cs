@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SurrealCB.CommonUI;
+using SurrealCB.CommonUI.Services;
 using SurrealCB.Data;
 
 namespace SurrealCB.Server
@@ -30,6 +32,8 @@ namespace SurrealCB.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<HttpClient>();
+            services.AddScoped<AppState>();
+            services.AddScoped<IUserProfileApi, UserProfileApi>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddRazorPages();
             services.AddServerSideBlazor();

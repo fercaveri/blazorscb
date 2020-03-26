@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using SurrealCB.CommonUI.Services;
 using SurrealCB.Data.Dto;
 using SurrealCB.Data.Dto.Account;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 
-namespace SurrealCB.UI.Services
+namespace SurrealCB.CommonUI
 {
     public class AppState
     {
