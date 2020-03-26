@@ -5,7 +5,7 @@
 #pragma warning disable 0649
 #pragma warning disable 0169
 
-namespace SurrealCB.Shared
+namespace SurrealCB.Server.Shared
 {
     #line hidden
     using System;
@@ -72,6 +72,13 @@ using SurrealCB;
 #nullable restore
 #line 9 "C:\Rikito\SurrealCB\SurrealCB\_Imports.razor"
 using SurrealCB.Shared;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 10 "C:\Rikito\SurrealCB\SurrealCB\_Imports.razor"
+using MatBlazor;
 
 #line default
 #line hidden

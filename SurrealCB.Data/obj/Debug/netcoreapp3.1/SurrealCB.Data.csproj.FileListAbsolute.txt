@@ -1,0 +1,8 @@
+C:\Rikito\SurrealCB\SurrealCB.Data\obj\Debug\netcoreapp3.1\SurrealCB.Data.AssemblyInfoInputs.cache
+C:\Rikito\SurrealCB\SurrealCB.Data\obj\Debug\netcoreapp3.1\SurrealCB.Data.AssemblyInfo.cs
+C:\Rikito\SurrealCB\SurrealCB.Data\bin\Debug\netcoreapp3.1\SurrealCB.Data.deps.json
+C:\Rikito\SurrealCB\SurrealCB.Data\bin\Debug\netcoreapp3.1\SurrealCB.Data.dll
+C:\Rikito\SurrealCB\SurrealCB.Data\bin\Debug\netcoreapp3.1\SurrealCB.Data.pdb
+C:\Rikito\SurrealCB\SurrealCB.Data\obj\Debug\netcoreapp3.1\SurrealCB.Data.dll
+C:\Rikito\SurrealCB\SurrealCB.Data\obj\Debug\netcoreapp3.1\SurrealCB.Data.pdb
+C:\Rikito\SurrealCB\SurrealCB.Data\obj\Debug\netcoreapp3.1\SurrealCB.Data.csprojAssemblyReference.cache

@@ -1,0 +1,8 @@
+[submodule "SurrealCB/Westwind.AspnetCore.LiveReload"]
+	path = SurrealCB/Westwind.AspnetCore.LiveReload
+	url = https://github.com/RemiBou/Westwind.AspnetCore.LiveReload
+	branch = RemiBou-better-refresh
+[submodule "Westwind.AspnetCore.LiveReload"]
+	path = Westwind.AspnetCore.LiveReload
+	url = https://github.com/RemiBou/Westwind.AspnetCore.LiveReload
+	branch = RemiBou-better-refresh
