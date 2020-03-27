@@ -507,7 +507,6 @@ ul.breadcrumb {
 /* dialog */
 .mdc-dialog__content {
     min-width: 300px;
-
 }
 
 .mdc-dialog__title + .mdc-dialog__content {
@@ -522,6 +521,7 @@ ul.breadcrumb {
 .mdc-dialog__actions {
     border-top: 1px solid #e1e1e1 !important;
 }
+
 .no-drop {
     border: 2px dashed red;
 }
@@ -595,7 +595,7 @@ ul.breadcrumb {
     color: red;
 }
 
-#blazor-error-ui::before{
+#blazor-error-ui::before {
     margin: auto;
 }
 
@@ -607,7 +607,7 @@ ul.breadcrumb {
 }
 
 #blazor-error-ui {
-    z-index:9999;
+    z-index: 9999;
     display: none;
     background: #fff;
     margin: 0 auto;
@@ -754,10 +754,32 @@ ul.breadcrumb {
     color: white;
 }
 
-.card-container {
+.uicard-container {
     border: 1px solid black;
+    max-width: 20%;
 }
 
-.card-title, .card-footer-up, .card-footer-down {
+.uicard-image img {
+    width: 100%;
+    padding: 5px;
+}
+
+.uicard-title, .uicard-footer-up, .uicard-footer-down {
     display: flex;
+    justify-content: space-around;
+}
+
+    .uicard-footer-up div {
+        display: flex;
+        flex-direction: row;
+    }
+
+        .uicard-footer-up div img {
+            width: 25px;
+            height: 25px;
+            margin-right: 5px;
+        }
+
+.uicard-footer-down {
+    min-height: 30px;
 }

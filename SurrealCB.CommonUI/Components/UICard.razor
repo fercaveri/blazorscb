@@ -1,18 +1,21 @@
-<div class="card-container card-element-@Element">
-    <div class="card-title"> 
+<div class="uicard-container uicard-element-@Element mat-elevation-z4">
+    <div class="uicard-title">
         <div> @Name </div>
         <div> @Tier  </div>
     </div>
-    <div class="card-image"> <img src="@ImgSrc"/> </div>
-    <div class="card-footer">
-        <div class="card-footer-up">
-            <div> @Hp </div>
-            <div> @Atk </div>
-            <div> @Def </div>
-            <div> @Spd </div>
+    <MatDivider> </MatDivider>
+    <div class="uicard-image"> <img src="@ImgSrc" /> </div>
+    <MatDivider> </MatDivider>
+    <div class="uicard-footer">
+        <div class="uicard-footer-up">
+            <div> <img src="_content/SurrealCB.CommonUI/icons/health.svg" /> @Hp </div>
+            <div> <img src="_content/SurrealCB.CommonUI/icons/sword.svg" /> @Atk </div>
+            <div> <img src="_content/SurrealCB.CommonUI/icons/shield.svg" /> @Def </div>
+            <div> <img src="_content/SurrealCB.CommonUI/icons/speed.svg" /> @Spd </div>
         </div>
-        <div class="card-footer-down">
-            @if (Passives != null) {
+        <div class="uicard-footer-down">
+            @if (Passives != null)
+            {
                 foreach (CardPassive passive in Passives)
                 {
                     <UICardPassive />

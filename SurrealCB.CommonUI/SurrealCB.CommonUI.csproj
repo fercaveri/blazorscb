@@ -30,7 +30,9 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\fonts\" />
+    <Folder Include="wwwroot\images\cards\" />
     <Folder Include="wwwroot\javascript\" />
+    <Folder Include="wwwroot\icons\" />
   </ItemGroup>
 
 
