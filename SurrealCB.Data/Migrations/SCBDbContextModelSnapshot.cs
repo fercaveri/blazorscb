@@ -19,25 +19,206 @@ namespace SurrealCB.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("SurrealCB.Data.Model.WeatherForecast", b =>
+            modelBuilder.Entity("SurrealCB.Data.Model.Card", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("Atk")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Summary")
+                    b.Property<int>("AtkType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BaseExp")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Def")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TemperatureC")
+                    b.Property<int>("Element")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Hp")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImgSrc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PassiveId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rarity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RuneSlots")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Spd")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Tier")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Value")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Weather");
+                    b.HasIndex("PassiveId");
+
+                    b.ToTable("Cards");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Card");
+                });
+
+            modelBuilder.Entity("SurrealCB.Data.Model.CardBoost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Atk")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CardId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Def")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Hp")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PassiveId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Spd")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CardId");
+
+                    b.HasIndex("PassiveId");
+
+                    b.ToTable("CardBoosts");
+                });
+
+            modelBuilder.Entity("SurrealCB.Data.Model.CardPassive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Param1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Param2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Param3")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Passive")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CardPassives");
+                });
+
+            modelBuilder.Entity("SurrealCB.Data.Model.Rune", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BoostId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Element")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxTier")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinTier")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PlayerCardId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rarity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BoostId");
+
+                    b.HasIndex("PlayerCardId");
+
+                    b.ToTable("Rune");
+                });
+
+            modelBuilder.Entity("SurrealCB.Data.Model.PlayerCard", b =>
+                {
+                    b.HasBaseType("SurrealCB.Data.Model.Card");
+
+                    b.Property<int>("CurrentExp")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Owner")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("PlayerCard");
+                });
+
+            modelBuilder.Entity("SurrealCB.Data.Model.Card", b =>
+                {
+                    b.HasOne("SurrealCB.Data.Model.CardPassive", "Passive")
+                        .WithMany()
+                        .HasForeignKey("PassiveId");
+                });
+
+            modelBuilder.Entity("SurrealCB.Data.Model.CardBoost", b =>
+                {
+                    b.HasOne("SurrealCB.Data.Model.Card", null)
+                        .WithMany("LevelBoosts")
+                        .HasForeignKey("CardId");
+
+                    b.HasOne("SurrealCB.Data.Model.CardPassive", "Passive")
+                        .WithMany()
+                        .HasForeignKey("PassiveId");
+                });
+
+            modelBuilder.Entity("SurrealCB.Data.Model.Rune", b =>
+                {
+                    b.HasOne("SurrealCB.Data.Model.CardBoost", "Boost")
+                        .WithMany()
+                        .HasForeignKey("BoostId");
+
+                    b.HasOne("SurrealCB.Data.Model.PlayerCard", null)
+                        .WithMany("Runes")
+                        .HasForeignKey("PlayerCardId");
                 });
 #pragma warning restore 612, 618
         }

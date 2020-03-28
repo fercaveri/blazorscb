@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
+
+namespace SurrealCB.Data.Model
+{
+    public class ApplicationUser : IdentityUser<Guid>
+    {
+        [MaxLength(64)]
+        public string FirstName { get; set; }
+
+        [MaxLength(64)]
+        public string LastName { get; set; }
+
+        [MaxLength(64)]
+        public string FullName { get; set; }
+
+        public ICollection<ApiLogItem> ApiLogItems { get; set; }
+
+        public UserProfile Profile { get; set; }
+
+        public virtual ICollection<Message> Messages { get; set; }
+    }
+}

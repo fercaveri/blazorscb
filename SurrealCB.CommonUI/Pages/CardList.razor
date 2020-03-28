@@ -1,0 +1,32 @@
+﻿@inject HttpClient Http
+@inject IMatToaster matToaster
+@page "/card_list"
+
+@foreach (Card card in this.cards)
+{
+    <UICard Atk="@card.Atk" Def="@card.Def" Spd="@card.Spd" Hp="@card.Hp" Name="@card.Name" Element="@card.Element" Tier="@card.Tier" 
+            Rarity="@card.Rarity" ImgSrc="@card.ImgSrc"></UICard>
+}
+
+@code {
+    List<Card> cards = new List<Card>();
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAllCards();
+    }
+
+    private async Task GetAllCards()
+    {
+        ApiResponseDto apiResponse = await Http.GetJsonAsync<ApiResponseDto>("api/card/GetAll");
+
+        if (apiResponse.StatusCode == Status200OK)
+        {
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Card List Retrieved");
+            this.cards = Newtonsoft.Json.JsonConvert.DeserializeObject<Card[]>(apiResponse.Result.ToString()).ToList<Card>();
+        }
+        else
+        {
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Todo List Retrieval Failed");
+        }
+    }
+}

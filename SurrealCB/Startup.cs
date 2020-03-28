@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using SurrealCB.CommonUI;
 using SurrealCB.CommonUI.Services;
 using SurrealCB.Data;
+using SurrealCB.Server.Middlewares;
 
 namespace SurrealCB.Server
 {
@@ -34,10 +35,12 @@ namespace SurrealCB.Server
             services.AddScoped<HttpClient>();
             services.AddScoped<AppState>();
             services.AddScoped<IUserProfileApi, UserProfileApi>();
+            services.AddScoped<ICardService, CardService>();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
             services.AddDbContext<SCBDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMatToaster(config =>
@@ -63,11 +66,14 @@ namespace SurrealCB.Server
                 app.UseExceptionHandler("/Error");
             }
 
+            app.UseMiddleware<ApiResponseMiddleware>("true");
             app.UseStaticFiles();
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllers();
                 endpoints.MapFallbackToPage("/index");
             });
         }

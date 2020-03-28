@@ -1,7 +1,6 @@
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.csprojAssemblyReference.cache
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\staticwebassets\SurrealCB.Server.StaticWebAssets.Manifest.cache
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\staticwebassets\SurrealCB.Server.StaticWebAssets.xml
-C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.MvcApplicationPartsAssemblyInfo.cache
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.RazorComponent.input.cache
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\Error.razor.g.cs
 C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\appsettings.Development.json
@@ -47,11 +46,9 @@ C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreap
 C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\SurrealCB.Data.dll
 C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\SurrealCB.Data.pdb
-C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\RazorDeclaration\SurrealCB.Server.dll
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.TagHelpers.input.cache
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.TagHelpers.output.cache
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.RazorCoreGenerate.cache
-C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\Razor\Pages\Error.razor.g.cs
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.AssemblyInfoInputs.cache
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.AssemblyInfo.cs
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.RazorTargetAssemblyInfo.cache
