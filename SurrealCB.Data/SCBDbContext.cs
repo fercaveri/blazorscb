@@ -1,6 +1,7 @@
 ﻿namespace SurrealCB.Data
 {
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
     using SurrealCB.Data.Model;
     using SurrealCB.Data.Shared;
 
@@ -22,12 +23,22 @@
         public DbSet<PlayerCard> PlayerCards { get; set; }
         public DbSet<CardPassive> CardPassives { get; set; }
         public DbSet<CardBoost> CardBoosts { get; set; }
-
         public DbSet<ApiLogItem> ApiLogs { get; set; }
-
+        public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<Message> Messages { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<ApplicationUser>()
+                .HasOne(a => a.Profile)
+                .WithOne(b => b.ApplicationUser)
+                .HasForeignKey<UserProfile>(b => b.UserId);
+
+            builder.Entity<Card>().Property(p => p.AtkType).HasConversion(new EnumToStringConverter<AtkType>());
+            builder.Entity<Card>().Property(p => p.Element).HasConversion(new EnumToStringConverter<Element>());
+            builder.Entity<Card>().Property(p => p.Rarity).HasConversion(new EnumToStringConverter<Rarity>());
+            builder.Entity<CardPassive>().Property(p => p.Passive).HasConversion(new EnumToStringConverter<Passive>());
         }
     }
 }

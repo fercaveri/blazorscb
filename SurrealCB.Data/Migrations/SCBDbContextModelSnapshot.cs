@@ -19,6 +19,122 @@ namespace SurrealCB.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("SurrealCB.Data.Model.ApiLogItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<Guid?>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("IPAddress")
+                        .HasColumnType("nvarchar(45)")
+                        .HasMaxLength(45);
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(2048)")
+                        .HasMaxLength(2048);
+
+                    b.Property<string>("QueryString")
+                        .HasColumnType("nvarchar(2048)")
+                        .HasMaxLength(2048);
+
+                    b.Property<string>("RequestBody")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<DateTime>("RequestTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ResponseBody")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<long>("ResponseMillis")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("StatusCode")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("ApiLogs");
+                });
+
+            modelBuilder.Entity("SurrealCB.Data.Model.ApplicationUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(64)")
+                        .HasMaxLength(64);
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(64)")
+                        .HasMaxLength(64);
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(64)")
+                        .HasMaxLength(64);
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationUser");
+                });
+
             modelBuilder.Entity("SurrealCB.Data.Model.Card", b =>
                 {
                     b.Property<int>("Id")
@@ -29,8 +145,9 @@ namespace SurrealCB.Data.Migrations
                     b.Property<int>("Atk")
                         .HasColumnType("int");
 
-                    b.Property<int>("AtkType")
-                        .HasColumnType("int");
+                    b.Property<string>("AtkType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("BaseExp")
                         .HasColumnType("int");
@@ -42,8 +159,9 @@ namespace SurrealCB.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Element")
-                        .HasColumnType("int");
+                    b.Property<string>("Element")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Hp")
                         .HasColumnType("int");
@@ -57,8 +175,9 @@ namespace SurrealCB.Data.Migrations
                     b.Property<int?>("PassiveId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Rarity")
-                        .HasColumnType("int");
+                    b.Property<string>("Rarity")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RuneSlots")
                         .HasColumnType("int");
@@ -131,12 +250,44 @@ namespace SurrealCB.Data.Migrations
                     b.Property<string>("Param3")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Passive")
-                        .HasColumnType("int");
+                    b.Property<string>("Passive")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("CardPassives");
+                });
+
+            modelBuilder.Entity("SurrealCB.Data.Model.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<Guid?>("SenderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("When")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("SurrealCB.Data.Model.Rune", b =>
@@ -179,6 +330,39 @@ namespace SurrealCB.Data.Migrations
                     b.ToTable("Rune");
                 });
 
+            modelBuilder.Entity("SurrealCB.Data.Model.UserProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsNavMinified")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsNavOpen")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastPageVisited")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserProfiles");
+                });
+
             modelBuilder.Entity("SurrealCB.Data.Model.PlayerCard", b =>
                 {
                     b.HasBaseType("SurrealCB.Data.Model.Card");
@@ -190,6 +374,13 @@ namespace SurrealCB.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("PlayerCard");
+                });
+
+            modelBuilder.Entity("SurrealCB.Data.Model.ApiLogItem", b =>
+                {
+                    b.HasOne("SurrealCB.Data.Model.ApplicationUser", null)
+                        .WithMany("ApiLogItems")
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("SurrealCB.Data.Model.Card", b =>
@@ -210,6 +401,13 @@ namespace SurrealCB.Data.Migrations
                         .HasForeignKey("PassiveId");
                 });
 
+            modelBuilder.Entity("SurrealCB.Data.Model.Message", b =>
+                {
+                    b.HasOne("SurrealCB.Data.Model.ApplicationUser", "Sender")
+                        .WithMany("Messages")
+                        .HasForeignKey("SenderId");
+                });
+
             modelBuilder.Entity("SurrealCB.Data.Model.Rune", b =>
                 {
                     b.HasOne("SurrealCB.Data.Model.CardBoost", "Boost")
@@ -219,6 +417,15 @@ namespace SurrealCB.Data.Migrations
                     b.HasOne("SurrealCB.Data.Model.PlayerCard", null)
                         .WithMany("Runes")
                         .HasForeignKey("PlayerCardId");
+                });
+
+            modelBuilder.Entity("SurrealCB.Data.Model.UserProfile", b =>
+                {
+                    b.HasOne("SurrealCB.Data.Model.ApplicationUser", "ApplicationUser")
+                        .WithOne("Profile")
+                        .HasForeignKey("SurrealCB.Data.Model.UserProfile", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

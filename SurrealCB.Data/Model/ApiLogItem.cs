@@ -5,10 +5,8 @@ using System.Text;
 
 namespace SurrealCB.Data.Model
 {
-    public class ApiLogItem
+    public class ApiLogItem : IEntity
     {
-        [Key]
-        public long Id { get; set; }
 
         [Required]
         public DateTime RequestTime { get; set; }

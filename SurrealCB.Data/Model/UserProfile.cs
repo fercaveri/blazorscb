@@ -5,11 +5,8 @@ using System.Text;
 
 namespace SurrealCB.Data.Model
 {
-    public class UserProfile
+    public class UserProfile : IEntity
     {
-        [Key]
-        public long Id { get; set; }
-
         public Guid UserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 

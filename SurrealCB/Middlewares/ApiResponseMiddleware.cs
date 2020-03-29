@@ -1,8 +1,4 @@
-﻿using BlazorBoilerplate.Server.Middleware.Extensions;
-using BlazorBoilerplate.Server.Middleware.Wrappers;
-using BlazorBoilerplate.Server.Models;
-using BlazorBoilerplate.Server.Services;
-using IdentityModel;
+﻿using IdentityModel;
 using Microsoft.AspNetCore.Http;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 using Microsoft.AspNetCore.Identity;
@@ -25,6 +21,7 @@ using System.Threading.Tasks;
 using SurrealCB.Server.Misc;
 using SurrealCB.Data.Model;
 using SurrealCB.Server.Services;
+using SurrealCB.Data.Extensions;
 
 namespace SurrealCB.Server.Middlewares
 {
@@ -45,7 +42,7 @@ namespace SurrealCB.Server.Middlewares
             _next = next;
             _enableAPILogging = enableAPILogging;
             _clearCacheHeadersDelegate = ClearCacheHeaders;
-            _ignorePaths = configuration.GetSection("BlazorBoilerplate:ApiLogging:IgnorePaths").Get<List<string>>();
+            //_ignorePaths = configuration.GetSection("BlazorBoilerplate:ApiLogging:IgnorePaths").Get<List<string>>();
         }
 
         public async Task Invoke(HttpContext httpContext, IApiLogService apiLogService, ILogger<ApiResponseMiddleware> logger, UserManager<ApplicationUser> userManager)

@@ -21,13 +21,13 @@ namespace SurrealCB.Server.Misc
         public string Message { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public Exception ResponseException { get; set; }
+        public ApiError ResponseException { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public object Result { get; set; }
 
         [JsonConstructor]
-        public ApiResponse(int statusCode, string message = "", object result = null, Exception apiError = null, string apiVersion = "0.7.0")
+        public ApiResponse(int statusCode, string message = "", object result = null, ApiError apiError = null, string apiVersion = "0.7.0")
         {
             StatusCode = statusCode;
             Message = message;
@@ -37,10 +37,10 @@ namespace SurrealCB.Server.Misc
             IsError = false;
         }
 
-        public ApiResponse(int statusCode, Exception apiError)
+        public ApiResponse(int statusCode, ApiError apiError)
         {
             StatusCode = statusCode;
-            Message = apiError.Message;
+            Message = apiError.ExceptionMessage;
             ResponseException = apiError;
             IsError = true;
         }

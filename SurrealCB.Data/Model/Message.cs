@@ -5,9 +5,8 @@ using System.Text;
 
 namespace SurrealCB.Data.Model
 {
-    public class Message
+    public class Message : IEntity
     {
-        public int Id { get; set; }
         [Required]
         public string UserName { get; set; }
         [Required]

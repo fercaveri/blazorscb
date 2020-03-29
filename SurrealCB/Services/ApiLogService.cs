@@ -11,6 +11,7 @@ using SurrealCB.Data;
 using Microsoft.AspNetCore.Http;
 using SurrealCB.Data.Dto;
 using SurrealCB.Data.Model;
+using SurrealCB.Data.Shared;
 
 namespace SurrealCB.Server.Services
 {

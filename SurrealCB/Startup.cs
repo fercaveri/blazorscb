@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AutoMapper;
 using MatBlazor;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +17,12 @@ using Microsoft.Extensions.Hosting;
 using SurrealCB.CommonUI;
 using SurrealCB.CommonUI.Services;
 using SurrealCB.Data;
+using SurrealCB.Data.Model;
+using SurrealCB.Data.Shared;
+using SurrealCB.Server.Authorization;
+using SurrealCB.Server.Mappings;
 using SurrealCB.Server.Middlewares;
+using SurrealCB.Server.Services;
 
 namespace SurrealCB.Server
 {
@@ -36,8 +43,28 @@ namespace SurrealCB.Server
             services.AddScoped<AppState>();
             services.AddScoped<IUserProfileApi, UserProfileApi>();
             services.AddScoped<ICardService, CardService>();
+            services.AddScoped<IUserSession, UserSession>();
 
+            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
+                .AddRoles<IdentityRole<Guid>>()
+                .AddEntityFrameworkStores<SCBDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>,
+                AdditionalUserClaimsPrincipalFactory>();
+
+            services.AddTransient<IApiLogService, ApiLogService>();
+
+            var automapperConfig = new MapperConfiguration(configuration =>
+            {
+                configuration.AddProfile(new MappingProfile());
+            });
+
+            var autoMapper = automapperConfig.CreateMapper();
+
+            services.AddSingleton(autoMapper);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
@@ -66,7 +93,7 @@ namespace SurrealCB.Server
                 app.UseExceptionHandler("/Error");
             }
 
-            app.UseMiddleware<ApiResponseMiddleware>("true");
+            app.UseMiddleware<ApiResponseMiddleware>(true);
             app.UseStaticFiles();
             app.UseRouting();
             app.UseEndpoints(endpoints =>
