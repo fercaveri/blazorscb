@@ -9,5 +9,8 @@ namespace SurrealCB.Data.Model
         public int Def { get; set; }
         public double Spd { get; set; }
         public CardPassive Passive { get; set; }
+        public string Param1 { get; set; }
+        public string Param2 { get; set; }
+        public string Param3 { get; set; }
     }
 }
