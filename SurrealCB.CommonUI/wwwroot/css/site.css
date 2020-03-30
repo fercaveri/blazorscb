@@ -754,6 +754,10 @@ ul.breadcrumb {
     color: white;
 }
 
+.card-list-container {
+    display: flex;
+}
+
 .uicard-container {
     border: 1px solid black;
     max-width: 20%;

@@ -7,7 +7,7 @@ namespace SurrealCB.Data.Model
     [JsonConverter(typeof(StringEnumConverter))]
     public enum AtkType
     {
-        SELECTION = 0,
+        NORMAL = 0,
         RANDOM,
         ALL,
         HEAL,

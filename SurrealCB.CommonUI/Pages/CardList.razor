@@ -4,8 +4,10 @@
 
 @foreach (Card card in this.cards)
 {
-    <UICard Atk="@card.Atk" Def="@card.Def" Spd="@card.Spd" Hp="@card.Hp" Name="@card.Name" Element="@card.Element" Tier="@card.Tier" 
-            Rarity="@card.Rarity" ImgSrc="@card.ImgSrc"></UICard>
+    <div class="card-list-container">
+        <UICard Atk="@card.Atk" Def="@card.Def" Spd="@card.Spd" Hp="@card.Hp" Name="@card.Name" Element="@card.Element" Tier="@card.Tier"
+                Rarity="@card.Rarity" ImgSrc="@card.ImgSrc"></UICard>
+    </div>
 }
 
 @code {

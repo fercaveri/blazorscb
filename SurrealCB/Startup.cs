@@ -68,6 +68,7 @@ namespace SurrealCB.Server
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddDbContext<SCBDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMatToaster(config =>

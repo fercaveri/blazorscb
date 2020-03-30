@@ -155,10 +155,6 @@ namespace SurrealCB.Data.Migrations
                     b.Property<int>("Def")
                         .HasColumnType("int");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Element")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -196,8 +192,6 @@ namespace SurrealCB.Data.Migrations
                     b.HasIndex("PassiveId");
 
                     b.ToTable("Cards");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Card");
                 });
 
             modelBuilder.Entity("SurrealCB.Data.Model.CardBoost", b =>
@@ -290,6 +284,29 @@ namespace SurrealCB.Data.Migrations
                     b.ToTable("Messages");
                 });
 
+            modelBuilder.Entity("SurrealCB.Data.Model.PlayerCard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CardId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CurrentExp")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Owner")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CardId");
+
+                    b.ToTable("PlayerCards");
+                });
+
             modelBuilder.Entity("SurrealCB.Data.Model.Rune", b =>
                 {
                     b.Property<int>("Id")
@@ -363,19 +380,6 @@ namespace SurrealCB.Data.Migrations
                     b.ToTable("UserProfiles");
                 });
 
-            modelBuilder.Entity("SurrealCB.Data.Model.PlayerCard", b =>
-                {
-                    b.HasBaseType("SurrealCB.Data.Model.Card");
-
-                    b.Property<int>("CurrentExp")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Owner")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("PlayerCard");
-                });
-
             modelBuilder.Entity("SurrealCB.Data.Model.ApiLogItem", b =>
                 {
                     b.HasOne("SurrealCB.Data.Model.ApplicationUser", null)
@@ -406,6 +410,13 @@ namespace SurrealCB.Data.Migrations
                     b.HasOne("SurrealCB.Data.Model.ApplicationUser", "Sender")
                         .WithMany("Messages")
                         .HasForeignKey("SenderId");
+                });
+
+            modelBuilder.Entity("SurrealCB.Data.Model.PlayerCard", b =>
+                {
+                    b.HasOne("SurrealCB.Data.Model.Card", "Card")
+                        .WithMany()
+                        .HasForeignKey("CardId");
                 });
 
             modelBuilder.Entity("SurrealCB.Data.Model.Rune", b =>

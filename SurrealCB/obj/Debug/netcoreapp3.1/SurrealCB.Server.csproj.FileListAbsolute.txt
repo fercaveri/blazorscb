@@ -85,7 +85,6 @@ C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Crypt
 C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Core.dll
 C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Stores.dll
-C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.MvcApplicationPartsAssemblyInfo.cache
 C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\IdentityModel.dll
 C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\IdentityServer4.dll
 C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\IdentityServer4.Storage.dll
@@ -96,5 +95,9 @@ C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Pr
 C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
 C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
+C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.JsonPatch.dll
+C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
+C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.MvcApplicationPartsAssemblyInfo.cache
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\RazorDeclaration\SurrealCB.Server.dll
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\Razor\Pages\Error.razor.g.cs

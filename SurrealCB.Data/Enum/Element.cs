@@ -13,6 +13,7 @@ namespace SurrealCB.Data.Model
         LIGHT,
         DARK,
         EARTH,
+        WIND,
         NONE
     }
 }
