@@ -8,5 +8,6 @@ namespace SurrealCB.Data.Model
         public int Value { get; set; }
         public ItemType Type { get; set; }
         public int Tier { get; set; }
+        public Rarity Rarity { get; set; }
     }
 }
