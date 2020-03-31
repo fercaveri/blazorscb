@@ -1,12 +1,12 @@
 using System;
-using System.Collections.Generic;
 
 namespace SurrealCB.Data.Model
 {
-    public class Recipe : IEntity
+    public class Item : IEntity
     {
         public string Name { get; set; }
         public int Value { get; set; }
-        public List<RequiredItem> RequiredItems { get; set; }
+        public ItemType Type { get; set; }
+        public int Tier { get; set; }
     }
 }
