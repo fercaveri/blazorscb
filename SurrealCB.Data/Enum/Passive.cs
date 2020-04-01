@@ -16,5 +16,12 @@ namespace SurrealCB.Data.Model
         DOOM, //Mata luego de X segundos
         BLAZE, //Fuego X danio cada vez que toca golpear
         BACKTRACK, //Retrocede X segundos de speed
+
+        //TODAVIA EN PROCESO
+        HP_DEFRAGMENTER, //Saca X% de vida actual al golpear
+        SPIKE_ARMOR, //Devuelve el X% de danio al atacante
+        BERSEKER, //Incrementa en X el ataque por cada golpe dado
+        BLEED, //Sangra al enemigo, que recibe X de danio por cada ataque durante X segundos
+        SHATTER, //Reduce el ataque del enemigo en X durante X segundos
     }
 }
