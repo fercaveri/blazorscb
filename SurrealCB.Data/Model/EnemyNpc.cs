@@ -10,5 +10,7 @@ namespace SurrealCB.Data.Model
         public int ExpGain { get; set; }
         public List<PlayerCard> Cards { get; set; }
         public Reward Reward { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
     }
 }

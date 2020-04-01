@@ -23,6 +23,14 @@
         public DbSet<PlayerCard> PlayerCards { get; set; }
         public DbSet<CardPassive> CardPassives { get; set; }
         public DbSet<CardBoost> CardBoosts { get; set; }
+        public DbSet<LevelBoost> LevelBoosts { get; set; }
+        public DbSet<Map> Maps { get; set; }
+        public DbSet<EnemyNpc> Enemies { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<Reward> Rewards { get; set; }
+        public DbSet<CardRecipe> CardRecipes { get; set; }
+        public DbSet<ItemRecipe> ItemRecipes { get; set; }
+        public DbSet<RuneRecipe> RuneRecipes { get; set; }
         public DbSet<ApiLogItem> ApiLogs { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Message> Messages { get; set; }
