@@ -36,3 +36,4 @@ C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\Components\
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\Components\UICardPassive.razor.g.cs
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\CardList.razor.g.cs
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\Pages\CardList.razor.g.cs
+C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\SurrealCB.CommonUI.csproj.CoreCompileInputs.cache

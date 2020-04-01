@@ -15,5 +15,6 @@ namespace SurrealCB.Data.Model
         HP_SCATTER, //Saca X% de vida total al golpear
         DOOM, //Mata luego de X segundos
         BLAZE, //Fuego X danio cada vez que toca golpear
+        BACKTRACK, //Retrocede X segundos de speed
     }
 }

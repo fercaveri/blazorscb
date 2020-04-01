@@ -101,3 +101,5 @@ C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.MvcApplicationPartsAssemblyInfo.cache
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\RazorDeclaration\SurrealCB.Server.dll
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\Razor\Pages\Error.razor.g.cs
+C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.csproj.CoreCompileInputs.cache
+C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.genruntimeconfig.cache
