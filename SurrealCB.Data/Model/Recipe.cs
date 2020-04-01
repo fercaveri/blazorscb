@@ -3,10 +3,23 @@ using System.Collections.Generic;
 
 namespace SurrealCB.Data.Model
 {
-    public class Recipe : IEntity
+    public abstract class Recipe : IEntity
     {
-        public string Name { get; set; }
-        public int Value { get; set; }
         public List<RequiredItem> RequiredItems { get; set; }
+    }
+
+    public class CardRecipe : Recipe
+    {
+        public Card Result { get; set; }
+    }
+
+    public class RuneRecipe : Recipe
+    {
+        public Rune Result { get; set; }
+    }
+
+    public class ItemRecipe : Recipe
+    {
+        public Item Result { get; set; }
     }
 }

@@ -5,11 +5,10 @@ using Newtonsoft.Json.Converters;
 namespace SurrealCB.Data.Model
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum ItemType
+    public enum GameType
     {
-        MATERIAL = 0,
-        CONSUMIBLE,
-        CARD_PACK,
-        RECIPE
+        NORMAL = 0,
+        ENDURACE,
+        DECK,
     }
 }
