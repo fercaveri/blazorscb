@@ -26,16 +26,16 @@ namespace SurrealCB.Server.Controllers
             this.cardService = cardService;
         }
 
-        [HttpGet("GetAll")]
-        public async Task<ApiResponse> Next()
-        {
-            var cards = await this.cardService.GetAll();
-            return new ApiResponse(Status200OK, "Get All Cards Successful", cards);
-        }
+        
 
-        [HttpGet("GetAll")]
-        public async Task<ApiResponse> Attack()
+        [HttpPost]
+        public async Task<ApiResponse> Perform(List<BattleCard> cards, int srcPos, int tarPos)
         {
+            var srcCard = await cards.Where(x => x.Position == srcPos).FirstOrDefaultAsync();
+            var tarCard = await cards.Where(x => x.Position == tarPos).FirstOrDefaultAsync();
+           
+            if (srcCard == null ||
+                srcCard.AtkType != AtkType.ALL && srcCard.AtkType != AtkType.RANDOM && tarCard == null)
             var cards = await this.cardService.GetAll();
             return new ApiResponse(Status200OK, "Get All Cards Successful", cards);
         }
