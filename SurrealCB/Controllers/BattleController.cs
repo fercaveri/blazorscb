@@ -30,9 +30,23 @@ namespace SurrealCB.Server.Controllers
             this.cardService = cardService;
         }
 
-        
+        [HttpPost("start")]
+        public async Task<ApiResponse> StartBattle(EnemyNpc enemy)
+        {
+            var battleCards = new List<BattleCard>();
+            var random = new Random();
+            for (var i = 0; i < 4; i++)
+            {
+                var pcard = enemy.Cards[random.Next(enemy.Cards.Count - 1)];
+                battleCards.Add(new BattleCard(pcard));
+            }
+            //TODO: this.userService.getUserCards() o algo asi;
+            //await this.battleService.PerformAttack(srcCard, tarCard);
 
-        [HttpPost]
+            return new ApiResponse(Status200OK, "Cards updated successfully", battleCards);
+        }
+
+        [HttpPost("perform")]
         public async Task<ApiResponse> Perform(List<BattleCard> cards, int srcPos, int tarPos)
         {
             var srcCard = cards.Where(x => x.Position == srcPos).FirstOrDefault();

@@ -32,9 +32,9 @@ namespace SurrealCB.Server
 
         public int CalculateDmg(BattleCard srcCard, BattleCard tarCard)
         {
-            var dmg = srcCard.PlayerCard.Card.Atk;
+            var dmg = srcCard.GetAtk();
             var passives = srcCard.PlayerCard.GetPassives();
-            var def = tarCard.PlayerCard.Card.Def;
+            var def = tarCard.GetDef();
             foreach (var passive in passives)
             {
                 switch (passive.Passive)
@@ -53,7 +53,7 @@ namespace SurrealCB.Server
         public int ApplyDmg(BattleCard srcCard, BattleCard tarCard, int dmg)
         {
             var passives = srcCard.PlayerCard.GetPassives();
-            var def = tarCard.PlayerCard.Card.Def;
+            var def = tarCard.GetDef();
             foreach (var passive in passives)
             {
                 switch (passive.Passive)

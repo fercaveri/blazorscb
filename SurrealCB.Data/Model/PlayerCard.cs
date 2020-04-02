@@ -17,5 +17,40 @@ namespace SurrealCB.Data.Model
             list = list.Concat(this.ActiveLvlBoosts.OrderBy(x => x.Level).Select(x => x.Boost.Passive)).Distinct().ToList();
             return list;
         }
+
+        public int GetHp()
+        {
+            var hp = this.Card.Hp;
+            //TODO: Rune & Boost
+            return hp;
+        }
+
+        public int GetAtk()
+        {
+            var attack = this.Card.Atk;
+            //TODO: Rune & Boost
+            return attack;
+        }
+
+        public int GetDef()
+        {
+            var deffense = this.Card.Def;
+            //TODO: Rune & Boost
+            return deffense;
+        }
+
+        public double GetImm()
+        {
+            var immunity = this.Card.Imm;
+            //TODO: Rune & Boost
+            return immunity;
+        }
+
+        public double GetSpd()
+        {
+            var speed = this.Card.Spd;
+            //TODO: Rune & Boost
+            return speed;
+        }
     }
 }
