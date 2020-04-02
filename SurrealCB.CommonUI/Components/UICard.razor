@@ -11,6 +11,7 @@
             <div> <img src="_content/SurrealCB.CommonUI/icons/health.svg" /> @Hp </div>
             <div> <img src="_content/SurrealCB.CommonUI/icons/sword.svg" /> @Atk </div>
             <div> <img src="_content/SurrealCB.CommonUI/icons/shield.svg" /> @Def </div>
+            <div> <img src="_content/SurrealCB.CommonUI/icons/wall.svg" /> @(Imm)% </div>
             <div> <img src="_content/SurrealCB.CommonUI/icons/speed.svg" /> @Spd </div>
         </div>
         <div class="uicard-footer-down">
@@ -18,7 +19,10 @@
             {
                 foreach (CardPassive passive in Passives)
                 {
-                    <UICardPassive />
+                    @if (passive != null)
+                    {
+                        <UICardPassive CPassive="@passive" />
+                    }
                 }
             }
         </div>
@@ -37,6 +41,8 @@
     public int Atk { get; set; }
     [Parameter]
     public int Def { get; set; }
+    [Parameter]
+    public int Imm { get; set; }
     [Parameter]
     public double Spd { get; set; }
     [Parameter]

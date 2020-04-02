@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,6 +44,8 @@ namespace SurrealCB.Server
             services.AddScoped<AppState>();
             services.AddScoped<IUserProfileApi, UserProfileApi>();
             services.AddScoped<ICardService, CardService>();
+            services.AddScoped<IBattleService, BattleService>();
+            services.AddScoped<IMapService, MapService>();
             services.AddScoped<IUserSession, UserSession>();
 
             services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
@@ -54,6 +57,7 @@ namespace SurrealCB.Server
                 AdditionalUserClaimsPrincipalFactory>();
 
             services.AddTransient<IApiLogService, ApiLogService>();
+            services.AddTransient<ISeeder, Seeder>();
 
             var automapperConfig = new MapperConfiguration(configuration =>
             {
@@ -65,6 +69,7 @@ namespace SurrealCB.Server
             services.AddSingleton(autoMapper);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+            services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
@@ -85,6 +90,12 @@ namespace SurrealCB.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var databaseInitializer = serviceScope.ServiceProvider.GetService<ISeeder>();
+                databaseInitializer.SeedAsync().Wait();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -1,11 +1,11 @@
 <div class="uicard-passive">
     <MatTooltip Tooltip="@GetPassiveTuple().Item1">
-        <div> <img src="@GetPassiveTuple().Item2" /></div>
-        @if (!string.IsNullOrEmpty(p1))
+        <div> <img src="@($"_content/SurrealCB.CommonUI/icons/{GetPassiveTuple().Item2}.svg")" /></div>
+        @if (p1 != 0)
         {<div class="uicard-passive-param"> @p1 </div>}
-        @if (!string.IsNullOrEmpty(p2))
+        @if (p2 != 0)
         {<div class="uicard-passive-param"> @p2 </div>}
-        @if (!string.IsNullOrEmpty(p3))
+        @if (p3 != 0)
         {<div class="uicard-passive-param"> @p3 </div>}
     </MatTooltip>
 </div>
@@ -15,9 +15,9 @@
     [Parameter]
     public CardPassive CPassive { get; set; }
     public Passive p => CPassive.Passive;
-    public string p1 => CPassive.Param1;
-    public string p2 => CPassive.Param2;
-    public string p3 => CPassive.Param3;
+    public double p1 => CPassive.Param1;
+    public double p2 => CPassive.Param2;
+    public double p3 => CPassive.Param3;
 
     protected override async Task OnInitializedAsync()
     {
@@ -29,13 +29,14 @@
 
         p switch
         {
-            Passive.BLAZE => Tuple.Create($"Inflicts {p1} dmg every card turn for {p2} seconds.", ""),
+            Passive.BLAZE => Tuple.Create($"Inflicts {p1} dmg every card turn for {p2} seconds.", "blaze"),
             Passive.DOOM => Tuple.Create($"Kill the card in {p1} seconds.", ""),
             Passive.FREEZE => Tuple.Create($"Slows the speed {p1} for {p2} seconds.", ""),
-            Passive.HP_SCATTER => Tuple.Create($"Reduce {p1} of enemy total hp on every hit.", ""),
+            Passive.HP_SHATTER => Tuple.Create($"Reduce {p1} of enemy total hp on every hit.", "hp_shatter"),
+            Passive.HP_DEFRAGMENTER => Tuple.Create($"Reduce {p1} of enemy current hp on every hit.", "hp_defragmenter"),
             Passive.IGNORE_DEF => Tuple.Create($"Ignore entire enemy defense.", ""),
             Passive.PIERCING => Tuple.Create($"Ignore {p1} of defense on attack.", ""),
-            Passive.POISON => Tuple.Create($"Inflicts {p1} dmg every {p2} seconds for {p3} seconds.", ""),
+            Passive.POISON => Tuple.Create($"Inflicts {p1} dmg every {p2} seconds for {p3} seconds.", "poison"),
             Passive.STUN => Tuple.Create($"Stun the target for {p1} seconds.", ""),
             Passive.BACKTRACK => Tuple.Create($"Backtrack the target speed for {p1} seconds.", ""),
             _ => Tuple.Create("", ""),

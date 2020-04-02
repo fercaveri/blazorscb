@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace SurrealCB.Data.Model
@@ -10,6 +11,7 @@ namespace SurrealCB.Data.Model
         public int CurrentExp { get; set; }
         public List<Rune> Runes { get; set; }
         public List<LevelBoost> ActiveLvlBoosts { get; set; }
+        public int CardId { get; set; }
         public Card Card { get; set; }
         public List<CardPassive> GetPassives()
         {

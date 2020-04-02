@@ -43,7 +43,7 @@ namespace SurrealCB.Server
                         def = 0; 
                         break;
                     case Passive.PIERCING:
-                        def = Math.Max(def - int.Parse(passive.Param1), 0);
+                        def = Math.Max(def - (int)passive.Param1, 0);
                         break;
                 };
             }
@@ -62,7 +62,7 @@ namespace SurrealCB.Server
                         def = 0;
                         break;
                     case Passive.PIERCING:
-                        def = Math.Max(def - int.Parse(passive.Param1), 0);
+                        def = Math.Max(def - (int)passive.Param1, 0);
                         break;
                 };
             }
@@ -79,8 +79,8 @@ namespace SurrealCB.Server
             {
                 switch (passive.Passive)
                 {
-                    case Passive.HP_SCATTER:
-                        dmg += (int)Math.Ceiling((double)(tarCard.Hp / int.Parse(passive.Param1.Replace("%", ""))));
+                    case Passive.HP_SHATTER:
+                        dmg += (int)Math.Ceiling((double)(tarCard.Hp / passive.Param1));
                         break;
                 };
             }

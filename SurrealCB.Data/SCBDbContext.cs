@@ -28,10 +28,12 @@
         public DbSet<EnemyNpc> Enemies { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<Reward> Rewards { get; set; }
+        public DbSet<Rune> Runes { get; set; }
         public DbSet<CardRecipe> CardRecipes { get; set; }
         public DbSet<ItemRecipe> ItemRecipes { get; set; }
         public DbSet<RuneRecipe> RuneRecipes { get; set; }
         public DbSet<ApiLogItem> ApiLogs { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Message> Messages { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
@@ -42,6 +44,28 @@
                 .HasOne(a => a.Profile)
                 .WithOne(b => b.ApplicationUser)
                 .HasForeignKey<UserProfile>(b => b.UserId);
+
+            builder.Entity<Map>()
+                .HasMany(a => a.Enemies)
+                .WithOne(b => b.Map);
+
+            builder.Entity<PlayerCard>()
+                .HasOne(a => a.Card)
+                .WithMany()
+                .HasForeignKey(a => a.CardId);
+
+            builder.Entity<MapRequiredEnemy>()
+                .HasKey(bc => new { bc.MapId, bc.EnemyId });
+            builder.Entity<MapRequiredEnemy>()
+                .HasOne(bc => bc.Enemy)
+                .WithMany(b => b.RequiredToMaps)
+                .HasForeignKey(bc => bc.EnemyId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<MapRequiredEnemy>()
+                .HasOne(bc => bc.Map)
+                .WithMany(b => b.RequiredEnemies)
+                .HasForeignKey(bc => bc.MapId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Card>().Property(p => p.AtkType).HasConversion(new EnumToStringConverter<AtkType>());
             builder.Entity<Card>().Property(p => p.Element).HasConversion(new EnumToStringConverter<Element>());

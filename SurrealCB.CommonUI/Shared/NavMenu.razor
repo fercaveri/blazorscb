@@ -10,9 +10,9 @@
             <MatIcon>list_alt</MatIcon> <span class="miniHover">Card List</span>
         </MatNavItem>
 
-        <MatNavSubMenu>
+        @*<MatNavSubMenu>
             <MatNavSubMenuHeader>
-                <MatNavItem AllowSelection="false">
+                <MatNavItem AllowSelection="false" Disabled="@(!IsLoggedIn)">
                     <MatIcon>stars</MatIcon><span class="miniHover"> Features</span>
                 </MatNavItem>
             </MatNavSubMenuHeader>
@@ -27,10 +27,10 @@
                     <MatIcon>screen_share</MatIcon> <span class="miniHover">Screenshots</span>
                 </MatNavItem>
             </MatNavSubMenuList>
-        </MatNavSubMenu>
+        </MatNavSubMenu>*@
 
-        <MatNavItem Href="@navigationManager.ToAbsoluteUri("dashboard").AbsoluteUri" Disabled="@(!IsLoggedIn)">
-            <MatIcon>bar_chart</MatIcon> <span class="miniHover">Dashboard</span>
+        <MatNavItem Href="@navigationManager.ToAbsoluteUri("maps").AbsoluteUri">
+            <MatIcon>bar_chart</MatIcon> <span class="miniHover">Maps</span>
         </MatNavItem>
 
         <MatNavSubMenu>

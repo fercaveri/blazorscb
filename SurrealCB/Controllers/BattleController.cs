@@ -31,7 +31,7 @@ namespace SurrealCB.Server.Controllers
         }
 
         [HttpPost("start")]
-        public async Task<ApiResponse> StartBattle(EnemyNpc enemy)
+        public async Task<ApiResponse> StartBattle([FromBody]EnemyNpc enemy)
         {
             var battleCards = new List<BattleCard>();
             var random = new Random();
@@ -47,7 +47,7 @@ namespace SurrealCB.Server.Controllers
         }
 
         [HttpPost("perform")]
-        public async Task<ApiResponse> Perform(List<BattleCard> cards, int srcPos, int tarPos)
+        public async Task<ApiResponse> Perform([FromBody]List<BattleCard> cards, int srcPos, int tarPos)
         {
             var srcCard = cards.Where(x => x.Position == srcPos).FirstOrDefault();
             var tarCard = cards.Where(x => x.Position == tarPos).FirstOrDefault();

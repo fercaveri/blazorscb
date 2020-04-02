@@ -1,0 +1,41 @@
+﻿@inject HttpClient Http
+@inject IMatToaster matToaster
+@page "/maps"
+
+
+<div class="maps-container">
+    @foreach (Map map in this.maps)
+    {
+    <div class="map-item">
+        <img src="@map.SrcImg" />
+        <span> Name: @map.Name</span>
+        <span> Min Level: @map.MinLevel</span>
+        <span> Difficult: @map.Difficult</span>
+        <span> Reward: </span> <!-- TODO: Reward tooltip -->
+        <!-- TODO: Hacer candado con tooltip de nivel o required monster etc-->
+    </div>
+    }
+</div>
+
+@code {
+    List<Map> maps = new List<Map>();
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAllCards();
+    }
+
+    private async Task GetAllCards()
+    {
+        ApiResponseDto apiResponse = await Http.GetJsonAsync<ApiResponseDto>("api/map/GetAll");
+
+        if (apiResponse.StatusCode == Status200OK)
+        {
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Map List Retrieved");
+            this.maps = Newtonsoft.Json.JsonConvert.DeserializeObject<Map[]>(apiResponse.Result.ToString()).ToList<Map>();
+        }
+        else
+        {
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Todo List Retrieval Failed");
+        }
+    }
+}
