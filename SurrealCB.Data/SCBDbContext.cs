@@ -1,11 +1,14 @@
 ﻿namespace SurrealCB.Data
 {
+    using System;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
     using SurrealCB.Data.Model;
     using SurrealCB.Data.Shared;
 
-    public class SCBDbContext : DbContext
+    public class SCBDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         private readonly IUserSession _userSession;
 
@@ -33,7 +36,6 @@
         public DbSet<ItemRecipe> ItemRecipes { get; set; }
         public DbSet<RuneRecipe> RuneRecipes { get; set; }
         public DbSet<ApiLogItem> ApiLogs { get; set; }
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Message> Messages { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
@@ -46,8 +48,7 @@
                 .HasForeignKey<UserProfile>(b => b.UserId);
 
             builder.Entity<Map>()
-                .HasMany(a => a.Enemies)
-                .WithOne(b => b.Map);
+                .HasMany(a => a.Enemies);
 
             builder.Entity<PlayerCard>()
                 .HasOne(a => a.Card)
@@ -71,6 +72,8 @@
             builder.Entity<Card>().Property(p => p.Element).HasConversion(new EnumToStringConverter<Element>());
             builder.Entity<Card>().Property(p => p.Rarity).HasConversion(new EnumToStringConverter<Rarity>());
             builder.Entity<CardPassive>().Property(p => p.Passive).HasConversion(new EnumToStringConverter<Passive>());
+            builder.Entity<Map>().Property(p => p.Difficult).HasConversion(new EnumToStringConverter<MapDifficult>());
+            builder.Entity<Map>().Property(p => p.Type).HasConversion(new EnumToStringConverter<GameType>());
         }
     }
 }

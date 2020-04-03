@@ -2,13 +2,14 @@
 @inject IMatToaster matToaster
 @page "/card_list"
 
-@foreach (Card card in this.cards)
-{
-    <div class="card-list-container">
+<div class="card-list-container">
+    @foreach (Card card in this.cards)
+    {
         <UICard Atk="@card.Atk" Def="@card.Def" Spd="@card.Spd" Hp="@card.Hp" Imm="@card.Imm" Name="@card.Name" Element="@card.Element" Tier="@card.Tier"
                 Rarity="@card.Rarity" ImgSrc="@card.ImgSrc" Passives="@(new List<CardPassive>{card.Passive})"></UICard>
-    </div>
-}
+
+    }
+</div>
 
 @code {
     List<Card> cards = new List<Card>();

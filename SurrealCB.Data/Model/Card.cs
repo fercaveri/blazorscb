@@ -14,8 +14,8 @@ namespace SurrealCB.Data.Model
         public Rarity Rarity { get; set; }
         public AtkType AtkType { get; set; }
         public Element Element { get; set; }
-        public CardPassive Passive { get; set; }
-        public List<CardBoost> LevelBoosts { get; set; }
+        public virtual CardPassive Passive { get; set; }
+        public virtual List<CardBoost> LevelBoosts { get; set; }
         public int Value { get; set; }
         public int BaseExp { get; set; }
         public int RuneSlots { get; set; }

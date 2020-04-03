@@ -1,19 +1,20 @@
 ﻿@inject HttpClient Http
 @inject IMatToaster matToaster
+@inject NavigationManager navigationManager
 @page "/maps"
 
 
 <div class="maps-container">
     @foreach (Map map in this.maps)
     {
-    <div class="map-item">
-        <img src="@map.SrcImg" />
-        <span> Name: @map.Name</span>
-        <span> Min Level: @map.MinLevel</span>
-        <span> Difficult: @map.Difficult</span>
-        <span> Reward: </span> <!-- TODO: Reward tooltip -->
-        <!-- TODO: Hacer candado con tooltip de nivel o required monster etc-->
-    </div>
+        <div class="map-item" @onclick="() => StartBattle(map)">
+            <img src="@map.SrcImg" />
+            <span> Name: @map.Name</span>
+            <span> Min Level: @map.MinLevel</span>
+            <span> Difficult: @map.Difficult</span>
+            <span> Reward: </span> <!-- TODO: Reward tooltip -->
+            <!-- TODO: Hacer candado con tooltip de nivel o required monster etc-->
+        </div>
     }
 </div>
 
@@ -37,5 +38,10 @@
         {
             matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Todo List Retrieval Failed");
         }
+    }
+
+    private void StartBattle(Map map)
+    {
+        navigationManager.NavigateTo($"battle/{map.Enemies.FirstOrDefault().Id}");
     }
 }

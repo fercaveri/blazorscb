@@ -23,11 +23,39 @@ namespace SurrealCB.Server
 
         public Task PerformAttack(BattleCard srcCard, BattleCard tarCard)
         {
+            var cancelStatus = this.ShouldCancelAttack(srcCard, tarCard);
+            if  (cancelStatus != CancelStatus.NONE)
+            {
+                return Task.CompletedTask;
+            }
             var dmg = this.CalculateDmg(srcCard, tarCard);
             tarCard.Hp = Math.Max(this.ApplyDmg(srcCard, tarCard, dmg), 0);
             var extraDmg = this.CalculateExtraDmg(srcCard, tarCard);
             tarCard.Hp = Math.Max(tarCard.Hp - extraDmg, 0);
             return Task.CompletedTask;
+        }
+
+        public CancelStatus ShouldCancelAttack(BattleCard srcCard, BattleCard tarCard)
+        {
+            var status = CancelStatus.NONE;
+            //TODO: status negativos de mi carta
+            var passives = tarCard.PlayerCard.GetPassives();
+            var random = new Random();
+            foreach (var passive in passives)
+            {
+                switch (passive.Passive)
+                {
+                    case Passive.DODGE:
+                        var res = random.Next(100);
+                        if (res <= passive.Param1)
+                        {
+                            status = CancelStatus.EVADE;
+                            return status;
+                        }
+                        break;
+                };
+            }
+            return status;
         }
 
         public int CalculateDmg(BattleCard srcCard, BattleCard tarCard)

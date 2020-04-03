@@ -7,15 +7,20 @@ namespace SurrealCB.Data.Model
     {
         public int Position { get; set; }
         public int Hp { get; set; }
-        public double Spd { get; set; }
-        public List<CardPassive> ActiveEffects { get; set; }
-        public PlayerCard PlayerCard { get; set; }
+        public double Time { get; set; }
+        public virtual List<CardPassive> ActiveEffects { get; set; }
+        public virtual PlayerCard PlayerCard { get; set; }
 
         public BattleCard(PlayerCard pcard)
         {
             this.PlayerCard = pcard;
             this.Hp = pcard.GetHp();
-            this.Spd = pcard.GetSpd();
+            this.Time = pcard.GetSpd();
+        }
+
+        public BattleCard()
+        {
+
         }
 
         public int GetHp()
@@ -39,14 +44,14 @@ namespace SurrealCB.Data.Model
             return deffense;
         }
 
-        public double GetImmunity()
+        public int GetImm()
         {
             var immunity = this.PlayerCard.GetImm();
             //TODO: Active effs
             return immunity;
         }
 
-        public double GetSpeed()
+        public double GetSpd()
         {
             var speed = this.PlayerCard.GetSpd();
             //TODO: Active effs

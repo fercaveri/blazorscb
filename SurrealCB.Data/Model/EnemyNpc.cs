@@ -9,11 +9,10 @@ namespace SurrealCB.Data.Model
         public string Name { get; set; }
         public int Level { get; set; }
         public int ExpGain { get; set; }
-        public List<PlayerCard> Cards { get; set; }
-        public Reward Reward { get; set; }
-        public virtual Map Map { get; set; }
+        public virtual List<PlayerCard> Cards { get; set; }
+        public virtual Reward Reward { get; set; }
         public int MapId { get; set; }
-        public List<MapRequiredEnemy> RequiredToMaps { get; set; }
+        public virtual List<MapRequiredEnemy> RequiredToMaps { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
     }

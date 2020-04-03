@@ -1,0 +1,40 @@
+﻿@inject HttpClient Http
+@inject IMatToaster matToaster
+@page "/battle"
+@page "/battle/{EnemyId}"
+
+
+<div class="battle-container">
+    @foreach (BattleCard card in this.cards)
+    {
+        <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.Hp" Imm="@card.GetImm()" Name="@card.PlayerCard.Card.Name"
+                Element="@card.PlayerCard.Card.Element" Tier="@card.PlayerCard.Card.Tier" Rarity="@card.PlayerCard.Card.Rarity"
+                ImgSrc="@card.PlayerCard.Card.ImgSrc" Passives="@card.PlayerCard.GetPassives()"></UICard>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string EnemyId { get; set; }
+
+    List<BattleCard> cards = new List<BattleCard>();
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAllCards();
+    }
+
+    private async Task GetAllCards()
+    {
+        ApiResponseDto apiResponse = await Http.GetJsonAsync<ApiResponseDto>($"api/battle/start/{EnemyId}");
+
+        if (apiResponse.StatusCode == Status200OK)
+        {
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Map List Retrieved");
+            this.cards = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleCard[]>(apiResponse.Result.ToString()).ToList<BattleCard>();
+        }
+        else
+        {
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Todo List Retrieval Failed");
+        }
+    }
+}

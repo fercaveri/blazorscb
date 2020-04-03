@@ -103,3 +103,5 @@ C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\RazorDeclaration\SurrealCB
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\Razor\Pages\Error.razor.g.cs
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.csproj.CoreCompileInputs.cache
 C:\Rikito\SurrealCB\SurrealCB\obj\Debug\netcoreapp3.1\SurrealCB.Server.genruntimeconfig.cache
+C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\Castle.Core.dll
+C:\Rikito\SurrealCB\SurrealCB\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Proxies.dll

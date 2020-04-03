@@ -5,21 +5,21 @@ namespace SurrealCB.Data.Model
 {
     public abstract class Recipe : IEntity
     {
-        public List<RequiredItem> RequiredItems { get; set; }
+        virtual public List<RequiredItem> RequiredItems { get; set; }
     }
 
     public class CardRecipe : Recipe
     {
-        public Card Result { get; set; }
+        public virtual Card Result { get; set; }
     }
 
     public class RuneRecipe : Recipe
     {
-        public Rune Result { get; set; }
+        public virtual Rune Result { get; set; }
     }
 
     public class ItemRecipe : Recipe
     {
-        public Item Result { get; set; }
+        public virtual Item Result { get; set; }
     }
 }

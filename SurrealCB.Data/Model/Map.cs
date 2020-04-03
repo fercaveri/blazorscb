@@ -9,10 +9,10 @@ namespace SurrealCB.Data.Model
         public int MinLevel { get; set; }
         public MapDifficult Difficult { get; set; }
         public GameType Type { get; set; }
-        public List<EnemyNpc> Enemies { get; set; }
-        public Reward CompletionReward { get; set; }
-        public List<Map> RequiredMaps { get; set; }
-        public List<MapRequiredEnemy> RequiredEnemies { get; set; }
+        public virtual List<EnemyNpc> Enemies { get; set; }
+        public virtual Reward CompletionReward { get; set; }
+        public virtual List<Map> RequiredMaps { get; set; }
+        public virtual List<MapRequiredEnemy> RequiredEnemies { get; set; }
         public string SrcImg { get; set; }
     }
 }

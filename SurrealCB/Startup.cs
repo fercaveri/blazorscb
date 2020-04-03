@@ -44,6 +44,7 @@ namespace SurrealCB.Server
             services.AddScoped<AppState>();
             services.AddScoped<IUserProfileApi, UserProfileApi>();
             services.AddScoped<ICardService, CardService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IBattleService, BattleService>();
             services.AddScoped<IMapService, MapService>();
             services.AddScoped<IUserSession, UserSession>();
@@ -75,7 +76,8 @@ namespace SurrealCB.Server
             services.AddServerSideBlazor();
             services.AddControllers().AddNewtonsoftJson();
             services.AddDbContext<SCBDbContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                    options.UseLazyLoadingProxies()
+                           .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMatToaster(config =>
             {
                 config.Position = MatToastPosition.BottomRight;

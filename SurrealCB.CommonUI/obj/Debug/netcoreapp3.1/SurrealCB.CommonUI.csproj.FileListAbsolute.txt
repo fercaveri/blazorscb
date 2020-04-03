@@ -5,7 +5,6 @@ C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\staticwebassets\S
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\staticwebassets\SurrealCB.CommonUI.StaticWebAssets.xml
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\SurrealCB.CommonUI.RazorComponent.input.cache
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\RazorDeclaration\App.razor.g.cs
-C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\Index.razor.g.cs
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\RazorDeclaration\Shared\MainLayout.razor.g.cs
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\RazorDeclaration\Shared\NavMenu.razor.g.cs
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\RazorDeclaration\_Imports.razor.g.cs
@@ -18,7 +17,6 @@ C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\SurrealCB.CommonU
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\bin\Debug\netcoreapp3.1\SurrealCB.CommonUI.StaticWebAssets.xml
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\RazorDeclaration\SurrealCB.CommonUI.dll
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\App.razor.g.cs
-C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\Pages\Index.razor.g.cs
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\Shared\MainLayout.razor.g.cs
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\Shared\NavMenu.razor.g.cs
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\_Imports.razor.g.cs
@@ -37,3 +35,5 @@ C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\Pages\CardL
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\SurrealCB.CommonUI.csproj.CoreCompileInputs.cache
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\Maps.razor.g.cs
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\Pages\Maps.razor.g.cs
+C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\Battle.razor.g.cs
+C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\Pages\Battle.razor.g.cs

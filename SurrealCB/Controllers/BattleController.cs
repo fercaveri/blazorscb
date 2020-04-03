@@ -21,13 +21,44 @@ namespace SurrealCB.Server.Controllers
         private readonly ILogger<CardController> logger;
         private readonly IBattleService battleService;
         private readonly ICardService cardService;
+        private readonly IUserService userService;
+        private readonly SCBDbContext repository;
 
         public BattleController(ILogger<CardController> logger, IBattleService battleService,
-            ICardService cardService)
+            ICardService cardService, IUserService userService, SCBDbContext repository)
         {
             this.logger = logger;
             this.battleService = battleService;
             this.cardService = cardService;
+            this.userService = userService;
+            this.repository = repository;
+        }
+
+        [HttpGet("start/{enemyId}")]
+        public async Task<ApiResponse> StartBattle(int enemyId)
+        {
+            var enemy = await this.repository.Enemies.FirstOrDefaultAsync(x => x.Id == enemyId);
+            var battleCards = new List<BattleCard>();
+            var random = new Random();
+            for (var i = 0; i < 4; i++)
+            {
+                var pcard = enemy.Cards[random.Next(enemy.Cards.Count - 1)];
+                battleCards.Add(new BattleCard(pcard)
+                {
+                    Position = i + 4
+                });
+            }
+            var userCards = await this.userService.GetUserCards();
+            for (var i = 0; i < 4; i++)
+            {
+                var pcard = userCards[random.Next(userCards.Count - 1)];
+                battleCards.Add(new BattleCard(pcard)
+                {
+                    Position = i
+                });
+            }
+
+            return new ApiResponse(Status200OK, "Cards updated successfully", battleCards);
         }
 
         [HttpPost("start")]
@@ -38,10 +69,20 @@ namespace SurrealCB.Server.Controllers
             for (var i = 0; i < 4; i++)
             {
                 var pcard = enemy.Cards[random.Next(enemy.Cards.Count - 1)];
-                battleCards.Add(new BattleCard(pcard));
+                battleCards.Add(new BattleCard(pcard)
+                {
+                    Position = i + 4
+                });
             }
-            //TODO: this.userService.getUserCards() o algo asi;
-            //await this.battleService.PerformAttack(srcCard, tarCard);
+            var userCards = await this.userService.GetUserCards();
+            for (var i = 0; i < 4; i++)
+            {
+                var pcard = userCards[random.Next(userCards.Count - 1)];
+                battleCards.Add(new BattleCard(pcard)
+                {
+                    Position = i
+                });
+            }
 
             return new ApiResponse(Status200OK, "Cards updated successfully", battleCards);
         }
@@ -51,7 +92,7 @@ namespace SurrealCB.Server.Controllers
         {
             var srcCard = cards.Where(x => x.Position == srcPos).FirstOrDefault();
             var tarCard = cards.Where(x => x.Position == tarPos).FirstOrDefault();
-           
+
             if (srcCard == null ||
                 srcCard.PlayerCard.Card.AtkType != AtkType.ALL && srcCard.PlayerCard.Card.AtkType != AtkType.RANDOM && tarCard == null)
             {

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using IdentityModel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SurrealCB.Data.Model;
+using SurrealCB.Data.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,42 +63,42 @@ namespace SurrealCB.Data
 
         private async Task SeedASPIdentityCoreAsync()
         {
-            //if (!await _context.Users.AnyAsync())
-            //{
-            //    //Generating inbuilt accounts
-            //    const string adminRoleName = "Administrator";
-            //    const string userRoleName = "User";
+            if (!await _context.Users.AnyAsync())
+            {
+                //Generating inbuilt accounts
+                const string adminRoleName = "Administrator";
+                const string userRoleName = "User";
 
-            //    await EnsureRoleAsync(adminRoleName, "Default administrator", ApplicationPermissions.GetAllPermissionValues());
-            //    await EnsureRoleAsync(userRoleName, "Default user", new string[] { });
+                await EnsureRoleAsync(adminRoleName, "Default administrator", ApplicationPermissions.GetAllPermissionValues());
+                await EnsureRoleAsync(userRoleName, "Default user", new string[] { });
 
-            //    await CreateUserAsync("admin", "admin123", "Admin", "Blazor", "Administrator", "admin@blazoreboilerplate.com", "+1 (123) 456-7890", new string[] { adminRoleName });
-            //    await CreateUserAsync("user", "user123", "User", "Blazor", "User Blazor", "user@blazoreboilerplate.com", "+1 (123) 456-7890`", new string[] { userRoleName });
+                await CreateUserAsync("admin", "ferk!veri1S", "Admin", "Blazor", "Administrator", "admin@blazoreboilerplate.com", "+1 (123) 456-7890", new string[] { adminRoleName });
+                await CreateUserAsync("user", "ferk!veri1S", "User", "Blazor", "User Blazor", "user@blazoreboilerplate.com", "+1 (123) 456-7890`", new string[] { userRoleName });
 
-            //    _logger.LogInformation("Inbuilt account generation completed");
-            //}
-            //else
-            //{
-            //    const string adminRoleName = "Administrator";
+                _logger.LogInformation("Inbuilt account generation completed");
+            }
+            else
+            {
+                const string adminRoleName = "Administrator";
 
-            //    IdentityRole<Guid> adminRole = await _roleManager.FindByNameAsync(adminRoleName);
-            //    var AllClaims = ApplicationPermissions.GetAllPermissionValues().Distinct();
-            //    var RoleClaims = (await _roleManager.GetClaimsAsync(adminRole)).Select(c => c.Value).ToList();
-            //    var NewClaims = AllClaims.Except(RoleClaims);
-            //    foreach (string claim in NewClaims)
-            //    {
-            //        await _roleManager.AddClaimAsync(adminRole, new Claim(ClaimConstants.Permission, claim));
-            //    }
-            //    var DeprecatedClaims = RoleClaims.Except(AllClaims);
-            //    var roles = await _roleManager.Roles.ToListAsync();
-            //    foreach (string claim in DeprecatedClaims)
-            //    {
-            //        foreach (var role in roles)
-            //        {
-            //            await _roleManager.RemoveClaimAsync(role, new Claim(ClaimConstants.Permission, claim));
-            //        }
-            //    }
-            //}
+                IdentityRole<Guid> adminRole = await _roleManager.FindByNameAsync(adminRoleName);
+                var AllClaims = ApplicationPermissions.GetAllPermissionValues().Distinct();
+                var RoleClaims = (await _roleManager.GetClaimsAsync(adminRole)).Select(c => c.Value).ToList();
+                var NewClaims = AllClaims.Except(RoleClaims);
+                foreach (string claim in NewClaims)
+                {
+                    await _roleManager.AddClaimAsync(adminRole, new Claim(ClaimConstants.Permission, claim));
+                }
+                var DeprecatedClaims = RoleClaims.Except(AllClaims);
+                var roles = await _roleManager.Roles.ToListAsync();
+                foreach (string claim in DeprecatedClaims)
+                {
+                    foreach (var role in roles)
+                    {
+                        await _roleManager.RemoveClaimAsync(role, new Claim(ClaimConstants.Permission, claim));
+                    }
+                }
+            }
             await Task.CompletedTask;
         }
 
@@ -130,6 +132,33 @@ namespace SurrealCB.Data
             {
                 _context.Maps.AddRange(
                    this.maps
+                );
+            }
+
+            if (!_context.PlayerCards.Any())
+            {
+                var userId = (await _context.Users.FirstOrDefaultAsync()).Id;
+                _context.PlayerCards.AddRange(
+                   new PlayerCard
+                   {
+                       Card = this.cards.FirstOrDefault(x => x.Id == 1),
+                       ApplicationUserId = userId
+                   },
+                   new PlayerCard
+                   {
+                       Card = this.cards.FirstOrDefault(x => x.Id == 2),
+                       ApplicationUserId = userId
+                   },
+                   new PlayerCard
+                   {
+                       Card = this.cards.FirstOrDefault(x => x.Id == 3),
+                       ApplicationUserId = userId
+                   },
+                   new PlayerCard
+                   {
+                       Card = this.cards.FirstOrDefault(x => x.Id == 4),
+                       ApplicationUserId = userId
+                   }
                 );
             }
 
@@ -203,92 +232,91 @@ namespace SurrealCB.Data
 
         private async Task EnsureRoleAsync(string roleName, string description, string[] claims)
         {
-            //if ((await _roleManager.FindByNameAsync(roleName)) == null)
-            //{
-            //    if (claims == null)
-            //        claims = new string[] { };
+            if ((await _roleManager.FindByNameAsync(roleName)) == null)
+            {
+                if (claims == null)
+                    claims = new string[] { };
 
-            //    string[] invalidClaims = claims.Where(c => ApplicationPermissions.GetPermissionByValue(c) == null).ToArray();
-            //    if (invalidClaims.Any())
-            //        throw new Exception("The following claim types are invalid: " + string.Join(", ", invalidClaims));
+                string[] invalidClaims = claims.Where(c => ApplicationPermissions.GetPermissionByValue(c) == null).ToArray();
+                if (invalidClaims.Any())
+                    throw new Exception("The following claim types are invalid: " + string.Join(", ", invalidClaims));
 
-            //    IdentityRole<Guid> applicationRole = new IdentityRole<Guid>(roleName);
+                IdentityRole<Guid> applicationRole = new IdentityRole<Guid>(roleName);
 
-            //    var result = await _roleManager.CreateAsync(applicationRole);
+                var result = await _roleManager.CreateAsync(applicationRole);
 
-            //    IdentityRole<Guid> role = await _roleManager.FindByNameAsync(applicationRole.Name);
+                IdentityRole<Guid> role = await _roleManager.FindByNameAsync(applicationRole.Name);
 
-            //    foreach (string claim in claims.Distinct())
-            //    {
-            //        result = await _roleManager.AddClaimAsync(role, new Claim(ClaimConstants.Permission, ApplicationPermissions.GetPermissionByValue(claim)));
+                foreach (string claim in claims.Distinct())
+                {
+                    result = await _roleManager.AddClaimAsync(role, new Claim(ClaimConstants.Permission, ApplicationPermissions.GetPermissionByValue(claim)));
 
-            //        if (!result.Succeeded)
-            //        {
-            //            await _roleManager.DeleteAsync(role);
-            //        }
-            //    }
-            //}
-            await Task.CompletedTask;
+                    if (!result.Succeeded)
+                    {
+                        await _roleManager.DeleteAsync(role);
+                    }
+                }
+            }
         }
 
         private async Task<ApplicationUser> CreateUserAsync(string userName, string password, string firstName, string fullName, string lastName, string email, string phoneNumber, string[] roles)
         {
-            //var applicationUser = _userManager.FindByNameAsync(userName).Result;
+            var applicationUser = _userManager.FindByNameAsync(userName).Result;
 
-            //if (applicationUser == null)
-            //{
-            //    applicationUser = new ApplicationUser
-            //    {
-            //        UserName = userName,
-            //        Email = email,
-            //        PhoneNumber = phoneNumber,
-            //        FullName = fullName,
-            //        FirstName = firstName,
-            //        LastName = lastName,
-            //        EmailConfirmed = true
-            //    };
+            if (applicationUser == null)
+            {
+                applicationUser = new ApplicationUser
+                {
+                    UserName = userName,
+                    Email = email,
+                    PhoneNumber = phoneNumber,
+                    FullName = fullName,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    EmailConfirmed = true
+                };
 
-            //    var result = _userManager.CreateAsync(applicationUser, password).Result;
-            //    if (!result.Succeeded)
-            //    {
-            //        throw new Exception(result.Errors.First().Description);
-            //    }
+                var result = _userManager.CreateAsync(applicationUser, password).Result;
+                if (!result.Succeeded)
+                {
+                    throw new Exception(result.Errors.First().Description);
+                }
 
-            //    result = _userManager.AddClaimsAsync(applicationUser, new Claim[]{
-            //            new Claim(JwtClaimTypes.Name, userName),
-            //            new Claim(JwtClaimTypes.GivenName, firstName),
-            //            new Claim(JwtClaimTypes.FamilyName, lastName),
-            //            new Claim(JwtClaimTypes.Email, email),
-            //            new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
-            //            new Claim(JwtClaimTypes.PhoneNumber, phoneNumber)
+                result = _userManager.AddClaimsAsync(applicationUser, new Claim[]{
+                        new Claim(JwtClaimTypes.Name, userName),
+                        new Claim(JwtClaimTypes.GivenName, firstName),
+                        new Claim(JwtClaimTypes.FamilyName, lastName),
+                        new Claim(JwtClaimTypes.Email, email),
+                        new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                        new Claim(JwtClaimTypes.PhoneNumber, phoneNumber)
 
 
-            //        }).Result;
+                    }).Result;
 
-            //    //add claims version of roles
-            //    foreach (var role in roles.Distinct())
-            //    {
-            //        await _userManager.AddClaimAsync(applicationUser, new Claim($"Is{role}", "true"));
-            //    }
+                //add claims version of roles
+                foreach (var role in roles.Distinct())
+                {
+                    await _userManager.AddClaimAsync(applicationUser, new Claim($"Is{role}", "true"));
+                }
 
-            //    ApplicationUser user = await _userManager.FindByNameAsync(applicationUser.UserName);
+                ApplicationUser user = await _userManager.FindByNameAsync(applicationUser.UserName);
 
-            //    try
-            //    {
-            //        result = await _userManager.AddToRolesAsync(user, roles.Distinct());
-            //    }
+                try
+                {
+                    result = await _userManager.AddToRolesAsync(user, roles.Distinct());
+                }
 
-            //    catch
-            //    {
-            //        await _userManager.DeleteAsync(user);
-            //        throw;
-            //    }
+                catch
+                {
+                    await _userManager.DeleteAsync(user);
+                    throw;
+                }
 
-            //    if (!result.Succeeded)
-            //    {
-            //        await _userManager.DeleteAsync(user);
-            //    }
-            //}
+                if (!result.Succeeded)
+                {
+                    await _userManager.DeleteAsync(user);
+                }
+            }
             //return applicationUser;
             await Task.CompletedTask;
             return null;
@@ -350,6 +378,46 @@ namespace SurrealCB.Data
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/poison_mosquito.png",
                     LevelBoosts = null
                 },
+                new Card
+                {
+                    Id = 8, Name = "Crow", Tier = 1, Rarity = Rarity.RARE, AtkType = AtkType.NORMAL, Element = Element.WIND,
+                    Passive = new CardPassive { Id = 4, Passive = Passive.DODGE, Param1 = 25},
+                    Hp = 4, Atk = 1, Def = 0, Imm = 50, Spd = 2.6, Value = 30, BaseExp = 25, RuneSlots = 0,
+                    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/crow.png",
+                    LevelBoosts = null
+                },
+                new Card
+                {
+                    Id = 9, Name = "Imp", Tier = 1, Rarity = Rarity.COMMON, AtkType = AtkType.NORMAL, Element = Element.DARK,
+                    Passive = null,
+                    Hp = 6, Atk = 3, Def = 0, Imm = 0, Spd = 4.8, Value = 20, BaseExp = 20, RuneSlots = 0,
+                    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/imp.png",
+                    LevelBoosts = null
+                },
+                new Card
+                {
+                    Id = 10, Name = "Lirin", Tier = 1, Rarity = Rarity.SPECIAL, AtkType = AtkType.RANDOM, Element = Element.DARK,
+                    Passive = new CardPassive { Id = 5, Passive = Passive.DOOM, Param1 = 8},
+                    Hp = 9, Atk = 0, Def = 0, Imm = 100, Spd = 9, Value = 60, BaseExp = 60, RuneSlots = 1,
+                    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/lirin.png",
+                    LevelBoosts = null
+                },
+                new Card
+                {
+                    Id = 11, Name = "Little Beast", Tier = 1, Rarity = Rarity.COMMON, AtkType = AtkType.NORMAL, Element = Element.EARTH,
+                    Passive = null,
+                    Hp = 3, Atk = 2, Def = 2, Imm = 35, Spd = 3.7, Value = 25, BaseExp = 25, RuneSlots = 0,
+                    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/little_beast.png",
+                    LevelBoosts = null
+                },
+                //new Card
+                //{
+                //    Id = 8, Name = "Poison Mosquito", Tier = 1, Rarity = Rarity.RARE, AtkType = AtkType.NORMAL, Element = Element.WIND,
+                //    Passive = new CardPassive { Id = 3, Passive = Passive.POISON, Param1 = 1, Param2 = 2, Param3 = 4},
+                //    Hp = 4, Atk = 1, Def = 0, Imm = 25, Spd = 2.1, Value = 30, BaseExp = 25, RuneSlots = 0,
+                //    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/poison_mosquito.png",
+                //    LevelBoosts = null
+                //},
             };
             return cards;
         }
@@ -381,7 +449,6 @@ namespace SurrealCB.Data
         {
             return new PlayerCard
             {
-                //Card = this._context.Cards.Where(x => x.Id == id).FirstOrDefault(),
                 CardId = id,
                 ActiveLvlBoosts = levelBoosts,
                 Runes = runes
