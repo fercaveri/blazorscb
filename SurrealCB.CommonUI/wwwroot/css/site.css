@@ -808,3 +808,24 @@ ul.breadcrumb {
         flex: 1 0 21%; /* explanation below */
         margin: 10px;
     }
+
+
+.passive-poison {
+    filter: invert(97%) sepia(100%) saturate(1114%) hue-rotate(63deg) brightness(93%) contrast(98%);
+}
+
+.passive-doom {
+    filter: invert(19%) sepia(28%) saturate(2523%) hue-rotate(253deg) brightness(87%) contrast(107%);
+}
+
+.passive-dodge {
+    filter: invert(67%) sepia(14%) saturate(261%) hue-rotate(239deg) brightness(97%) contrast(86%);
+}
+
+.passive-hp_shatter {
+    filter: invert(56%) sepia(48%) saturate(2840%) hue-rotate(292deg) brightness(95%) contrast(83%);
+}
+
+.passive-blaze {
+    filter: invert(39%) sepia(54%) saturate(2883%) hue-rotate(1deg) brightness(102%) contrast(105%);
+}
