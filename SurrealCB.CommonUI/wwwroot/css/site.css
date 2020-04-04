@@ -841,7 +841,7 @@ ul.breadcrumb {
 }
 
 .uicard-element-WATER {
-    background-color: #a5d6a7;
+    background-color: #90caf9;
 }
 
 .uicard-element-EARTH {
@@ -868,6 +868,25 @@ ul.breadcrumb {
     background-color: #eeeeee;
 }
 
+.icon-health {
+    filter: invert(18%) sepia(82%) saturate(6156%) hue-rotate(12deg) brightness(98%) contrast(91%);
+}
+
+.icon-atk {
+    filter: invert(29%) sepia(79%) saturate(1434%) hue-rotate(357deg) brightness(108%) contrast(90%);
+}
+
+.icon-shield {
+    filter: invert(13%) sepia(65%) saturate(7454%) hue-rotate(247deg) brightness(76%) contrast(102%);
+}
+
+.icon-imm {
+    filter: invert(35%) sepia(84%) saturate(314%) hue-rotate(1deg) brightness(97%) contrast(90%);
+}
+
+.icon-speed {
+    filter: invert(28%) sepia(77%) saturate(413%) hue-rotate(121deg) brightness(96%) contrast(92%);
+}
 
 .passive-poison {
     filter: invert(48%) sepia(81%) saturate(389%) hue-rotate(60deg) brightness(100%) contrast(94%);
