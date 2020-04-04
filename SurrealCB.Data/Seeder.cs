@@ -410,14 +410,38 @@ namespace SurrealCB.Data
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/little_beast.png",
                     LevelBoosts = null
                 },
-                //new Card
-                //{
-                //    Id = 8, Name = "Poison Mosquito", Tier = 1, Rarity = Rarity.RARE, AtkType = AtkType.NORMAL, Element = Element.WIND,
-                //    Passive = new CardPassive { Id = 3, Passive = Passive.POISON, Param1 = 1, Param2 = 2, Param3 = 4},
-                //    Hp = 4, Atk = 1, Def = 0, Imm = 25, Spd = 2.1, Value = 30, BaseExp = 25, RuneSlots = 0,
-                //    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/poison_mosquito.png",
-                //    LevelBoosts = null
-                //},
+                new Card
+                {
+                    Id = 12, Name = "Reptillion", Tier = 1, Rarity = Rarity.RARE, AtkType = AtkType.NORMAL, Element = Element.NATURE,
+                    Passive = new CardPassive { Id = 6, Passive = Passive.POISON, Param1 = 2, Param2 = 3, Param3 = 6 },
+                    Hp = 6, Atk = 1, Def = 0, Imm = 0, Spd = 5.3, Value = 25, BaseExp = 35, RuneSlots = 0,
+                    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/reptillion.png",
+                    LevelBoosts = null
+                },
+                new Card
+                {
+                    Id = 13, Name = "Elkchampion", Tier = 1, Rarity = Rarity.LEGENDARY, AtkType = AtkType.ALL, Element = Element.LIGHT,
+                    Passive = new CardPassive { Id = 7, Passive = Passive.IGNORE_DEF },
+                    Hp = 8, Atk = 1, Def = 1, Imm = 0, Spd = 5, Value = 120, BaseExp = 200, RuneSlots = 1,
+                    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/elkchampion.png",
+                    LevelBoosts = null
+                },
+                new Card
+                {
+                    Id = 14, Name = "Little Hidra", Tier = 1, Rarity = Rarity.SPECIAL, AtkType = AtkType.RANDOM, Element = Element.WATER,
+                    Passive = null,
+                    Hp = 9, Atk = 1, Def = 0, Imm = 0, Spd = 1.2, Value = 80, BaseExp = 120, RuneSlots = 1,
+                    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/little_hidra.png",
+                    LevelBoosts = null
+                },
+                new Card
+                {
+                    Id = 15, Name = "Triton", Tier = 1, Rarity = Rarity.RARE, AtkType = AtkType.HEAL, Element = Element.WATER,
+                    Passive = null,
+                    Hp = 6, Atk = 2, Def = 0, Imm = 0, Spd = 3.5, Value = 40, BaseExp = 40, RuneSlots = 0,
+                    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/triton.png",
+                    LevelBoosts = null
+                },
             };
             return cards;
         }

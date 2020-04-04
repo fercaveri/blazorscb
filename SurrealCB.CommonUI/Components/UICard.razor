@@ -9,7 +9,7 @@
     <div class="uicard-footer">
         <div class="uicard-footer-up">
             <div> <img class="card-icon" src="_content/SurrealCB.CommonUI/icons/health.svg" /> @Hp </div>
-            <div> <img class="card-icon" src="_content/SurrealCB.CommonUI/icons/sword.svg" /> @Atk </div>
+            <div> <img class="card-icon" src="@GetAtkIcon()" /> @Atk </div>
             <div> <img class="card-icon" src="_content/SurrealCB.CommonUI/icons/shield.svg" /> @Def </div>
             <div> <img class="card-icon" src="_content/SurrealCB.CommonUI/icons/wall.svg" /> @(Imm)% </div>
             <div> <img class="card-icon" src="_content/SurrealCB.CommonUI/icons/speed.svg" /> @Spd </div>
@@ -50,7 +50,7 @@
     [Parameter]
     public Rarity Rarity { get; set; }
     [Parameter]
-    public AtkType AtkType { get; set; }
+    public AtkType AType { get; set; }
     [Parameter]
     public Element Element { get; set; }
     [Parameter]
@@ -63,4 +63,13 @@
         await base.OnInitializedAsync();
 
     }
+
+    private string GetAtkIcon() =>
+        this.AType switch
+        {
+            AtkType.RANDOM => "_content/SurrealCB.CommonUI/icons/atk_random.svg",
+            AtkType.ALL => "_content/SurrealCB.CommonUI/icons/atk_all.svg",
+            AtkType.HEAL => "_content/SurrealCB.CommonUI/icons/atk_heal.svg",
+            _ => "_content/SurrealCB.CommonUI/icons/sword.svg",
+        };
 }

@@ -6,7 +6,7 @@
     @foreach (Card card in this.cards)
     {
         <UICard Atk="@card.Atk" Def="@card.Def" Spd="@card.Spd" Hp="@card.Hp" Imm="@card.Imm" Name="@card.Name" Element="@card.Element" Tier="@card.Tier"
-                Rarity="@card.Rarity" ImgSrc="@card.ImgSrc" Passives="@(new List<CardPassive>{card.Passive})"></UICard>
+                Rarity="@card.Rarity" AType="@card.AtkType" ImgSrc="@card.ImgSrc" Passives="@(new List<CardPassive>{card.Passive})"></UICard>
 
     }
 </div>

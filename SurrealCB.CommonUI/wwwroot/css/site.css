@@ -837,40 +837,40 @@ ul.breadcrumb {
 }
 
 .uicard-element-FIRE {
-    background-color: red;
+    background-color: #ef9a9a;
 }
 
 .uicard-element-WATER {
-    background-color: blue;
+    background-color: #a5d6a7;
 }
 
 .uicard-element-EARTH {
-    background-color: brown;
+    background-color: #bcaaa4;
 }
 
 .uicard-element-DARK {
-    background-color: black;
-    color: white;
+    background-color: #9fa8da;
 }
 
 .uicard-element-LIGHT {
-    background-color: floralwhite;
+    background-color: #fff59d;
 }
 
 .uicard-element-NATURE {
-    background-color: green;
+    background-color: #a5d6a7;
 }
 
 .uicard-element-WIND {
-    background-color: cornflowerblue;
+    background-color: #80deea;
 }
 
-.uicard-element-WIND {
-    background-color: white;
+.uicard-element-NONE {
+    background-color: #eeeeee;
 }
+
 
 .passive-poison {
-    filter: invert(97%) sepia(100%) saturate(1114%) hue-rotate(63deg) brightness(93%) contrast(98%);
+    filter: invert(48%) sepia(81%) saturate(389%) hue-rotate(60deg) brightness(100%) contrast(94%);
 }
 
 .passive-doom {
@@ -887,4 +887,12 @@ ul.breadcrumb {
 
 .passive-blaze {
     filter: invert(39%) sepia(54%) saturate(2883%) hue-rotate(1deg) brightness(102%) contrast(105%);
+}
+
+.passive-piercing {
+    filter: invert(19%) sepia(61%) saturate(3885%) hue-rotate(296deg) brightness(78%) contrast(124%);
+}
+
+.passive-ignore_defense {
+    filter: invert(10%) sepia(92%) saturate(2745%) hue-rotate(233deg) brightness(84%) contrast(110%);
 }
