@@ -11,6 +11,7 @@ namespace SurrealCB.Server
     public interface IBattleService
     {
         Task PerformAttack(BattleCard srcCard, BattleCard tarCard);
+        Task<int> NextTurn(ICollection<BattleCard> cards);
     }
     public class BattleService : IBattleService
     {
@@ -19,6 +20,19 @@ namespace SurrealCB.Server
         public BattleService(SCBDbContext repository)
         {
             this.repository = repository;
+        }
+
+        public Task<int> NextTurn(ICollection<BattleCard> cards)
+        {
+            //var globalEffects = List<EffectOAlgo>();
+            //TODO: ver efectos de tiempo tipo freeze etc
+            var nextCard = cards.OrderBy(x => x.Time).FirstOrDefault();
+            var timeElapsed = nextCard.Time;
+            foreach (var card in cards)
+            {
+                card.Time = -timeElapsed;
+            }
+            return Task.FromResult(nextCard.Position);
         }
 
         public Task PerformAttack(BattleCard srcCard, BattleCard tarCard)

@@ -61,30 +61,12 @@ namespace SurrealCB.Server.Controllers
             return new ApiResponse(Status200OK, "Cards updated successfully", battleCards);
         }
 
-        [HttpPost("start")]
-        public async Task<ApiResponse> StartBattle([FromBody]EnemyNpc enemy)
+        [HttpPost("next")]
+        public async Task<ApiResponse> NextTurn([FromBody]List<BattleCard> cards)
         {
-            var battleCards = new List<BattleCard>();
-            var random = new Random();
-            for (var i = 0; i < 4; i++)
-            {
-                var pcard = enemy.Cards[random.Next(enemy.Cards.Count - 1)];
-                battleCards.Add(new BattleCard(pcard)
-                {
-                    Position = i + 4
-                });
-            }
-            var userCards = await this.userService.GetUserCards();
-            for (var i = 0; i < 4; i++)
-            {
-                var pcard = userCards[random.Next(userCards.Count - 1)];
-                battleCards.Add(new BattleCard(pcard)
-                {
-                    Position = i
-                });
-            }
+            var nextPosition = await this.battleService.NextTurn(cards);
 
-            return new ApiResponse(Status200OK, "Cards updated successfully", battleCards);
+            return new ApiResponse(Status200OK, "Cards updated successfully", new BattleStatus { Cards = cards, NextPosition = nextPosition});
         }
 
         [HttpPost("perform")]
@@ -96,11 +78,11 @@ namespace SurrealCB.Server.Controllers
             if (srcCard == null ||
                 srcCard.PlayerCard.Card.AtkType != AtkType.ALL && srcCard.PlayerCard.Card.AtkType != AtkType.RANDOM && tarCard == null)
             {
-                return new ApiResponse(Status400BadRequest, "Wrong request", cards);
+                return new ApiResponse(Status400BadRequest, "Wrong request");
             }
             await this.battleService.PerformAttack(srcCard, tarCard);
 
-            return new ApiResponse(Status200OK, "Cards updated successfully", cards);
+            return new ApiResponse(Status200OK, "Cards updated successfully", new BattleStatus { Cards = cards});
         }
     }
 }

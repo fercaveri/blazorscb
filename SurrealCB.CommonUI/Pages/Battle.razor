@@ -9,13 +9,15 @@
     {
         <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.Hp" Imm="@card.GetImm()" Name="@card.PlayerCard.Card.Name"
                 Element="@card.PlayerCard.Card.Element" Tier="@card.PlayerCard.Card.Tier" Rarity="@card.PlayerCard.Card.Rarity"
-                ImgSrc="@card.PlayerCard.Card.ImgSrc" Passives="@card.PlayerCard.GetPassives()"></UICard>
+                ImgSrc="@card.PlayerCard.Card.ImgSrc" Passives="@card.PlayerCard.GetPassives()" class="@(nextPosition == card.Position ? "active" : "")"></UICard>
     }
 </div>
 
 @code {
     [Parameter]
     public string EnemyId { get; set; }
+
+    private int nextPosition { get; set; }
 
     List<BattleCard> cards = new List<BattleCard>();
     protected override async Task OnInitializedAsync()
@@ -31,10 +33,36 @@
         {
             matToaster.Add(apiResponse.Message, MatToastType.Success, "Map List Retrieved");
             this.cards = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleCard[]>(apiResponse.Result.ToString()).ToList<BattleCard>();
+
+            await this.CheckNext();
         }
         else
         {
             matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Todo List Retrieval Failed");
+        }
+    }
+
+    private async Task CheckNext()
+    {
+        ApiResponseDto nextResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/battle/next", this.cards);
+        var battleStatus = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleStatus>(nextResponse.Result.ToString());
+        this.nextPosition = battleStatus.NextPosition;
+        if (this.nextPosition > 3)
+        {
+            var playerCardcount = this.cards.Where(x => x.Position < 4).Count();
+            var random = new Random();
+            var who = random.Next(playerCardcount) - 1;
+            ApiResponseDto atkResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/battle/perform?srcPos={nextPosition}&tarPos={who}", this.cards);
+            this.cards = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleCard[]>(atkResponse.Result.ToString()).ToList<BattleCard>();
+            await this.CheckNext();
+        }
+    }
+
+    private async Task PlayerPerform()
+    {
+        if (this.nextPosition < 4)
+        {
+            //TODO: Continue
         }
     }
 }

@@ -766,6 +766,10 @@ ul.breadcrumb {
     border-radius: 5px;
 }
 
+.uicard-container.active {
+    border: 3px solid blue;
+}
+
 .uicard-image img {
     width: 100%;
     padding: 5px;
