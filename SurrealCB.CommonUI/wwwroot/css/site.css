@@ -805,10 +805,10 @@ ul.breadcrumb {
 
 .battle-container {
     display: grid;
-    grid-template-columns: 25% 25% 25% 25%;
-    grid-template-rows: 50% 50%;
-    grid-column-gap: 20px;
-    grid-row-gap: 50px;
+    grid-template-columns: 22% 22% 22% 22%;
+    grid-template-rows: 45% 45%;
+    grid-column-gap: 3%;
+    grid-row-gap: 10%;
 }
 
 .battle-card.active .uicard-container {
