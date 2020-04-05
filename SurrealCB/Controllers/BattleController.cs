@@ -73,6 +73,7 @@ namespace SurrealCB.Server.Controllers
         [HttpPost("perform")]
         public async Task<ApiResponse> Perform([FromBody]List<BattleCard> cards, int srcPos, int tarPos)
         {
+            //TODO no pega bien
             var srcCard = cards.Where(x => x.Position == srcPos).FirstOrDefault();
             var tarCard = cards.Where(x => x.Position == tarPos).FirstOrDefault();
 
