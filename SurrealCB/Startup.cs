@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Converters;
 using SurrealCB.CommonUI;
 using SurrealCB.CommonUI.Services;
 using SurrealCB.Data;
@@ -74,7 +75,10 @@ namespace SurrealCB.Server
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson(setup =>
+            {
+                setup.SerializerSettings.Converters.Add(new StringEnumConverter());
+            });
             services.AddDbContext<SCBDbContext>(options =>
                     options.UseLazyLoadingProxies()
                            .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));

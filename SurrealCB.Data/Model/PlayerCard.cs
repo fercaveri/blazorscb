@@ -16,7 +16,11 @@ namespace SurrealCB.Data.Model
         public Guid? ApplicationUserId { get; set; }
         public virtual List<CardPassive> GetPassives()
         {
-            var list = new List<CardPassive> { this.Card.Passive };
+            var list = new List<CardPassive> { };
+            if (this.Card.Passive != null)
+            {
+                list.Add(this.Card.Passive);
+            }
             list = list.Concat(this.ActiveLvlBoosts.OrderBy(x => x.Level).Select(x => x.Boost.Passive)).Distinct().ToList();
             return list;
         }

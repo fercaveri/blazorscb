@@ -37,17 +37,8 @@ namespace SurrealCB.Server.Controllers
         [HttpGet("start/{enemyId}")]
         public async Task<ApiResponse> StartBattle(int enemyId)
         {
-            var enemy = await this.repository.Enemies.FirstOrDefaultAsync(x => x.Id == enemyId);
             var battleCards = new List<BattleCard>();
             var random = new Random();
-            for (var i = 0; i < 4; i++)
-            {
-                var pcard = enemy.Cards[random.Next(enemy.Cards.Count - 1)];
-                battleCards.Add(new BattleCard(pcard)
-                {
-                    Position = i + 4
-                });
-            }
             var userCards = await this.userService.GetUserCards();
             for (var i = 0; i < 4; i++)
             {
@@ -55,6 +46,16 @@ namespace SurrealCB.Server.Controllers
                 battleCards.Add(new BattleCard(pcard)
                 {
                     Position = i
+                });
+            }
+
+            var enemy = await this.repository.Enemies.FirstOrDefaultAsync(x => x.Id == enemyId);
+            for (var i = 0; i < 4; i++)
+            {
+                var pcard = enemy.Cards[random.Next(enemy.Cards.Count - 1)];
+                battleCards.Add(new BattleCard(pcard)
+                {
+                    Position = i + 4
                 });
             }
 
@@ -82,7 +83,7 @@ namespace SurrealCB.Server.Controllers
             }
             await this.battleService.PerformAttack(srcCard, tarCard);
 
-            return new ApiResponse(Status200OK, "Cards updated successfully", new BattleStatus { Cards = cards});
+            return new ApiResponse(Status200OK, "Cards updated successfully", new BattleStatus { Cards = cards, NextPosition = -1});
         }
     }
 }

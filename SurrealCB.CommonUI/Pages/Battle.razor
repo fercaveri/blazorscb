@@ -7,9 +7,11 @@
 <div class="battle-container">
     @foreach (BattleCard card in this.cards)
     {
-        <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.Hp" Imm="@card.GetImm()" Name="@card.PlayerCard.Card.Name"
-                Element="@card.PlayerCard.Card.Element" Tier="@card.PlayerCard.Card.Tier" Rarity="@card.PlayerCard.Card.Rarity"
-                ImgSrc="@card.PlayerCard.Card.ImgSrc" Passives="@card.PlayerCard.GetPassives()" class="@(nextPosition == card.Position ? "active" : "")"></UICard>
+        <div class="battle-card @(nextPosition == card.Position ? "active" : "")" @onclick="() => PlayerPerform(card.Position)">
+            <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.Hp" Imm="@card.GetImm()" Name="@card.PlayerCard.Card.Name"
+                    Element="@card.PlayerCard.Card.Element" Tier="@card.PlayerCard.Card.Tier" Rarity="@card.PlayerCard.Card.Rarity"
+                    ImgSrc="@card.PlayerCard.Card.ImgSrc" Passives="@card.PlayerCard.GetPassives()"></UICard>
+        </div>
     }
 </div>
 
@@ -46,6 +48,7 @@
     {
         ApiResponseDto nextResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/battle/next", this.cards);
         var battleStatus = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleStatus>(nextResponse.Result.ToString());
+        this.cards = battleStatus.Cards.ToList();
         this.nextPosition = battleStatus.NextPosition;
         if (this.nextPosition > 3)
         {
@@ -53,16 +56,19 @@
             var random = new Random();
             var who = random.Next(playerCardcount) - 1;
             ApiResponseDto atkResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/battle/perform?srcPos={nextPosition}&tarPos={who}", this.cards);
-            this.cards = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleCard[]>(atkResponse.Result.ToString()).ToList<BattleCard>();
+            var newStatus = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleStatus>(nextResponse.Result.ToString());
+            this.cards = newStatus.Cards.ToList();
             await this.CheckNext();
         }
     }
 
-    private async Task PlayerPerform()
+    private async Task PlayerPerform(int pos)
     {
         if (this.nextPosition < 4)
         {
-            //TODO: Continue
+            ApiResponseDto atkResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/battle/perform?srcPos={nextPosition}&tarPos={pos}", this.cards);
+            this.cards = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleCard[]>(atkResponse.Result.ToString()).ToList<BattleCard>();
+            await this.CheckNext();
         }
     }
 }

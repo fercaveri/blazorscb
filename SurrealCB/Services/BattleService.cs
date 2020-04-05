@@ -30,8 +30,9 @@ namespace SurrealCB.Server
             var timeElapsed = nextCard.Time;
             foreach (var card in cards)
             {
-                card.Time = -timeElapsed;
+                card.Time =- Math.Max(timeElapsed, 0);
             }
+            nextCard.Time = nextCard.GetSpd();
             return Task.FromResult(nextCard.Position);
         }
 
