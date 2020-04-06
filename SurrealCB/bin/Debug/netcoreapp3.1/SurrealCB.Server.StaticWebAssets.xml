@@ -1,5 +1,0 @@
-﻿<StaticWebAssets Version="1.0">
-  <ContentRoot BasePath="_content/MatBlazor" Path="C:\Users\fjc39603\.nuget\packages\matblazor\2.2.0\build\..\staticwebassets\" />
-  <ContentRoot BasePath="_content/SurrealCB.CommonUI" Path="C:\Rikito\SurrealCB\SurrealCB.CommonUI\wwwroot\" />
-  <ContentRoot BasePath="_content/Toolbelt.Blazor.LoadingBar" Path="C:\Users\fjc39603\.nuget\packages\toolbelt.blazor.loadingbar\11.0.0.1\build\..\staticwebassets\" />
-</StaticWebAssets>
