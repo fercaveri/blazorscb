@@ -805,15 +805,47 @@ ul.breadcrumb {
 
 .battle-container {
     display: grid;
-    grid-template-columns: 20% 20% 20% 20%;
+    grid-template-columns: 18% 18% 18% 18%;
     grid-template-rows: 40% 40%;
-    grid-column-gap: 6%;
-    grid-row-gap: 15%;
+    grid-column-gap: 9%;
+    grid-row-gap: 10%;
 }
 
-.battle-card.active .uicard-container {
-    border: 3px solid blue;
-}
+    .battle-container .mdc-linear-progress {
+        height: 12px !important;
+    }
+
+    .battle-container .mdc-linear-progress__bar-inner {
+        border-top: 12px solid !important;
+    }
+
+    .battle-container .battle-card .speed-bar .mdc-linear-progress__bar-inner {
+        border-color: blue !important;
+    }
+
+    .battle-container .health-green .mdc-linear-progress__bar-inner {
+        border-color: green !important;
+    }
+
+    .battle-container .health-yellowgreen .mdc-linear-progress__bar-inner {
+        border-color: greenyellow !important;
+    }
+
+    .battle-container .health-yellow .mdc-linear-progress__bar-inner {
+        border-color: yellow !important;
+    }
+
+    .battle-container .health-orange .mdc-linear-progress__bar-inner {
+        border-color: orange !important;
+    }
+
+    .battle-container .health-red .mdc-linear-progress__bar-inner {
+        border-color: red !important;
+    }
+
+    .battle-card.active .uicard-container {
+        border: 3px solid blue;
+    }
 
 .battle-card .uicard-container {
     width: 100%;

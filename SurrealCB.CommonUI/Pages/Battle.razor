@@ -7,19 +7,31 @@
 <div class="battle-container">
     @foreach (BattleCard card in this.cards)
     {
-        <div class="battle-card @(nextPosition == card.Position ? "active" : "") battle-pos-@card.Position @(card.Hp == 0 ? "battle-death" : "")" 
-             @onclick="() => PlayerPerform(card.Position)">
-            <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.Hp" Imm="@card.GetImm()" Name="@card.PlayerCard.Card.Name"
-                    Element="@card.PlayerCard.Card.Element" Tier="@card.PlayerCard.Card.Tier" Rarity="@card.PlayerCard.Card.Rarity"
-                    ImgSrc="@card.PlayerCard.Card.ImgSrc" Passives="@card.PlayerCard.GetPassives()"></UICard>
-        </div>
+    <div class="battle-card @(nextPosition == card.Position ? "active" : "") battle-pos-@card.Position @(card.Hp == 0 ? "battle-death" : "") health-@GetHealthStatus(card)"
+         @onclick="() => PlayerPerform(card.Position)">
+        <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.Hp" Imm="@card.GetImm()" Name="@card.PlayerCard.Card.Name"
+                Element="@card.PlayerCard.Card.Element" Tier="@card.PlayerCard.Card.Tier" Rarity="@card.PlayerCard.Card.Rarity"
+                ImgSrc="@card.PlayerCard.Card.ImgSrc" Passives="@card.PlayerCard.GetPassives()"></UICard>
+        <MatProgressBar Progress="@GetHpBar(card)"></MatProgressBar>
+        <MatProgressBar Progress="@GetSpeedBar(card)" Class="speed-bar"></MatProgressBar>
         @if (Actions.Any(x => x.Position == card.Position))
         {
             <div class="battle-card-dmg dmg-@Actions.FirstOrDefault(x => x.Position == card.Position).Type">
                 @Actions.FirstOrDefault(x => x.Position == card.Position).Number
             </div>
         }
+    </div>
     }
+
+    <MatDialog IsOpen="@(battleStatus != BattleEnd.CONTINUE)">
+        <MatDialogTitle>@GetDialogTitle()</MatDialogTitle>
+        <MatDialogContent>
+            <p>Rewards: </p>
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton>Return To World</MatButton>
+        </MatDialogActions>
+    </MatDialog>
 </div>
 
 @code {
@@ -30,7 +42,9 @@
 
     private ICollection<BattleAction> Actions = new List<BattleAction>();
 
-    List<BattleCard> cards = new List<BattleCard>();
+    private List<BattleCard> cards = new List<BattleCard>();
+
+    private BattleEnd battleStatus = BattleEnd.CONTINUE;
 
     protected override async Task OnInitializedAsync()
     {
@@ -83,7 +97,7 @@
         if (this.nextPosition < 4 && this.nextPosition != -1)
         {
             var card = this.cards.FirstOrDefault(x => x.Position == pos);
-            if (card.Hp > 0 && 
+            if (card.Hp > 0 &&
                 ((card.PlayerCard.Card.AtkType == AtkType.NORMAL && pos > 3) ||
                 (card.PlayerCard.Card.AtkType == AtkType.HEAL && pos < 4)))
             {
@@ -113,4 +127,38 @@
         }
         await this.CheckNext();
     }
+
+    private string GetHealthStatus(BattleCard card)
+    {
+        var statusPerc = this.GetHpBar(card);
+        return statusPerc switch
+        {
+            _ when statusPerc > 0.8 => "green",
+            _ when statusPerc > 0.6 => "yellowgreen",
+            _ when statusPerc > 0.4 => "yellow",
+            _ when statusPerc > 0.2 => "orange",
+            _ => "red",
+        };
+    }
+
+    private double GetHpBar(BattleCard card)
+    {
+        if (card.Hp == 0) return 0;
+        return (double)((double)card.Hp / (double)card.GetHp());
+    }
+
+    private double GetSpeedBar(BattleCard card)
+    {
+        if (card.Time == 0 || card.Hp == 0) return 0;
+        return card.Time / card.GetSpd();
+    }
+
+    private string GetDialogTitle() =>
+        this.battleStatus switch
+        {
+            BattleEnd.WIN => "You win",
+            BattleEnd.LOSE => "You lose",
+            BattleEnd.DRAW => "You draw",
+            _ => "You win",
+        };
 }

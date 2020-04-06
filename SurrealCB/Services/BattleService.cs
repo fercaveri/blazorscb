@@ -13,6 +13,7 @@ namespace SurrealCB.Server
         Task<ICollection<BattleAction>> PerformAttack(BattleCard srcCard, BattleCard tarCard);
         Task<ICollection<BattleAction>> AttackAll(BattleCard srcCard, ICollection<BattleCard> targets);
         Task<int> NextTurn(ICollection<BattleCard> cards);
+        Task<BattleEnd> CheckWinOrLose(ICollection<BattleCard> cards, int srcPos);
     }
     public class BattleService : IBattleService
     {
@@ -27,7 +28,7 @@ namespace SurrealCB.Server
         {
             //var globalEffects = List<EffectOAlgo>();
             //TODO: ver efectos de tiempo tipo freeze etc
-            var nextCard = cards.OrderBy(x => x.Time).FirstOrDefault();
+            var nextCard = cards.Where(x => x.Hp != 0).OrderBy(x => x.Time).FirstOrDefault();
             var timeElapsed = nextCard.Time;
             foreach (var card in cards)
             {
@@ -66,6 +67,26 @@ namespace SurrealCB.Server
             }
 
             return Task.FromResult(retList);
+        }
+
+        public Task<BattleEnd> CheckWinOrLose(ICollection<BattleCard> cards, int srcPos)
+        {
+            if (srcPos > 3)
+            {
+                if (!cards.Any(x => x.Position < 4 && x.Hp != 0))
+                {
+                    return Task.FromResult(BattleEnd.LOSE);
+                }
+            }
+            if (srcPos < 4)
+            {
+                if (!cards.Any(x => x.Position > 3 && x.Hp != 0))
+                {
+                    return Task.FromResult(BattleEnd.WIN);
+                }
+            }
+            //TODO: DRAW status
+            return Task.FromResult(BattleEnd.CONTINUE);
         }
 
         public CancelStatus ShouldCancelAttack(BattleCard srcCard, BattleCard tarCard)

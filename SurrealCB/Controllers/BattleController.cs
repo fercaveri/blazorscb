@@ -104,7 +104,8 @@ namespace SurrealCB.Server.Controllers
                         targets = cards.Where(x => x.Position > 3).ToList();
                     }
                     var act = await this.battleService.AttackAll(srcCard, targets);
-                    return new ApiResponse(Status200OK, "Damage applied successfully", new BattleStatus { Cards = cards, Actions = act, NextPosition = -1 });
+                    var end = await this.battleService.CheckWinOrLose(cards, srcPos);
+                    return new ApiResponse(Status200OK, "Damage applied successfully", new BattleStatus { Cards = cards, Actions = act, NextPosition = -1, Status = end });
                 }
                 else
                 {
@@ -117,7 +118,8 @@ namespace SurrealCB.Server.Controllers
                 return new ApiResponse(Status400BadRequest, "Wrong request");
             }
             var actions = await this.battleService.PerformAttack(srcCard, tarCard);
-            return new ApiResponse(Status200OK, "Damage applied successfully", new BattleStatus { Cards = cards, Actions = actions, NextPosition = -1 });
+            var shouldEnd = await this.battleService.CheckWinOrLose(cards, srcPos);
+            return new ApiResponse(Status200OK, "Damage applied successfully", new BattleStatus { Cards = cards, Actions = actions, NextPosition = -1, Status = shouldEnd });
         }
     }
 }
