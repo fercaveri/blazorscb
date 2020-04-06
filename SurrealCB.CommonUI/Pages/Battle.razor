@@ -7,11 +7,18 @@
 <div class="battle-container">
     @foreach (BattleCard card in this.cards)
     {
-        <div class="battle-card @(nextPosition == card.Position ? "active" : "") battle-pos-@card.Position" @onclick="() => PlayerPerform(card.Position)">
+        <div class="battle-card @(nextPosition == card.Position ? "active" : "") battle-pos-@card.Position @(card.Hp == 0 ? "battle-death" : "")" 
+             @onclick="() => PlayerPerform(card.Position)">
             <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.Hp" Imm="@card.GetImm()" Name="@card.PlayerCard.Card.Name"
                     Element="@card.PlayerCard.Card.Element" Tier="@card.PlayerCard.Card.Tier" Rarity="@card.PlayerCard.Card.Rarity"
                     ImgSrc="@card.PlayerCard.Card.ImgSrc" Passives="@card.PlayerCard.GetPassives()"></UICard>
         </div>
+        @if (Actions.Any(x => x.Position == card.Position))
+        {
+            <div class="battle-card-dmg dmg-@Actions.FirstOrDefault(x => x.Position == card.Position).Type">
+                @Actions.FirstOrDefault(x => x.Position == card.Position).Number
+            </div>
+        }
     }
 </div>
 
@@ -21,7 +28,10 @@
 
     private int nextPosition { get; set; }
 
+    private ICollection<BattleAction> Actions = new List<BattleAction>();
+
     List<BattleCard> cards = new List<BattleCard>();
+
     protected override async Task OnInitializedAsync()
     {
         await GetAllCards();
@@ -54,22 +64,53 @@
         {
             var playerCardcount = this.cards.Where(x => x.Position < 4).Count();
             var random = new Random();
-            var who = random.Next(playerCardcount) - 1;
+            var who = random.Next(1, playerCardcount) - 1;
             ApiResponseDto atkResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/battle/perform?srcPos={nextPosition}&tarPos={who}", this.cards);
             var newStatus = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleStatus>(atkResponse.Result.ToString());
-            this.cards = newStatus.Cards.ToList();
-            await this.CheckNext();
+            await this.CheckStatus(newStatus);
+        }
+        var nextPlayerCard = this.cards.FirstOrDefault(x => x.Position == this.nextPosition);
+        if (nextPlayerCard.PlayerCard.Card.AtkType == AtkType.RANDOM || nextPlayerCard.PlayerCard.Card.AtkType == AtkType.ALL)
+        {
+            ApiResponseDto atkResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/battle/perform?srcPos={nextPosition}&tarPos={-1}", this.cards);
+            var newStatus = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleStatus>(atkResponse.Result.ToString());
+            await this.CheckStatus(newStatus);
         }
     }
 
     private async Task PlayerPerform(int pos)
     {
-        if (this.nextPosition < 4)
+        if (this.nextPosition < 4 && this.nextPosition != -1)
         {
-            ApiResponseDto atkResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/battle/perform?srcPos={nextPosition}&tarPos={pos}", this.cards);
-            var newStatus = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleStatus>(atkResponse.Result.ToString());
-            this.cards = newStatus.Cards.ToList();
-            await this.CheckNext();
+            var card = this.cards.FirstOrDefault(x => x.Position == pos);
+            if (card.Hp > 0 && 
+                ((card.PlayerCard.Card.AtkType == AtkType.NORMAL && pos > 3) ||
+                (card.PlayerCard.Card.AtkType == AtkType.HEAL && pos < 4)))
+            {
+                ApiResponseDto atkResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/battle/perform?srcPos={nextPosition}&tarPos={pos}", this.cards);
+                var newStatus = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleStatus>(atkResponse.Result.ToString());
+                await this.CheckStatus(newStatus);
+            }
         }
+    }
+
+    private async Task CheckStatus(BattleStatus status)
+    {
+        this.cards = status.Cards.ToList();
+        this.nextPosition = status.NextPosition;
+        if (status.Actions?.Count() > 0)
+        {
+            foreach (var action in status.Actions)
+            {
+                if (this.Actions.Any(x => x.Position == action.Position))
+                {
+                    var old = this.Actions.FirstOrDefault(x => x.Position == action.Position);
+                    await Task.Delay(1000);
+                    this.Actions.Remove(old);
+                }
+                this.Actions.Add(action);
+            }
+        }
+        await this.CheckNext();
     }
 }

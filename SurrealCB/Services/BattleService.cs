@@ -10,7 +10,8 @@ namespace SurrealCB.Server
 {
     public interface IBattleService
     {
-        Task PerformAttack(BattleCard srcCard, BattleCard tarCard);
+        Task<ICollection<BattleAction>> PerformAttack(BattleCard srcCard, BattleCard tarCard);
+        Task<ICollection<BattleAction>> AttackAll(BattleCard srcCard, ICollection<BattleCard> targets);
         Task<int> NextTurn(ICollection<BattleCard> cards);
     }
     public class BattleService : IBattleService
@@ -30,24 +31,41 @@ namespace SurrealCB.Server
             var timeElapsed = nextCard.Time;
             foreach (var card in cards)
             {
-                card.Time =- Math.Max(timeElapsed, 0);
+                card.Time = Math.Max(card.Time - timeElapsed, 0);
             }
             nextCard.Time = nextCard.GetSpd();
             return Task.FromResult(nextCard.Position);
         }
 
-        public Task PerformAttack(BattleCard srcCard, BattleCard tarCard)
+        public Task<ICollection<BattleAction>> PerformAttack(BattleCard srcCard, BattleCard tarCard)
         {
+            ICollection<BattleAction> retList = new List<BattleAction>();
             var cancelStatus = this.ShouldCancelAttack(srcCard, tarCard);
             if  (cancelStatus != CancelStatus.NONE)
             {
-                return Task.CompletedTask;
+                return Task.FromResult(retList);
             }
             var dmg = this.CalculateDmg(srcCard, tarCard);
-            tarCard.Hp = Math.Max(this.ApplyDmg(srcCard, tarCard, dmg), 0);
             var extraDmg = this.CalculateExtraDmg(srcCard, tarCard);
-            tarCard.Hp = Math.Max(tarCard.Hp - extraDmg, 0);
-            return Task.CompletedTask;
+            tarCard.Hp = tarCard.Hp - dmg - extraDmg;
+            if (tarCard.Hp < 0) tarCard.Hp = 0; 
+
+            var dmgType = tarCard.Hp == 0 ? HealthChange.DEATH : HealthChange.DAMAGE;
+            retList.Add(new BattleAction { Number = dmg + extraDmg, Position = tarCard.Position, Type = dmgType });
+
+            return Task.FromResult(retList);
+        }
+
+        public Task<ICollection<BattleAction>> AttackAll(BattleCard srcCard, ICollection<BattleCard> targets)
+        {
+            ICollection<BattleAction> retList = new List<BattleAction>();
+
+            foreach(var tarCard in targets)
+            {
+                retList = new List<BattleAction>(retList.Concat(this.PerformAttack(srcCard, tarCard).Result));
+            }
+
+            return Task.FromResult(retList);
         }
 
         public CancelStatus ShouldCancelAttack(BattleCard srcCard, BattleCard tarCard)
@@ -90,28 +108,8 @@ namespace SurrealCB.Server
                         break;
                 };
             }
-            return dmg - def;
-        }
-
-        public int ApplyDmg(BattleCard srcCard, BattleCard tarCard, int dmg)
-        {
-            var passives = srcCard.PlayerCard.GetPassives();
-            var def = tarCard.GetDef();
-            foreach (var passive in passives)
-            {
-                switch (passive.Passive)
-                {
-                    case Passive.IGNORE_DEF:
-                        def = 0;
-                        break;
-                    case Passive.PIERCING:
-                        def = Math.Max(def - (int)passive.Param1, 0);
-                        break;
-                };
-            }
-            var finalDmg = dmg - def;
-            finalDmg = this.ApplyElementToDmg(srcCard.PlayerCard.Card.Element, tarCard.PlayerCard.Card.Element, finalDmg);
-            return finalDmg;
+            dmg = this.ApplyElementToDmg(srcCard.PlayerCard.Card.Element, tarCard.PlayerCard.Card.Element, dmg);
+            return Math.Max(0, dmg - def);
         }
 
         public int CalculateExtraDmg(BattleCard srcCard, BattleCard tarCard)
