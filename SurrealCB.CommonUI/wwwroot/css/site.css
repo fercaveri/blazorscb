@@ -801,6 +801,43 @@ ul.breadcrumb {
     flex-direction: row;
 }
 
+/* Map */
+
+.maps-container {
+    display: grid;
+    grid-template-columns: 18% 18% 18% 18% 18%;
+    grid-template-rows: 80px;
+    grid-column-gap: 2%;
+    grid-row-gap: 20px;
+}
+
+.map-item.map-EASY {
+    grid-column: 1;
+    box-shadow: 0px 0px 5px 1px rgba(119,209,132,1);
+}
+
+.map-item.map-NORMAL {
+    grid-column: 2;
+    box-shadow: 0px 0px 6px 2px rgba(58,84,214,1);
+}
+
+.map-item.map-HARD {
+    grid-column: 3;
+    box-shadow: 0px 0px 7px 3px rgba(174,34,181,1);
+}
+
+.map-item.map-HARDCORE {
+    grid-column: 4;
+    box-shadow: 0px 0px 8px 4px rgba(255,243,5,1);
+}
+
+.map-item.map-HELL {
+    grid-column: 5;
+    box-shadow: 0px 0px 9px 5px rgba(224,54,54,1);
+}
+
+.map-item
+
 /* Battle */
 
 .battle-container {

@@ -7,12 +7,12 @@
 <div class="maps-container">
     @foreach (Map map in this.maps)
     {
-        <div class="map-item" @onclick="() => StartBattle(map)">
-            <img src="@map.SrcImg" />
-            <span> Name: @map.Name</span>
-            <span> Min Level: @map.MinLevel</span>
-            <span> Difficult: @map.Difficult</span>
-            <span> Reward: </span> <!-- TODO: Reward tooltip -->
+        <div class="map-item map-@(map.Difficult) map-tier-@GetTier(map.MinLevel)" @onclick="() => StartBattle(map)">
+            <img src="@(GetThumbnail(map.SrcImg))" />
+            <span class="map-name"> Name: @map.Name</span>
+            <span class="min-level"> Min Level: @map.MinLevel</span>
+            <span class="map-difficult"> Difficult: @map.Difficult.ToString()</span>
+            <span class="map-reward"> Reward: TBD</span> <!-- TODO: Reward tooltip -->
             <!-- TODO: Hacer candado con tooltip de nivel o required monster etc-->
         </div>
     }
@@ -44,4 +44,15 @@
     {
         navigationManager.NavigateTo($"battle/{map.Enemies.FirstOrDefault().Id}");
     }
+
+    private string GetTier(int minLevel)
+    {
+        return Math.Ceiling((double)minLevel / 5.0).ToString();
+    }
+
+    private string GetThumbnail(string img)
+    {
+        return img.Replace(".png", "_thumb.png");
+    }
+
 }

@@ -453,7 +453,7 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Mountain", MinLevel = 1, Difficult = MapDifficult.EASY, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/mountain.png",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
@@ -464,7 +464,82 @@ namespace SurrealCB.Data
                             }
                         }
                     }
-                }
+                },
+                new Map
+                {
+                    Name = "Swamp", MinLevel = 1, Difficult = MapDifficult.NORMAL, Type = GameType.NORMAL, RequiredEnemies = null,
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 200 }, SrcImg = "",
+                    Enemies = new List<EnemyNpc>
+                    {
+                        new EnemyNpc
+                        {
+                            Name = "Entering", Level = 1, ExpGain = 7, X = 10, Y = 0, Reward = new Reward { Gold = 12 },
+                            Cards = new List<PlayerCard>{
+                                this.GetPlayerCard(3), this.GetPlayerCard(3)
+                            }
+                        }
+                    }
+                },
+                new Map
+                {
+                    Name = "Skies", MinLevel = 3, Difficult = MapDifficult.HARD, Type = GameType.NORMAL, RequiredEnemies = null,
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 200 }, SrcImg = "",
+                    Enemies = new List<EnemyNpc>
+                    {
+                        new EnemyNpc
+                        {
+                            Name = "Rainbow", Level = 1, ExpGain = 7, X = 10, Y = 0, Reward = new Reward { Gold = 16 },
+                            Cards = new List<PlayerCard>{
+                                this.GetPlayerCard(8), this.GetPlayerCard(10), this.GetPlayerCard(13)
+                            }
+                        }
+                    }
+                },
+                new Map
+                {
+                    Name = "Snow Mountain", MinLevel = 6, Difficult = MapDifficult.HARDCORE, Type = GameType.NORMAL, RequiredEnemies = null,
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/snow_mountain.png",
+                    Enemies = new List<EnemyNpc>
+                    {
+                        new EnemyNpc
+                        {
+                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 10 },
+                            Cards = new List<PlayerCard>{
+                                this.GetPlayerCard(13), this.GetPlayerCard(14)
+                            }
+                        }
+                    }
+                },
+                new Map
+                {
+                    Name = "Fire Mountain", MinLevel = 11, Difficult = MapDifficult.HELL, Type = GameType.NORMAL, RequiredEnemies = null,
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/fire_mountain.png",
+                    Enemies = new List<EnemyNpc>
+                    {
+                        new EnemyNpc
+                        {
+                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 200 },
+                            Cards = new List<PlayerCard>{
+                                this.GetPlayerCard(13), this.GetPlayerCard(14)
+                            }
+                        }
+                    }
+                },
+                new Map
+                {
+                    Name = "Beautiful Mountain", MinLevel = 11, Difficult = MapDifficult.HARD, Type = GameType.NORMAL, RequiredEnemies = null,
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/beautiful_mountain.png",
+                    Enemies = new List<EnemyNpc>
+                    {
+                        new EnemyNpc
+                        {
+                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Cards = new List<PlayerCard>{
+                                this.GetPlayerCard(13), this.GetPlayerCard(14), this.GetPlayerCard(12), this.GetPlayerCard(11)
+                            }
+                        }
+                    }
+                },
             };
             return maps;
         }
