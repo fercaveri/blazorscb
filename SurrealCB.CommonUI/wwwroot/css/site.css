@@ -811,78 +811,91 @@ ul.breadcrumb {
     grid-row-gap: 20px;
 }
 
-.map-item.map-EASY {
-    grid-column: 1;
-    box-shadow: 0px 0px 5px 1px rgba(119,209,132,1);
+.map-item {
+    display: flex;
 }
 
-.map-item.map-NORMAL {
-    grid-column: 2;
-    box-shadow: 0px 0px 6px 2px rgba(58,84,214,1);
+    .map-item .map-thumb {
+        padding: 5px;
+        height: 80px;
+        width: 80px;
+    }
+
+    .map-item .map-stats {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .map-item.map-EASY {
+        grid-column: 1;
+        box-shadow: 0px 0px 5px 1px rgba(119,209,132,1);
+    }
+
+    .map-item.map-NORMAL {
+        grid-column: 2;
+        box-shadow: 0px 0px 6px 2px rgba(58,84,214,1);
+    }
+
+    .map-item.map-HARD {
+        grid-column: 3;
+        box-shadow: 0px 0px 7px 3px rgba(174,34,181,1);
+    }
+
+    .map-item.map-HARDCORE {
+        grid-column: 4;
+        box-shadow: 0px 0px 8px 4px rgba(255,243,5,1);
+    }
+
+    .map-item.map-HELL {
+        grid-column: 5;
+        box-shadow: 0px 0px 9px 5px rgba(224,54,54,1);
+    }
+
+    .map-item
+    /* Battle */
+    .battle-container {
+        display: grid;
+        grid-template-columns: 18% 18% 18% 18%;
+        grid-template-rows: 40% 40%;
+        grid-column-gap: 9%;
+        grid-row-gap: 10%;
+    }
+
+.battle-container .mdc-linear-progress {
+    height: 12px !important;
 }
 
-.map-item.map-HARD {
-    grid-column: 3;
-    box-shadow: 0px 0px 7px 3px rgba(174,34,181,1);
+.battle-container .mdc-linear-progress__bar-inner {
+    border-top: 12px solid !important;
 }
 
-.map-item.map-HARDCORE {
-    grid-column: 4;
-    box-shadow: 0px 0px 8px 4px rgba(255,243,5,1);
+.battle-container .battle-card .speed-bar .mdc-linear-progress__bar-inner {
+    border-color: blue !important;
 }
 
-.map-item.map-HELL {
-    grid-column: 5;
-    box-shadow: 0px 0px 9px 5px rgba(224,54,54,1);
+.battle-container .health-green .mdc-linear-progress__bar-inner {
+    border-color: green !important;
 }
 
-.map-item
-
-/* Battle */
-
-.battle-container {
-    display: grid;
-    grid-template-columns: 18% 18% 18% 18%;
-    grid-template-rows: 40% 40%;
-    grid-column-gap: 9%;
-    grid-row-gap: 10%;
+.battle-container .health-yellowgreen .mdc-linear-progress__bar-inner {
+    border-color: greenyellow !important;
 }
 
-    .battle-container .mdc-linear-progress {
-        height: 12px !important;
-    }
+.battle-container .health-yellow .mdc-linear-progress__bar-inner {
+    border-color: yellow !important;
+}
 
-    .battle-container .mdc-linear-progress__bar-inner {
-        border-top: 12px solid !important;
-    }
+.battle-container .health-orange .mdc-linear-progress__bar-inner {
+    border-color: orange !important;
+}
 
-    .battle-container .battle-card .speed-bar .mdc-linear-progress__bar-inner {
-        border-color: blue !important;
-    }
+.battle-container .health-red .mdc-linear-progress__bar-inner {
+    border-color: red !important;
+}
 
-    .battle-container .health-green .mdc-linear-progress__bar-inner {
-        border-color: green !important;
-    }
-
-    .battle-container .health-yellowgreen .mdc-linear-progress__bar-inner {
-        border-color: greenyellow !important;
-    }
-
-    .battle-container .health-yellow .mdc-linear-progress__bar-inner {
-        border-color: yellow !important;
-    }
-
-    .battle-container .health-orange .mdc-linear-progress__bar-inner {
-        border-color: orange !important;
-    }
-
-    .battle-container .health-red .mdc-linear-progress__bar-inner {
-        border-color: red !important;
-    }
-
-    .battle-card.active .uicard-container {
-        border: 3px solid blue;
-    }
+.battle-card.active .uicard-container {
+    border: 3px solid blue;
+}
 
 .battle-card .uicard-container {
     width: 100%;

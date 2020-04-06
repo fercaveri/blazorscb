@@ -8,11 +8,17 @@
     @foreach (Map map in this.maps)
     {
         <div class="map-item map-@(map.Difficult) map-tier-@GetTier(map.MinLevel)" @onclick="() => StartBattle(map)">
-            <img src="@(GetThumbnail(map.SrcImg))" />
-            <span class="map-name"> Name: @map.Name</span>
-            <span class="min-level"> Min Level: @map.MinLevel</span>
-            <span class="map-difficult"> Difficult: @map.Difficult.ToString()</span>
-            <span class="map-reward"> Reward: TBD</span> <!-- TODO: Reward tooltip -->
+            <img class="map-thumb" src="@(GetThumbnail(map.SrcImg))" />
+            <div class="map-stats">
+                <span class="map-name"> @map.Name</span>
+                <span class="min-level"> @map.MinLevel</span>
+                <span class="map-difficult"> @map.Difficult.ToString()</span>
+                <span class="map-reward">
+                    <MatTooltip Tooltip="Rewards: TBD">
+                        <img @ref="@context.Current" class="card-icon" src="_content/SurrealCB.CommonUI/icons/reward.svg" />
+                    </MatTooltip>
+                </span>
+            </div>
             <!-- TODO: Hacer candado con tooltip de nivel o required monster etc-->
         </div>
     }
@@ -52,7 +58,7 @@
 
     private string GetThumbnail(string img)
     {
-        return img.Replace(".png", "_thumb.png");
+        return img.Replace(".jpg", "_thumb.jpg");
     }
 
 }
