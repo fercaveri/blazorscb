@@ -10,7 +10,7 @@ namespace SurrealCB.Data.Model
         EASY = 0,
         NORMAL,
         HARD,
-        HARDCORE,
+        INSANE,
         HELL
     }
 }

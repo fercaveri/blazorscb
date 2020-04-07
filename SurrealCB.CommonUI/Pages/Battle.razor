@@ -14,7 +14,7 @@
                 ImgSrc="@card.PlayerCard.Card.ImgSrc" Passives="@card.PlayerCard.GetPassives()"></UICard>
         <MatProgressBar Progress="@GetHpBar(card)"></MatProgressBar>
         <MatProgressBar Progress="@GetSpeedBar(card)" Class="speed-bar"></MatProgressBar>
-        @if (Actions.Any(x => x.Position == card.Position))
+        @if (card.Hp > 0 && Actions.Any(x => x.Position == card.Position))
         {
             <div class="battle-card-dmg dmg-@Actions.FirstOrDefault(x => x.Position == card.Position).Type">
                 @Actions.FirstOrDefault(x => x.Position == card.Position).Number
@@ -76,19 +76,27 @@
         this.nextPosition = battleStatus.NextPosition;
         if (this.nextPosition > 3)
         {
-            var playerCardcount = this.cards.Where(x => x.Position < 4).Count();
-            var random = new Random();
-            var who = random.Next(1, playerCardcount) - 1;
+            var card = this.cards.FirstOrDefault(x => x.Position == this.nextPosition);
+            var who = -1;
+            if (card.PlayerCard.Card.AtkType != AtkType.ALL && card.PlayerCard.Card.AtkType != AtkType.HEAL)
+            {
+                var playerCardcount = this.cards.Where(x => x.Position < 4).Count();
+                var random = new Random();
+                who = random.Next(1, playerCardcount) - 1;
+            }
             ApiResponseDto atkResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/battle/perform?srcPos={nextPosition}&tarPos={who}", this.cards);
             var newStatus = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleStatus>(atkResponse.Result.ToString());
             await this.CheckStatus(newStatus);
         }
-        var nextPlayerCard = this.cards.FirstOrDefault(x => x.Position == this.nextPosition);
-        if (nextPlayerCard.PlayerCard.Card.AtkType == AtkType.RANDOM || nextPlayerCard.PlayerCard.Card.AtkType == AtkType.ALL)
+        else
         {
-            ApiResponseDto atkResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/battle/perform?srcPos={nextPosition}&tarPos={-1}", this.cards);
-            var newStatus = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleStatus>(atkResponse.Result.ToString());
-            await this.CheckStatus(newStatus);
+            var nextPlayerCard = this.cards.FirstOrDefault(x => x.Position == this.nextPosition);
+            if (nextPlayerCard.PlayerCard.Card.AtkType == AtkType.RANDOM || nextPlayerCard.PlayerCard.Card.AtkType == AtkType.ALL)
+            {
+                ApiResponseDto atkResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/battle/perform?srcPos={nextPosition}&tarPos={-1}", this.cards);
+                var newStatus = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleStatus>(atkResponse.Result.ToString());
+                await this.CheckStatus(newStatus);
+            }
         }
     }
 
@@ -97,9 +105,10 @@
         if (this.nextPosition < 4 && this.nextPosition != -1)
         {
             var card = this.cards.FirstOrDefault(x => x.Position == pos);
+            var mine = this.cards.FirstOrDefault(x => x.Position == this.nextPosition);
             if (card.Hp > 0 &&
-                ((card.PlayerCard.Card.AtkType == AtkType.NORMAL && pos > 3) ||
-                (card.PlayerCard.Card.AtkType == AtkType.HEAL && pos < 4)))
+                ((mine.PlayerCard.Card.AtkType == AtkType.NORMAL && pos > 3) ||
+                (mine.PlayerCard.Card.AtkType == AtkType.HEAL && pos < 4)))
             {
                 ApiResponseDto atkResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/battle/perform?srcPos={nextPosition}&tarPos={pos}", this.cards);
                 var newStatus = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleStatus>(atkResponse.Result.ToString());
@@ -114,18 +123,17 @@
         this.nextPosition = status.NextPosition;
         if (status.Actions?.Count() > 0)
         {
-            foreach (var action in status.Actions)
-            {
-                if (this.Actions.Any(x => x.Position == action.Position))
-                {
-                    var old = this.Actions.FirstOrDefault(x => x.Position == action.Position);
-                    await Task.Delay(1000);
-                    this.Actions.Remove(old);
-                }
-                this.Actions.Add(action);
-            }
+            //TODO: agarrar de a 1 accion por carta
+            this.Actions = status.Actions;
+            StateHasChanged();
+            await Task.Delay(1000);
+            this.Actions.Clear();
         }
-        await this.CheckNext();
+        this.battleStatus = status.Status;
+        if (this.battleStatus == BattleEnd.CONTINUE)
+        {
+            await this.CheckNext();
+        }
     }
 
     private string GetHealthStatus(BattleCard card)

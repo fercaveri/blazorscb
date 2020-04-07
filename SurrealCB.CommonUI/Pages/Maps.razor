@@ -40,7 +40,7 @@
         if (apiResponse.StatusCode == Status200OK)
         {
             matToaster.Add(apiResponse.Message, MatToastType.Success, "Map List Retrieved");
-            this.maps = Newtonsoft.Json.JsonConvert.DeserializeObject<Map[]>(apiResponse.Result.ToString()).ToList<Map>();
+            this.maps = Newtonsoft.Json.JsonConvert.DeserializeObject<Map[]>(apiResponse.Result.ToString()).OrderBy(x => x.MinLevel).ToList<Map>();
         }
         else
         {

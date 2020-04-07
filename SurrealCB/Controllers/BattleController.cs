@@ -97,11 +97,11 @@ namespace SurrealCB.Server.Controllers
                     if (srcPos < 4)
                     {
                         //Check deep copy
-                        targets = cards.Where(x => x.Position < 4).ToList();
+                        targets = cards.Where(x => x.Position > 3).ToList();
                     }
                     else
                     {
-                        targets = cards.Where(x => x.Position > 3).ToList();
+                        targets = cards.Where(x => x.Position < 4).ToList();
                     }
                     var act = await this.battleService.AttackAll(srcCard, targets);
                     var end = await this.battleService.CheckWinOrLose(cards, srcPos);
