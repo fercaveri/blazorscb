@@ -540,6 +540,36 @@ namespace SurrealCB.Data
                         }
                     }
                 },
+                new Map
+                {
+                    Name = "Bluepoint", MinLevel = 17, Difficult = MapDifficult.NORMAL, Type = GameType.NORMAL, RequiredEnemies = null,
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/bluepoint.png",
+                    Enemies = new List<EnemyNpc>
+                    {
+                        new EnemyNpc
+                        {
+                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Cards = new List<PlayerCard>{
+                                this.GetPlayerCard(7), this.GetPlayerCard(6), this.GetPlayerCard(9), this.GetPlayerCard(10)
+                            }
+                        }
+                    }
+                },
+                new Map
+                {
+                    Name = "Darkpit", MinLevel = 23, Difficult = MapDifficult.HELL, Type = GameType.NORMAL, RequiredEnemies = null,
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/darkpit.png",
+                    Enemies = new List<EnemyNpc>
+                    {
+                        new EnemyNpc
+                        {
+                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Cards = new List<PlayerCard>{
+                                this.GetPlayerCard(13), this.GetPlayerCard(14), this.GetPlayerCard(15)
+                            }
+                        }
+                    }
+                },
             };
             return maps;
         }

@@ -11,13 +11,15 @@
             <img class="map-thumb" src="@(GetThumbnail(map.SrcImg))" />
             <div class="map-stats">
                 <span class="map-name"> @map.Name</span>
-                <span class="min-level"> @map.MinLevel</span>
-                <span class="map-difficult"> @map.Difficult.ToString()</span>
-                <span class="map-reward">
-                    <MatTooltip Tooltip="Rewards: TBD">
-                        <img @ref="@context.Current" class="card-icon" src="_content/SurrealCB.CommonUI/icons/reward.svg" />
-                    </MatTooltip>
-                </span>
+                <div class="map-bottom-stats">
+                    <span class="min-level"> @map.MinLevel</span>
+                    <span class="map-difficult"> @map.Difficult.ToString()</span>
+                    <span class="map-reward">
+                        <MatTooltip Tooltip="@GetRewardTooltip(map)">
+                            <img @ref="@context.Current" class="card-icon" src="_content/SurrealCB.CommonUI/icons/reward.svg" />
+                        </MatTooltip>
+                    </span>
+                </div>
             </div>
             <!-- TODO: Hacer candado con tooltip de nivel o required monster etc-->
         </div>
@@ -59,6 +61,28 @@
     private string GetThumbnail(string img)
     {
         return img.Replace(".jpg", "_thumb.jpg");
+    }
+
+    private string GetRewardTooltip(Map map)
+    {
+        var reward = "Rewards: </br>";
+        if (map.CompletionReward.Gold > 0)
+        {
+            reward += $"Gold: {map.CompletionReward.Gold} </br>";
+        }
+        if (map.CompletionReward.Exp > 0)
+        {
+            reward += $"Exp: { map.CompletionReward.Exp} </br>";
+        }
+        if (map.CompletionReward.Card != null)
+        {
+            reward += $"Card: {map.CompletionReward.Card.Name} </br>";
+        }
+        if (map.CompletionReward.Items != null && map.CompletionReward.Items.Any())
+        {
+            reward += $"Items: {string.Join(", ", map.CompletionReward.Items)}";
+        }
+        return reward;
     }
 
 }

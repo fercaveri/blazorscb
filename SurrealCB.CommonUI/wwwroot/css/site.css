@@ -805,9 +805,9 @@ ul.breadcrumb {
 
 .maps-container {
     display: grid;
-    grid-template-columns: 18% 18% 18% 18% 18%;
-    grid-template-rows: 80px;
-    grid-column-gap: 2%;
+    grid-template-columns: 19% 19% 19% 19% 19%;
+    grid-template-rows: 90px;
+    grid-column-gap: 1.5%;
     grid-row-gap: 20px;
 }
 
@@ -821,9 +821,27 @@ ul.breadcrumb {
         width: 80px;
     }
 
+    .map-item .map-name {
+        margin-left: 5px;
+    }
+
     .map-item .map-stats {
         display: flex;
         flex-direction: column;
+        justify-content: space-around;
+        width: 100%;
+    }
+
+    .map-item .map-bottom-stats {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 5px;
+        align-items: center;
+    }
+
+    .map-item .min-level {
+        border: 3px ridge gray;
+        padding: 0 5px;
     }
 
     .map-item.map-EASY {
@@ -851,7 +869,26 @@ ul.breadcrumb {
         box-shadow: 0px 0px 9px 5px rgba(224,54,54,1);
     }
 
-    .map-item
+.map-tier-1 {
+    border: 5px ridge white;
+}
+
+.map-tier-2 {
+    border: 5px ridge lightgray;
+}
+
+.map-tier-3 {
+    border: 5px ridge green;
+}
+
+.map-tier-4 {
+    border: 5px ridge blue;
+}
+
+.map-tier-5 {
+    border: 5px ridge purple;
+}
+
     /* Battle */
     .battle-container {
         display: grid;
