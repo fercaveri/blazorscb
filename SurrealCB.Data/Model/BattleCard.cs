@@ -8,7 +8,7 @@ namespace SurrealCB.Data.Model
         public int Position { get; set; }
         public int Hp { get; set; }
         public double Time { get; set; }
-        public virtual List<CardPassive> ActiveEffects { get; set; }
+        public virtual List<ActiveEffect> ActiveEffects { get; set; }
         public virtual PlayerCard PlayerCard { get; set; }
 
         public BattleCard(PlayerCard pcard)
@@ -21,6 +21,11 @@ namespace SurrealCB.Data.Model
         public BattleCard()
         {
 
+        }
+
+        public List<CardPassive> GetPassives()
+        {
+            return this.PlayerCard.GetPassives();
         }
 
         public int GetHp()

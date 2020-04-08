@@ -65,9 +65,9 @@ namespace SurrealCB.Server.Controllers
         [HttpPost("next")]
         public async Task<ApiResponse> NextTurn([FromBody]List<BattleCard> cards)
         {
-            var nextPosition = await this.battleService.NextTurn(cards);
+            var battleStatus = await this.battleService.NextTurn(cards);
 
-            return new ApiResponse(Status200OK, "Cards updated successfully", new BattleStatus { Cards = cards, NextPosition = nextPosition });
+            return new ApiResponse(Status200OK, "Cards updated successfully", battleStatus);
         }
 
         [HttpPost("perform")]

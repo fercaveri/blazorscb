@@ -11,7 +11,7 @@
          @onclick="() => PlayerPerform(card.Position)">
         <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.Hp" Imm="@card.GetImm()" Name="@card.PlayerCard.Card.Name"
                 Element="@card.PlayerCard.Card.Element" Tier="@card.PlayerCard.Card.Tier" Rarity="@card.PlayerCard.Card.Rarity"
-                ImgSrc="@card.PlayerCard.Card.ImgSrc" Passives="@card.PlayerCard.GetPassives()"></UICard>
+                ImgSrc="@card.PlayerCard.Card.ImgSrc" Passives="@card.PlayerCard.GetPassives()" AType="card.PlayerCard.Card.AtkType"></UICard>
         <MatProgressBar Progress="@GetHpBar(card)"></MatProgressBar>
         <MatProgressBar Progress="@GetSpeedBar(card)" Class="speed-bar"></MatProgressBar>
         @if (card.Hp > 0 && Actions.Any(x => x.Position == card.Position))

@@ -26,6 +26,7 @@ namespace SurrealCB.Data
 
         private Card[] cards;
         private Map[] maps;
+        private Item[] items;
 
         public Seeder(
             SCBDbContext context,
@@ -37,6 +38,7 @@ namespace SurrealCB.Data
             _userManager = userManager;
             _roleManager = roleManager;
             _logger = logger;
+            this.items = this.FillItems();
             this.cards = this.FillCards();
             this.maps = this.FillMaps();
         }
@@ -322,6 +324,17 @@ namespace SurrealCB.Data
             return null;
         }
 
+        private Item[] FillItems()
+        {
+            Item[] items = {
+                new Item
+                {
+                    Name = "Horse Hair", Rarity = Rarity.RARE, Tier = 1, Value = 100, Type = ItemType.MATERIAL
+                }
+            };
+            return items;
+        }
+
         private Card[] FillCards()
         {
             Card[] cards =
@@ -331,14 +344,27 @@ namespace SurrealCB.Data
                     Id = 1, Name = "Goblin", Tier = 1, Rarity = Rarity.COMMON, AtkType = AtkType.NORMAL, Element = Element.EARTH, Passive = null,
                     Hp = 5, Atk = 2, Def = 0, Imm = 0, Spd = 3.6, Value = 20, BaseExp = 20, RuneSlots = 0,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/goblin.png",
-                    LevelBoosts = null
+                    LevelBoosts = new List<LevelBoost>{ 
+                        new LevelBoost { Id = 1, Boost = new CardBoost { Imm = 10 }, Level = 2, Cost = 5},
+                        new LevelBoost { Id = 2, Boost = new CardBoost { Spd = 0.2 }, Level = 3, Cost = 15},
+                        new LevelBoost { Id = 3, Boost = new CardBoost { Def = 1 }, Level = 4, Cost = 80},
+                        new LevelBoost { Id = 4, Boost = new CardBoost { Hp = 2 }, Level = 4, Cost = 50},
+                        new LevelBoost { Id = 5, Boost = new CardBoost { Atk = 1 }, Level = 5, Cost = 150},
+                    }
                 },
                 new Card
                 {
                     Id = 2, Name = "Horse", Tier = 1, Rarity = Rarity.COMMON, AtkType = AtkType.NORMAL, Element = Element.EARTH, Passive = null,
-                    Hp = 4, Atk = 2, Def = 0, Imm = 0, Spd = 2.8, Value = 20, BaseExp = 20, RuneSlots = 0,
+                    Hp = 4, Atk = 2, Def = 0, Imm = 0, Spd = 2.8, Value = 20, BaseExp = 25, RuneSlots = 0,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/horse.png",
-                    LevelBoosts = null
+                    LevelBoosts = new List<LevelBoost>{
+                        new LevelBoost { Id = 6, Boost = new CardBoost { Spd = 0.1 }, Level = 2, Cost = 5},
+                        new LevelBoost { Id = 7, Boost = new CardBoost { Hp = 1 }, Level = 3, Cost = 25},
+                        new LevelBoost { Id = 8, Boost = new CardBoost { Hp = 1 }, Level = 4, Cost = 60},
+                        new LevelBoost { Id = 9, Boost = new CardBoost { Spd = 0.4 }, Level = 4, Cost = 100, RequiredItems = new List<RequiredItem>{ new RequiredItem { Item = this.GetItem("Horse Hair"), Amount = 2 } } },
+                        new LevelBoost { Id = 10, Boost = new CardBoost { Passive = new CardPassive { Passive = Passive.DODGE, Param1 = 35} }, Level = 5, Cost = 400, ImprovedName = "Dodge Horse"},
+                        new LevelBoost { Id = 11, Boost = new CardBoost { Spd = 0.3 }, Level = 5, Cost = 300, RequiredBoostId = 9, ImprovedName = "Speedy Horse"},
+                    }
                 },
                 new Card
                 {
@@ -346,14 +372,29 @@ namespace SurrealCB.Data
                     Passive = new CardPassive { Id = 1, Passive = Passive.BLAZE, Param1 = 1, Param2 = 8},
                     Hp = 4, Atk = 1, Def = 0, Imm = 0, Spd = 3.0, Value = 30, BaseExp = 25, RuneSlots = 0,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/fire_wraith.png",
-                    LevelBoosts = null
+                    LevelBoosts =
+                    {
+                        new LevelBoost { Id = 12, Boost = new CardBoost { Spd = 0.1 }, Level = 2, Cost = 20},
+                        new LevelBoost { Id = 13, Boost = new CardBoost { Hp = 1 }, Level = 3, Cost = 75},
+                        new LevelBoost { Id = 14, Boost = new CardBoost { Def = 1 }, Level = 4, Cost = 250, RequiredItems = new List<RequiredItem>{ new RequiredItem { Item = this.GetItem("Fire Emblem"), Amount = 1 } } },
+                        new LevelBoost { Id = 15, Boost = new CardBoost { Hp = 1 }, Level = 4, Cost = 150},
+                        new LevelBoost { Id = 16, Boost = new CardBoost { Passive = new CardPassive { Passive = Passive.BLAZE, Param1 = 2, Param2 = 9} }, Level = 5, Cost = 600, ImprovedName = "Blazing Wraith"},
+                        new LevelBoost { Id = 17, Boost = new CardBoost { Def = 1 }, Level = 5, Cost = 700, ImprovedName = "Armored Fire Wraith"},
+                    }
                 },
                 new Card
                 {
                     Id = 4, Name = "Grunt", Tier = 1, Rarity = Rarity.RARE, AtkType = AtkType.NORMAL, Element = Element.NONE, Passive = null,
                     Hp = 6, Atk = 1, Def = 1, Imm = 30, Spd = 4.1, Value = 30, BaseExp = 25, RuneSlots = 0,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/grunt.png",
-                    LevelBoosts = null
+                    LevelBoosts =
+                    {
+                        new LevelBoost { Id = 18, Boost = new CardBoost { Spd = 0.2 }, Level = 2, Cost = 30},
+                        new LevelBoost { Id = 19, Boost = new CardBoost { Imm = 10 }, Level = 3, Cost = 90},
+                        new LevelBoost { Id = 20, Boost = new CardBoost { Hp = 1 }, Level = 4, Cost = 300, },
+                        new LevelBoost { Id = 22, Boost = new CardBoost { Passive = new CardPassive { Passive = Passive.BACKTRACK, Param1 = 1} }, Level = 5, Cost = 900, ImprovedName = "Time-Shift Grunt"},
+                        new LevelBoost { Id = 23, Boost = new CardBoost { Def = 1 }, Level = 5, Cost = 750, ImprovedName = "Armored Grunt"}
+                    }
                 },
                 new Card
                 {
@@ -490,7 +531,7 @@ namespace SurrealCB.Data
                         {
                             Name = "Rainbow", Level = 1, ExpGain = 7, X = 10, Y = 0, Reward = new Reward { Gold = 16 },
                             Cards = new List<PlayerCard>{
-                                this.GetPlayerCard(8), this.GetPlayerCard(10), this.GetPlayerCard(13)
+                                this.GetPlayerCard(1, 4), this.GetPlayerCard(2, 4), this.GetPlayerCard(3, 4)
                             }
                         }
                     }
@@ -724,8 +765,10 @@ namespace SurrealCB.Data
             return maps;
         }
 
-        private PlayerCard GetPlayerCard(int id, List<LevelBoost> levelBoosts = null, List<Rune> runes = null)
+        private PlayerCard GetPlayerCard(int id, int level = 1, List<Rune> runes = null)
         {
+            var levelBoosts = new List<LevelBoost>();
+            levelBoosts = this.cards.FirstOrDefault(x => x.Id == id).LevelBoosts.Where(x => x.Level <= level).ToList();
             return new PlayerCard
             {
                 CardId = id,
@@ -733,6 +776,11 @@ namespace SurrealCB.Data
                 Runes = runes
             };
         }
+
+        private Item GetItem(string name)
+        {
+            return this.items.Where(x => x.Name == name).FirstOrDefault();
+        } 
     }
 }
 

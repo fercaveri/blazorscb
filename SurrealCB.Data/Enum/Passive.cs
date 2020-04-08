@@ -14,7 +14,7 @@ namespace SurrealCB.Data.Model
         FREEZE, //Ralentiza X% por X segundos
         HP_SHATTER, //Saca X% de vida total al golpear
         DOOM, //Mata luego de X segundos
-        BLAZE, //Fuego X danio cada vez que toca golpear
+        BLAZE, //Fuego X danio cada vez que toca golpear por X segundos
         BACKTRACK, //Retrocede X segundos de speed
 
 
