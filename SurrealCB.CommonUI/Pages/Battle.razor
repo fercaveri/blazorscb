@@ -16,9 +16,18 @@
         <MatProgressBar Progress="@GetSpeedBar(card)" Class="speed-bar"></MatProgressBar>
         @if (card.Hp > 0 && Actions.Any(x => x.Position == card.Position))
         {
-            <div class="battle-card-dmg dmg-@Actions.FirstOrDefault(x => x.Position == card.Position).Type">
-                @Actions.FirstOrDefault(x => x.Position == card.Position).Number
-            </div>
+            if (Actions.FirstOrDefault(x => x.Position == card.Position).Type == HealthChange.DEATH)
+            {
+                <div class="battle-card-dmg">
+                    <img src="_content/SurrealCB.CommonUI/icons/skull.svg">
+                </div>
+            }
+            else
+            {
+                <div class="battle-card-dmg dmg-@Actions.FirstOrDefault(x => x.Position == card.Position).Type">
+                    @Actions.FirstOrDefault(x => x.Position == card.Position).Number
+                </div>
+            }
         }
     </div>
     }

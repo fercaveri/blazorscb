@@ -55,6 +55,12 @@
                 .WithMany()
                 .HasForeignKey(a => a.CardId);
 
+            builder.Entity<LevelBoost>()
+                .HasOne(x => x.RequiredBoost)
+                .WithMany()
+                .HasForeignKey(a => a.RequiredBoostId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<MapRequiredEnemy>()
                 .HasKey(bc => new { bc.MapId, bc.EnemyId });
             builder.Entity<MapRequiredEnemy>()

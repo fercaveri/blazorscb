@@ -246,6 +246,30 @@ namespace SurrealCB.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CardBoosts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Hp = table.Column<int>(nullable: false),
+                    Atk = table.Column<int>(nullable: false),
+                    Def = table.Column<int>(nullable: false),
+                    Imm = table.Column<int>(nullable: false),
+                    Spd = table.Column<double>(nullable: false),
+                    PassiveId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CardBoosts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CardBoosts_CardPassives_PassiveId",
+                        column: x => x.PassiveId,
+                        principalTable: "CardPassives",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Cards",
                 columns: table => new
                 {
@@ -271,37 +295,6 @@ namespace SurrealCB.Data.Migrations
                     table.PrimaryKey("PK_Cards", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Cards_CardPassives_PassiveId",
-                        column: x => x.PassiveId,
-                        principalTable: "CardPassives",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CardBoosts",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Hp = table.Column<int>(nullable: false),
-                    Atk = table.Column<int>(nullable: false),
-                    Def = table.Column<int>(nullable: false),
-                    Imm = table.Column<int>(nullable: false),
-                    Spd = table.Column<double>(nullable: false),
-                    PassiveId = table.Column<int>(nullable: true),
-                    CardId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CardBoosts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CardBoosts_Cards_CardId",
-                        column: x => x.CardId,
-                        principalTable: "Cards",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_CardBoosts_CardPassives_PassiveId",
                         column: x => x.PassiveId,
                         principalTable: "CardPassives",
                         principalColumn: "Id",
@@ -516,12 +509,13 @@ namespace SurrealCB.Data.Migrations
                 name: "LevelBoosts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(nullable: false),
                     Level = table.Column<int>(nullable: false),
                     BoostId = table.Column<int>(nullable: true),
                     ImprovedName = table.Column<string>(nullable: true),
+                    RequiredBoostId = table.Column<int>(nullable: true),
                     Cost = table.Column<int>(nullable: false),
+                    CardId = table.Column<int>(nullable: true),
                     PlayerCardId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -534,9 +528,21 @@ namespace SurrealCB.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_LevelBoosts_Cards_CardId",
+                        column: x => x.CardId,
+                        principalTable: "Cards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_LevelBoosts_PlayerCards_PlayerCardId",
                         column: x => x.PlayerCardId,
                         principalTable: "PlayerCards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LevelBoosts_LevelBoosts_RequiredBoostId",
+                        column: x => x.RequiredBoostId,
+                        principalTable: "LevelBoosts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -598,7 +604,7 @@ namespace SurrealCB.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ObjId = table.Column<int>(nullable: true),
+                    ItemId = table.Column<int>(nullable: true),
                     Amount = table.Column<int>(nullable: false),
                     CardRecipeId = table.Column<int>(nullable: true),
                     ItemRecipeId = table.Column<int>(nullable: true),
@@ -615,6 +621,12 @@ namespace SurrealCB.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_RequiredItem_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_RequiredItem_ItemRecipes_ItemRecipeId",
                         column: x => x.ItemRecipeId,
                         principalTable: "ItemRecipes",
@@ -624,12 +636,6 @@ namespace SurrealCB.Data.Migrations
                         name: "FK_RequiredItem_LevelBoosts_LevelBoostId",
                         column: x => x.LevelBoostId,
                         principalTable: "LevelBoosts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RequiredItem_Items_ObjId",
-                        column: x => x.ObjId,
-                        principalTable: "Items",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -685,11 +691,6 @@ namespace SurrealCB.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CardBoosts_CardId",
-                table: "CardBoosts",
-                column: "CardId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CardBoosts_PassiveId",
                 table: "CardBoosts",
                 column: "PassiveId");
@@ -730,9 +731,19 @@ namespace SurrealCB.Data.Migrations
                 column: "BoostId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LevelBoosts_CardId",
+                table: "LevelBoosts",
+                column: "CardId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LevelBoosts_PlayerCardId",
                 table: "LevelBoosts",
                 column: "PlayerCardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LevelBoosts_RequiredBoostId",
+                table: "LevelBoosts",
+                column: "RequiredBoostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MapRequiredEnemy_EnemyId",
@@ -775,6 +786,11 @@ namespace SurrealCB.Data.Migrations
                 column: "CardRecipeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RequiredItem_ItemId",
+                table: "RequiredItem",
+                column: "ItemId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RequiredItem_ItemRecipeId",
                 table: "RequiredItem",
                 column: "ItemRecipeId");
@@ -783,11 +799,6 @@ namespace SurrealCB.Data.Migrations
                 name: "IX_RequiredItem_LevelBoostId",
                 table: "RequiredItem",
                 column: "LevelBoostId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RequiredItem_ObjId",
-                table: "RequiredItem",
-                column: "ObjId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RequiredItem_RuneRecipeId",

@@ -127,6 +127,7 @@ namespace SurrealCB.Server
                                 {
                                     actions.Add(new BattleAction { Number = (int)eff.Param1, Position = card.Position, Type = HealthChange.POISON });
                                     eff.Param2 = cards.FirstOrDefault(x => x.Position == eff.FromPosition).GetPassives().FirstOrDefault(x => x.Passive == Passive.POISON).Param2;
+                                    this.ApplyDmg(card, (int)eff.Param1);
                                 }
                             }
                             while (remainingTime / eff.Param2 > 1);
@@ -237,7 +238,15 @@ namespace SurrealCB.Server
                             {
                                 tarCard.ActiveEffects.Remove(eff);
                             }
-                            tarCard.ActiveEffects.Add(new ActiveEffect(passive, srcCard.Position));
+                            tarCard.ActiveEffects.Add(new ActiveEffect
+                            {
+                                FromPosition = srcCard.Position,
+                                Id = passive.Id,
+                                Passive = passive.Passive,
+                                Param1 = passive.Param1,
+                                Param2 = passive.Param2,
+                                Param3 = passive.Param3
+                            });
                             break;
                     };
                 }

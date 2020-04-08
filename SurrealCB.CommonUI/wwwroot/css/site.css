@@ -961,6 +961,10 @@ ul.breadcrumb {
     animation-timing-function: ease-in-out;
 }
 
+.battle-card-dmg.dmg-POISON {
+    color: green;
+}
+
 @keyframes floating-dmg {
     from {
         transform: translate(0, 30px);

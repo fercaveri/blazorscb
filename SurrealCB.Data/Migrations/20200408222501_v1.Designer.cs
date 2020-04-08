@@ -10,7 +10,7 @@ using SurrealCB.Data;
 namespace SurrealCB.Data.Migrations
 {
     [DbContext(typeof(SCBDbContext))]
-    [Migration("20200403214328_v1")]
+    [Migration("20200408222501_v1")]
     partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -349,9 +349,6 @@ namespace SurrealCB.Data.Migrations
                     b.Property<int>("Atk")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CardId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Def")
                         .HasColumnType("int");
 
@@ -368,8 +365,6 @@ namespace SurrealCB.Data.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CardId");
 
                     b.HasIndex("PassiveId");
 
@@ -505,11 +500,12 @@ namespace SurrealCB.Data.Migrations
             modelBuilder.Entity("SurrealCB.Data.Model.LevelBoost", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<int?>("BoostId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CardId")
                         .HasColumnType("int");
 
                     b.Property<int>("Cost")
@@ -524,11 +520,18 @@ namespace SurrealCB.Data.Migrations
                     b.Property<int?>("PlayerCardId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RequiredBoostId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BoostId");
 
+                    b.HasIndex("CardId");
+
                     b.HasIndex("PlayerCardId");
+
+                    b.HasIndex("RequiredBoostId");
 
                     b.ToTable("LevelBoosts");
                 });
@@ -664,13 +667,13 @@ namespace SurrealCB.Data.Migrations
                     b.Property<int?>("CardRecipeId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ItemId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ItemRecipeId")
                         .HasColumnType("int");
 
                     b.Property<int?>("LevelBoostId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ObjId")
                         .HasColumnType("int");
 
                     b.Property<int?>("RuneRecipeId")
@@ -680,11 +683,11 @@ namespace SurrealCB.Data.Migrations
 
                     b.HasIndex("CardRecipeId");
 
+                    b.HasIndex("ItemId");
+
                     b.HasIndex("ItemRecipeId");
 
                     b.HasIndex("LevelBoostId");
-
-                    b.HasIndex("ObjId");
 
                     b.HasIndex("RuneRecipeId");
 
@@ -871,10 +874,6 @@ namespace SurrealCB.Data.Migrations
 
             modelBuilder.Entity("SurrealCB.Data.Model.CardBoost", b =>
                 {
-                    b.HasOne("SurrealCB.Data.Model.Card", null)
-                        .WithMany("LevelBoosts")
-                        .HasForeignKey("CardId");
-
                     b.HasOne("SurrealCB.Data.Model.CardPassive", "Passive")
                         .WithMany()
                         .HasForeignKey("PassiveId");
@@ -889,7 +888,7 @@ namespace SurrealCB.Data.Migrations
 
             modelBuilder.Entity("SurrealCB.Data.Model.EnemyNpc", b =>
                 {
-                    b.HasOne("SurrealCB.Data.Model.Map", "Map")
+                    b.HasOne("SurrealCB.Data.Model.Map", null)
                         .WithMany("Enemies")
                         .HasForeignKey("MapId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -920,9 +919,18 @@ namespace SurrealCB.Data.Migrations
                         .WithMany()
                         .HasForeignKey("BoostId");
 
+                    b.HasOne("SurrealCB.Data.Model.Card", null)
+                        .WithMany("LevelBoosts")
+                        .HasForeignKey("CardId");
+
                     b.HasOne("SurrealCB.Data.Model.PlayerCard", null)
                         .WithMany("ActiveLvlBoosts")
                         .HasForeignKey("PlayerCardId");
+
+                    b.HasOne("SurrealCB.Data.Model.LevelBoost", "RequiredBoost")
+                        .WithMany()
+                        .HasForeignKey("RequiredBoostId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("SurrealCB.Data.Model.Map", b =>
@@ -981,6 +989,10 @@ namespace SurrealCB.Data.Migrations
                         .WithMany("RequiredItems")
                         .HasForeignKey("CardRecipeId");
 
+                    b.HasOne("SurrealCB.Data.Model.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId");
+
                     b.HasOne("SurrealCB.Data.Model.ItemRecipe", null)
                         .WithMany("RequiredItems")
                         .HasForeignKey("ItemRecipeId");
@@ -988,10 +1000,6 @@ namespace SurrealCB.Data.Migrations
                     b.HasOne("SurrealCB.Data.Model.LevelBoost", null)
                         .WithMany("RequiredItems")
                         .HasForeignKey("LevelBoostId");
-
-                    b.HasOne("SurrealCB.Data.Model.Item", "Obj")
-                        .WithMany()
-                        .HasForeignKey("ObjId");
 
                     b.HasOne("SurrealCB.Data.Model.RuneRecipe", null)
                         .WithMany("RequiredItems")
