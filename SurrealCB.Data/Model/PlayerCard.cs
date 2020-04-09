@@ -28,35 +28,39 @@ namespace SurrealCB.Data.Model
         public int GetHp()
         {
             var hp = this.Card.Hp;
-            //TODO: Rune & Boost
+            hp += this.ActiveLvlBoosts.Where(x => x.Boost.Hp > 0).Sum(x => x.Boost.Hp);
+            //TODO: RUNES;
             return hp;
         }
 
         public int GetAtk()
         {
             var attack = this.Card.Atk;
-            //TODO: Rune & Boost
+            attack += this.ActiveLvlBoosts.Where(x => x.Boost.Atk > 0).Sum(x => x.Boost.Atk);
+            //TODO: RUNES;
             return attack;
         }
 
         public int GetDef()
         {
             var deffense = this.Card.Def;
-            //TODO: Rune & Boost
+            deffense += this.ActiveLvlBoosts.Where(x => x.Boost.Def > 0).Sum(x => x.Boost.Def);
             return deffense;
         }
 
         public int GetImm()
         {
             var immunity = this.Card.Imm;
-            //TODO: Rune & Boost
+            immunity += this.ActiveLvlBoosts.Where(x => x.Boost.Imm > 0).Sum(x => x.Boost.Imm);
+            //TODO: Rune 
             return immunity;
         }
 
         public double GetSpd()
         {
             var speed = this.Card.Spd;
-            //TODO: Rune & Boost
+            speed += this.ActiveLvlBoosts.Where(x => x.Boost.Spd > 0).Sum(x => x.Boost.Spd);
+            //TODO: Rune 
             return speed;
         }
 

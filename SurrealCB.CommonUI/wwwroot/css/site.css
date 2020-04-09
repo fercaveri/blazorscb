@@ -965,6 +965,12 @@ ul.breadcrumb {
     color: green;
 }
 
+.card-status-levels {
+    display: grid;
+    grid-template-rows: 50px;
+    grid-row-gap: 20px;
+}
+
 .battle-card-effects {
     position: absolute;
     top: 15%;

@@ -37,3 +37,7 @@ C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\RazorDeclaration\
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\Pages\Maps.razor.g.cs
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\Battle.razor.g.cs
 C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\Pages\Battle.razor.g.cs
+C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\CardStatus.razor.g.cs
+C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\PlayerCards.razor.g.cs
+C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\Pages\CardStatus.razor.g.cs
+C:\Rikito\SurrealCB\SurrealCB.CommonUI\obj\Debug\netcoreapp3.1\Razor\Pages\PlayerCards.razor.g.cs

@@ -9,7 +9,7 @@ using SurrealCB.Data.Model;
 
 namespace SurrealCB.CommonUI.Services
 {
-    public class PassiveService
+    public class PassiveHelper
     {
         public static Tuple<string, string> GetPassiveTuple(Passive p, double p1 = 0, double p2 = 0, double p3 = 0) =>
         p switch

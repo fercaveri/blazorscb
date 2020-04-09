@@ -3,19 +3,26 @@
 @page "/card_status"
 @page "/card_status/{Id}"
 
-<div class="card-list-container">
-    @if (card != null)
-    {
-        <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.GetHp()" Imm="@card.GetImm()" Name="@card.GetName()" Element="@card.Card.Element"
-                Tier="@card.Card.Tier" Rarity="@card.Card.Rarity" AType="@card.Card.AtkType" ImgSrc="@card.Card.ImgSrc" Passives="@card.GetPassives()"></UICard>
-    }
-    <div>
-        LEVEL BOOSTS <!-- USAR TREE COMPONENT?? -->
+    <div class="card-status">
+        @if (card != null)
+        {
+            <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.GetHp()" Imm="@card.GetImm()" Name="@card.GetName()" Element="@card.Card.Element"
+                    Tier="@card.Card.Tier" Rarity="@card.Card.Rarity" AType="@card.Card.AtkType" ImgSrc="@card.Card.ImgSrc" Passives="@card.GetPassives()"></UICard>
+            <div>
+                <p>Current Exp: @card.CurrentExp</p>
+                <p>Next Level: @ExpHelper.GetNextLevelExp(card.Card.BaseExp, card.Card.Tier, card.CurrentExp)</p>
+            </div>
+            <div class="card-status-levels" style="grid-template-columns: @GetLevelColumns()">
+                @foreach (var levelBoost in card.Card.LevelBoosts)
+                {
+                    <div class="card-level-boost" style="grid-column: @(card.Card.LevelBoosts.Where(x => x.Level == levelBoost.Level).OrderBy(x => x.Cost).IndexOf(levelBoost) + 1);
+                         grid-row: @levelBoost.Level">
+                        <img src="@($"_content/SurrealCB.CommonUI/icons/{GetBoostIcon(levelBoost)}.svg")"/>
+                    </div>
+                }
+            </div>
+        }
     </div>
-    <div>
-        EXP
-    </div>
-</div>
 
 @code {
     [Parameter]
@@ -41,5 +48,46 @@
         {
             matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Todo List Retrieval Failed");
         }
+    }
+
+    private string GetLevelColumns()
+    {
+        var colCount = card.Card.LevelBoosts.GroupBy(x => x.Level).Max(g => g.Count());
+        if (colCount == 1) return "100%";
+        else if (colCount == 2) return "50% 50%";
+        else if (colCount == 3) return "33.3% 33.3% 33.3%";
+        else if (colCount == 4) return "25% 25% 25% 25%";
+        return "100%";
+    }
+
+    private string GetBoostIcon(LevelBoost boost)
+    {
+        var b = boost.Boost;
+        if (b.Passive != null)
+        {
+            return PassiveHelper.GetPassiveTuple(b.Passive.Passive).Item2;
+        }
+        else if (b.Hp != 0)
+        {
+            return "health";
+        }
+        else if (b.Atk != 0)
+        {
+            return "attack";
+        }
+        else if (b.Def != 0)
+        {
+            return "defense";
+        }
+        else if (b.Spd != 0)
+        {
+            return "speed";
+        }
+        else if (b.Imm != 0)
+        {
+            return "immunity";
+        }
+        //TODO: mixear iconos para mas de 1;
+        return "";
     }
 }

@@ -34,7 +34,7 @@
                 <div class="battle-card-effects">
                     @foreach (var passive in card.ActiveEffects.Select(x => x.Passive))
                     {
-                        <img class="passive-@PassiveService.GetPassiveTuple(passive).Item2" src="_content/SurrealCB.CommonUI/icons/@(PassiveService.GetPassiveTuple(passive).Item2).svg">
+                        <img class="passive-@PassiveHelper.GetPassiveTuple(passive).Item2" src="_content/SurrealCB.CommonUI/icons/@(PassiveHelper.GetPassiveTuple(passive).Item2).svg">
                     }
                 </div>
             }
