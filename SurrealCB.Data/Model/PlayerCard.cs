@@ -59,5 +59,11 @@ namespace SurrealCB.Data.Model
             //TODO: Rune & Boost
             return speed;
         }
+
+        public string GetName()
+        {
+            var improvedName = this.ActiveLvlBoosts.OrderByDescending(x => x.Level).FirstOrDefault(x => x.ImprovedName != null)?.ImprovedName;
+            return improvedName != null ? improvedName : this.Card.Name;
+        }
     }
 }

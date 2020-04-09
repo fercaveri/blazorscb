@@ -40,7 +40,8 @@ namespace SurrealCB.Server
             var battleStatus = new BattleStatus
             {
                 NextPosition = nextCard.Position,
-                Cards = cards
+                Cards = cards,
+                Actions = actions
             };
             return Task.FromResult(battleStatus);
         }

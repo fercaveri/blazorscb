@@ -1,0 +1,45 @@
+﻿@inject HttpClient Http
+@inject IMatToaster matToaster
+@page "/card_status"
+@page "/card_status/{Id}"
+
+<div class="card-list-container">
+    @if (card != null)
+    {
+        <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.GetHp()" Imm="@card.GetImm()" Name="@card.GetName()" Element="@card.Card.Element"
+                Tier="@card.Card.Tier" Rarity="@card.Card.Rarity" AType="@card.Card.AtkType" ImgSrc="@card.Card.ImgSrc" Passives="@card.GetPassives()"></UICard>
+    }
+    <div>
+        LEVEL BOOSTS <!-- USAR TREE COMPONENT?? -->
+    </div>
+    <div>
+        EXP
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    PlayerCard card = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetPlayerCard();
+    }
+
+    private async Task GetPlayerCard()
+    {
+        ApiResponseDto apiResponse = await Http.GetJsonAsync<ApiResponseDto>($"api/card/player/{Id}");
+
+        if (apiResponse.StatusCode == Status200OK)
+        {
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Card List Retrieved");
+            this.card = Newtonsoft.Json.JsonConvert.DeserializeObject<PlayerCard>(apiResponse.Result.ToString());
+        }
+        else
+        {
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Todo List Retrieval Failed");
+        }
+    }
+}

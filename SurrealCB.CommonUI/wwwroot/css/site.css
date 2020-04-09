@@ -965,8 +965,21 @@ ul.breadcrumb {
     color: green;
 }
 
-@keyframes floating-dmg {
-    from {
+.battle-card-effects {
+    position: absolute;
+    top: 15%;
+    left: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+    .battle-card-effects img {
+        width: 25px;
+        height: 25px;
+    }
+
+    @keyframes floating-dmg {
+        from {
         transform: translate(0, 30px);
     }
 
