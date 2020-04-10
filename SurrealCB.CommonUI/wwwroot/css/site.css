@@ -965,19 +965,32 @@ ul.breadcrumb {
     color: green;
 }
 
+.card-status {
+    display: flex;
+    flex-direction: row;
+}
+
 .card-status-levels {
     display: grid;
     grid-template-rows: 50px;
     grid-row-gap: 20px;
+    width: 50%;
 }
 
-.battle-card-effects {
-    position: absolute;
-    top: 15%;
-    left: 10px;
-    display: flex;
-    flex-direction: row;
-}
+    .card-status-levels img {
+        width: 50px;
+        height: 50px;
+        border: 5px solid black;
+        opacity: 0.5;
+    }
+
+    .battle-card-effects {
+        position: absolute;
+        top: 15%;
+        left: 10px;
+        display: flex;
+        flex-direction: row;
+    }
 
     .battle-card-effects img {
         width: 25px;

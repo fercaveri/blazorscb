@@ -25,9 +25,9 @@ namespace SurrealCB.CommonUI.Services
 
         public static int GetLevelExp(int baseExp, int tier, int level)
         {
-            var tierFormula = tier == 1 ? 1 : (double)tier / 1.7;
-            var expNum = level == 2 ? 0.0 : (level - 1) / (5.0 / tierFormula);
-            return (int)Math.Pow((double)baseExp, (expNum + 1));
+			var tierFormula = tier == 1 ? 1 : (double)tier / 1.7;
+			var expNum = level == 2 ? 0.0 : (level - 1) / (10.0 / tierFormula);
+            return baseExp * (level - 2) + (int)Math.Pow((double)baseExp, (expNum + 1));
         }
     }
 }

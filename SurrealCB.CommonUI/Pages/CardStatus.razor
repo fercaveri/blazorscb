@@ -3,26 +3,39 @@
 @page "/card_status"
 @page "/card_status/{Id}"
 
-    <div class="card-status">
-        @if (card != null)
-        {
-            <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.GetHp()" Imm="@card.GetImm()" Name="@card.GetName()" Element="@card.Card.Element"
-                    Tier="@card.Card.Tier" Rarity="@card.Card.Rarity" AType="@card.Card.AtkType" ImgSrc="@card.Card.ImgSrc" Passives="@card.GetPassives()"></UICard>
-            <div>
-                <p>Current Exp: @card.CurrentExp</p>
-                <p>Next Level: @ExpHelper.GetNextLevelExp(card.Card.BaseExp, card.Card.Tier, card.CurrentExp)</p>
-            </div>
-            <div class="card-status-levels" style="grid-template-columns: @GetLevelColumns()">
-                @foreach (var levelBoost in card.Card.LevelBoosts)
-                {
+<div class="card-status">
+    @if (card != null)
+    {
+        <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.GetHp()" Imm="@card.GetImm()" Name="@card.GetName()" Element="@card.Card.Element"
+                Tier="@card.Card.Tier" Rarity="@card.Card.Rarity" AType="@card.Card.AtkType" ImgSrc="@card.Card.ImgSrc" Passives="@card.GetPassives()"></UICard>
+        <div>
+            <p>Current Exp: @card.CurrentExp</p>
+            <p>Next Level: @ExpHelper.GetNextLevelExp(card.Card.BaseExp, card.Card.Tier, card.CurrentExp)</p>
+        </div>
+        <div class="card-status-levels" style="grid-template-columns: @GetLevelColumns()">
+            @foreach (var levelBoost in card.Card.LevelBoosts)
+            {
+                <MatTooltip Tooltip="@GetBoostTooltip(levelBoost)">
                     <div class="card-level-boost" style="grid-column: @(card.Card.LevelBoosts.Where(x => x.Level == levelBoost.Level).OrderBy(x => x.Cost).IndexOf(levelBoost) + 1);
                          grid-row: @levelBoost.Level">
-                        <img src="@($"_content/SurrealCB.CommonUI/icons/{GetBoostIcon(levelBoost)}.svg")"/>
+                        <img src="@($"_content/SurrealCB.CommonUI/icons/{GetBoostIcon(levelBoost)}.svg")" />
                     </div>
+                </MatTooltip>
+                <img src="_content/SurrealCB.CommonUI/icons/gold.svg" />
+                @if (levelBoost.RequiredItems?.Any() == true)
+                {
+                    <img src="_content/SurrealCB.CommonUI/icons/reward.svg" />
                 }
-            </div>
-        }
-    </div>
+            }
+            @foreach (var level in card.Card.LevelBoosts.Select(x => x.Level).Distinct().OrderBy(x => x))
+            {
+                <div style="grid-row: @level">
+                    Level @level
+                </div>
+            }
+        </div>
+    }
+</div>
 
 @code {
     [Parameter]
@@ -53,10 +66,9 @@
     private string GetLevelColumns()
     {
         var colCount = card.Card.LevelBoosts.GroupBy(x => x.Level).Max(g => g.Count());
-        if (colCount == 1) return "100%";
-        else if (colCount == 2) return "50% 50%";
-        else if (colCount == 3) return "33.3% 33.3% 33.3%";
-        else if (colCount == 4) return "25% 25% 25% 25%";
+        if (colCount == 1) return "50% 50%";
+        else if (colCount == 2) return "33.3% 33.3% 33.3%";
+        else if (colCount == 3) return "25% 25% 25% 25%";
         return "100%";
     }
 
@@ -73,11 +85,11 @@
         }
         else if (b.Atk != 0)
         {
-            return "attack";
+            return "sword";
         }
         else if (b.Def != 0)
         {
-            return "defense";
+            return "shield";
         }
         else if (b.Spd != 0)
         {
@@ -85,9 +97,40 @@
         }
         else if (b.Imm != 0)
         {
-            return "immunity";
+            return "wall";
         }
         //TODO: mixear iconos para mas de 1;
         return "";
+    }
+
+    private string GetBoostTooltip(LevelBoost lb)
+    {
+        var message = "";
+        var b = lb.Boost;
+        if (b.Hp > 0)
+        {
+            message += $"Hp +{b.Hp} / ";
+        }
+        if (b.Atk > 0)
+        {
+            message += $"Atk +{b.Atk} / ";
+        }
+        if (b.Def > 0)
+        {
+            message += $"Def +{b.Def} / ";
+        }
+        if (b.Imm > 0)
+        {
+            message += $"Imm +{b.Imm}% / ";
+        }
+        if (b.Spd > 0)
+        {
+            message += $"Spd -{b.Spd} / ";
+        }
+        if (b.Passive != null)
+        {
+            message += PassiveHelper.GetPassiveTuple(b.Passive.Passive, b.Passive.Param1, b.Passive.Param2, b.Passive.Param3) + " / ";
+        }
+        return message;
     }
 }
