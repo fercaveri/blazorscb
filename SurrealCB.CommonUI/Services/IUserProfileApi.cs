@@ -11,7 +11,7 @@ namespace SurrealCB.CommonUI.Services
 {
     public interface IUserProfileApi
     {
-        Task<ApiResponseDto> Upsert(UserProfileDto userProfile);
+        Task<ApiResponseDto> Update(UserProfileDto userProfile);
         Task<ApiResponseDto> Get();
     }
 
@@ -26,12 +26,12 @@ namespace SurrealCB.CommonUI.Services
 
         public async Task<ApiResponseDto> Get()
         {
-            return await _httpClient.GetJsonAsync<ApiResponseDto>("api/UserProfile/Get");
+            return await _httpClient.GetJsonAsync<ApiResponseDto>("api/user/get");
         }
 
-        public async Task<ApiResponseDto> Upsert(UserProfileDto userProfile)
+        public async Task<ApiResponseDto> Update(UserProfileDto userProfile)
         {
-            return await _httpClient.PostJsonAsync<ApiResponseDto>("api/UserProfile/Upsert", userProfile);
+            return await _httpClient.PostJsonAsync<ApiResponseDto>("api/user/update", userProfile);
         }
     }
 }

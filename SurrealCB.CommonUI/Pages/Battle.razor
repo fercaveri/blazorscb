@@ -163,6 +163,10 @@
         {
             await this.CheckNext();
         }
+        else
+        {
+            ApiResponseDto atkResponse = await Http.GetJsonAsync<ApiResponseDto>($"api/battle/reward/{EnemyId}/");
+        }
     }
 
     private string GetHealthStatus(BattleCard card)

@@ -14,6 +14,7 @@ namespace SurrealCB.Data.Dto.Account
         public string LastPageVisited { get; set; } = "/";
         public bool IsNavOpen { get; set; } = true;
         public bool IsNavMinified { get; set; } = false;
-        public int Count { get; set; } = 0;
+        public int Gold { get; set; } = 0;
+        public int Exp { get; set; } = 0;
     }
 }

@@ -66,7 +66,6 @@ namespace SurrealCB.Server.Controllers
         public async Task<ApiResponse> NextTurn([FromBody]List<BattleCard> cards)
         {
             var battleStatus = await this.battleService.NextTurn(cards);
-
             return new ApiResponse(Status200OK, "Cards updated successfully", battleStatus);
         }
 
@@ -120,6 +119,20 @@ namespace SurrealCB.Server.Controllers
             var actions = await this.battleService.PerformAttack(srcCard, tarCard);
             var shouldEnd = await this.battleService.CheckWinOrLose(cards, srcPos);
             return new ApiResponse(Status200OK, "Damage applied successfully", new BattleStatus { Cards = cards, Actions = actions, NextPosition = -1, Status = shouldEnd });
+        }
+
+        [HttpPost("reward/{id}")]
+        public async Task<ApiResponse> ApplyBattleReward(int npcId)
+        {
+            var enemy = await this.repository.Enemies.FirstOrDefaultAsync(x => x.Id == npcId);
+            var userId = await this.userService.GetUserId();
+            var user = await this.userService.GetUser(userId);
+            user.Gold += enemy.Reward.Gold;
+            user.Exp += enemy.Reward.Exp;
+            this.repository.Users.Update(user);
+            await this.repository.SaveChangesAsync();
+
+            return new ApiResponse(Status200OK, "Cards updated successfully", user);
         }
     }
 }

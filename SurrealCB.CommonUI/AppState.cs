@@ -58,22 +58,40 @@ namespace SurrealCB.CommonUI
             return new UserProfileDto();
         }
 
-        public async Task UpdateUserProfileCount(int count)
+        public async Task UpdateUserProfileGold(int count)
         {
-            UserProfile.Count = count;
+            UserProfile.Gold = count;
             await UpdateUserProfile();
             NotifyStateChanged();
         }
 
-        public async Task<int> GetUserProfileCount()
+        public async Task<int> GetUserProfileGold()
         {
             if (UserProfile == null)
             {
                 UserProfile = await GetUserProfile();
-                return UserProfile.Count;
+                return UserProfile.Gold;
             }
 
-            return UserProfile.Count;
+            return UserProfile.Gold;
+        }
+
+        public async Task UpdateUserProfileExp(int count)
+        {
+            UserProfile.Exp = count;
+            await UpdateUserProfile();
+            NotifyStateChanged();
+        }
+
+        public async Task<int> GetUserProfileExp()
+        {
+            if (UserProfile == null)
+            {
+                UserProfile = await GetUserProfile();
+                return UserProfile.Exp;
+            }
+
+            return UserProfile.Exp;
         }
 
         public async Task SaveLastVisitedUri(string uri)

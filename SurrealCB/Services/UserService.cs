@@ -12,6 +12,8 @@ namespace SurrealCB.Server
     {
         Task<List<PlayerCard>> GetUserCards();
         Task<int> GetUserGold();
+        Task<Guid> GetUserId();
+        Task<ApplicationUser> GetUser(Guid id);
     }
     public class UserService : IUserService
     {
@@ -31,6 +33,17 @@ namespace SurrealCB.Server
         public async Task<int> GetUserGold()
         {
             return (await this.repository.Users.FirstOrDefaultAsync()).Gold;
+        }
+
+        public async Task<Guid> GetUserId()
+        {
+            //Guid userId = new Guid(_httpContextAccessor.HttpContext.User.FindFirst(JwtClaimTypes.Subject).Value);
+            return (await this.repository.Users.FirstOrDefaultAsync()).Id;
+        }
+
+        public async Task<ApplicationUser> GetUser(Guid id)
+        {
+            return await this.repository.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }
