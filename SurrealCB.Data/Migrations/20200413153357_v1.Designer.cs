@@ -10,7 +10,7 @@ using SurrealCB.Data;
 namespace SurrealCB.Data.Migrations
 {
     [DbContext(typeof(SCBDbContext))]
-    [Migration("20200408222501_v1")]
+    [Migration("20200413153357_v1")]
     partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -228,6 +228,9 @@ namespace SurrealCB.Data.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
+
+                    b.Property<int>("Gold")
+                        .HasColumnType("int");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(64)")

@@ -889,46 +889,46 @@ ul.breadcrumb {
     border: 5px ridge purple;
 }
 
-    /* Battle */
-    .battle-container {
-        display: grid;
-        grid-template-columns: 18% 18% 18% 18%;
-        grid-template-rows: 40% 40%;
-        grid-column-gap: 9%;
-        grid-row-gap: 10%;
+/* Battle */
+.battle-container {
+    display: grid;
+    grid-template-columns: 18% 18% 18% 18%;
+    grid-template-rows: 40% 40%;
+    grid-column-gap: 9%;
+    grid-row-gap: 10%;
+}
+
+    .battle-container .mdc-linear-progress {
+        height: 12px !important;
     }
 
-.battle-container .mdc-linear-progress {
-    height: 12px !important;
-}
+    .battle-container .mdc-linear-progress__bar-inner {
+        border-top: 12px solid !important;
+    }
 
-.battle-container .mdc-linear-progress__bar-inner {
-    border-top: 12px solid !important;
-}
+    .battle-container .battle-card .speed-bar .mdc-linear-progress__bar-inner {
+        border-color: blue !important;
+    }
 
-.battle-container .battle-card .speed-bar .mdc-linear-progress__bar-inner {
-    border-color: blue !important;
-}
+    .battle-container .health-green .mdc-linear-progress__bar-inner {
+        border-color: green !important;
+    }
 
-.battle-container .health-green .mdc-linear-progress__bar-inner {
-    border-color: green !important;
-}
+    .battle-container .health-yellowgreen .mdc-linear-progress__bar-inner {
+        border-color: greenyellow !important;
+    }
 
-.battle-container .health-yellowgreen .mdc-linear-progress__bar-inner {
-    border-color: greenyellow !important;
-}
+    .battle-container .health-yellow .mdc-linear-progress__bar-inner {
+        border-color: yellow !important;
+    }
 
-.battle-container .health-yellow .mdc-linear-progress__bar-inner {
-    border-color: yellow !important;
-}
+    .battle-container .health-orange .mdc-linear-progress__bar-inner {
+        border-color: orange !important;
+    }
 
-.battle-container .health-orange .mdc-linear-progress__bar-inner {
-    border-color: orange !important;
-}
-
-.battle-container .health-red .mdc-linear-progress__bar-inner {
-    border-color: red !important;
-}
+    .battle-container .health-red .mdc-linear-progress__bar-inner {
+        border-color: red !important;
+    }
 
 .battle-card.active .uicard-container {
     border: 3px solid blue;
@@ -944,9 +944,9 @@ ul.breadcrumb {
     position: relative;
 }
 
-.battle-card.battle-death {
-    opacity: 0.5;
-}
+    .battle-card.battle-death {
+        opacity: 0.5;
+    }
 
 .battle-card-dmg {
     position: absolute;
@@ -961,49 +961,91 @@ ul.breadcrumb {
     animation-timing-function: ease-in-out;
 }
 
-.battle-card-dmg.dmg-POISON {
-    color: green;
-}
+    .battle-card-dmg.dmg-POISON {
+        color: green;
+    }
+
+/* CARD STATUS */
 
 .card-status {
     display: flex;
     flex-direction: row;
+    height: calc(100vh - 104px);
+}
+
+.status-left-panel {
+    display: flex;
+    flex-direction: column;
 }
 
 .card-status-levels {
     display: grid;
-    grid-template-rows: 50px;
-    grid-row-gap: 40px;
+    grid-template-rows: 100px;
+    grid-row-gap: 20px;
     width: 50%;
     position: relative;
+    margin-left: 20px;
 }
 
     .card-status-levels img {
         width: 70px;
         height: 70px;
-        border: 5px solid black;
         opacity: 0.5;
+        padding: 5px;
     }
 
 .card-level-boost {
-    position:relative 
+    position: relative;
 }
+
+.boost-container {
+    width: 70px;
+    height: 70px;
+}
+
+    .boost-container .boost-img {
+        box-shadow: 0px 0px 1px 5px rgba(0,0,0,1)
+    }
+
+    .boost-container.active .boost-img {
+        border: 5px solid transparent;
+        box-shadow: 0px 0px 5px 5px rgba(119,209,132,1);
+        opacity: 1;
+    }
+
+    .boost-container.active:hover .boost-img {
+        cursor: auto;
+        box-shadow: 0px 0px 5px 5px rgba(119,209,132,1);
+        background-color: transparent;
+    }
+
+    .boost-container:hover .boost-img {
+        cursor: pointer;
+        background-color: lightgray;
+    }
 
 .card-level-side {
     position: absolute;
-    left: 70px;
-    top: 0px;
+    left: 0px;
+    top: 75px;
+    width: 70px;
     display: flex;
-    flex-direction: column;
+    height: 25px;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    box-shadow: 0px 0px 1px 5px rgba(125,125,125,1);
 }
 
 .card-status-levels .card-level-side img {
-    width: 35px;
-    height: 35px;
+    width: 20px;
+    height: 20px;
+    padding: 0px;
 }
 
 .card-status-levels .card-level-side span {
     text-align: center;
+    margin-right: 1px;
 }
 
 .battle-card-effects {
@@ -1019,8 +1061,8 @@ ul.breadcrumb {
         height: 25px;
     }
 
-    @keyframes floating-dmg {
-        from {
+@keyframes floating-dmg {
+    from {
         transform: translate(0, 30px);
     }
 
@@ -1142,7 +1184,7 @@ ul.breadcrumb {
     filter: invert(13%) sepia(65%) saturate(7454%) hue-rotate(247deg) brightness(76%) contrast(102%);
 }
 
-.icon-imm {
+.icon-wall {
     filter: invert(35%) sepia(84%) saturate(314%) hue-rotate(1deg) brightness(97%) contrast(90%);
 }
 
@@ -1150,30 +1192,30 @@ ul.breadcrumb {
     filter: invert(28%) sepia(77%) saturate(413%) hue-rotate(121deg) brightness(96%) contrast(92%);
 }
 
-.passive-poison {
+.icon-poison {
     filter: invert(48%) sepia(81%) saturate(389%) hue-rotate(60deg) brightness(100%) contrast(94%);
 }
 
-.passive-doom {
+.icon-doom {
     filter: invert(19%) sepia(28%) saturate(2523%) hue-rotate(253deg) brightness(87%) contrast(107%);
 }
 
-.passive-dodge {
+.icon-dodge {
     filter: invert(67%) sepia(14%) saturate(261%) hue-rotate(239deg) brightness(97%) contrast(86%);
 }
 
-.passive-hp_shatter {
+.icon-hp_shatter {
     filter: invert(56%) sepia(48%) saturate(2840%) hue-rotate(292deg) brightness(95%) contrast(83%);
 }
 
-.passive-blaze {
+.icon-blaze {
     filter: invert(39%) sepia(54%) saturate(2883%) hue-rotate(1deg) brightness(102%) contrast(105%);
 }
 
-.passive-piercing {
+.icon-piercing {
     filter: invert(19%) sepia(61%) saturate(3885%) hue-rotate(296deg) brightness(78%) contrast(124%);
 }
 
-.passive-ignore_defense {
+.icon-ignore_defense {
     filter: invert(10%) sepia(92%) saturate(2745%) hue-rotate(233deg) brightness(84%) contrast(110%);
 }

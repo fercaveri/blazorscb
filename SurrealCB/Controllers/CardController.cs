@@ -51,5 +51,21 @@ namespace SurrealCB.Server.Controllers
             var playerCard = await this.repository.PlayerCards.FirstOrDefaultAsync(x => x.Id == id);
             return new ApiResponse(Status200OK, "Get All Cards Successful", playerCard);
         }
+
+        [HttpGet("player/levelboost/{cardid}/{boostid}")]
+        public async Task<ApiResponse> ActivateLevelBoost(int cardid, int boostid)
+        {
+            var playerCard = await this.repository.PlayerCards.FirstOrDefaultAsync(x => x.Id == cardid);
+            var levelBoost = await this.repository.LevelBoosts.FirstOrDefaultAsync(x => x.Id == boostid);
+            try
+            {
+                await this.cardService.ActivateLevelBoost(playerCard, levelBoost);
+            }
+            catch (ApiException ex)
+            {
+                return new ApiResponse(ex.StatusCode, ex.Message);
+            }
+            return new ApiResponse(Status200OK, "Level Boost Applied", playerCard);
+        }
     }
 }

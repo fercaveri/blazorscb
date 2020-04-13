@@ -8,7 +8,7 @@ namespace SurrealCB.Data
     public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : IEntity
     {
-        private readonly SCBDbContext _dbContext;
+        public SCBDbContext _dbContext;
 
         public Repository(SCBDbContext dbContext)
         {
@@ -20,26 +20,26 @@ namespace SurrealCB.Data
             return _dbContext.Set<TEntity>().AsNoTracking();
         }
 
-        public async Task<TEntity> GetById(int id)
+        public async Task<TEntity> GetByIdAsync(int id)
         {
             return await _dbContext.Set<TEntity>()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task Create(TEntity entity)
+        public async Task CreateAsync(TEntity entity)
         {
             await _dbContext.Set<TEntity>().AddAsync(entity);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task Update(int id, TEntity entity)
+        public async Task UpdateAsync(TEntity entity)
         {
             _dbContext.Set<TEntity>().Update(entity);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             var entity = await _dbContext.Set<TEntity>().FindAsync(id);
             _dbContext.Set<TEntity>().Remove(entity);

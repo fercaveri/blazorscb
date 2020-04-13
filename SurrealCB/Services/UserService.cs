@@ -11,6 +11,7 @@ namespace SurrealCB.Server
     public interface IUserService
     {
         Task<List<PlayerCard>> GetUserCards();
+        Task<int> GetUserGold();
     }
     public class UserService : IUserService
     {
@@ -25,6 +26,11 @@ namespace SurrealCB.Server
         {
             var cards = (await this.repository.Users.FirstOrDefaultAsync()).Cards.ToList();
             return cards;
+        }
+
+        public async Task<int> GetUserGold()
+        {
+            return (await this.repository.Users.FirstOrDefaultAsync()).Gold;
         }
     }
 }

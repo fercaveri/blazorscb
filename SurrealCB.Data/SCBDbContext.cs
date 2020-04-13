@@ -1,6 +1,8 @@
 ﻿namespace SurrealCB.Data
 {
     using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
@@ -8,7 +10,7 @@
     using SurrealCB.Data.Model;
     using SurrealCB.Data.Shared;
 
-    public class SCBDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+    public class SCBDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>, IRepository<IEntity>
     {
         private readonly IUserSession _userSession;
 
@@ -80,6 +82,36 @@
             builder.Entity<CardPassive>().Property(p => p.Passive).HasConversion(new EnumToStringConverter<Passive>());
             builder.Entity<Map>().Property(p => p.Difficult).HasConversion(new EnumToStringConverter<MapDifficult>());
             builder.Entity<Map>().Property(p => p.Type).HasConversion(new EnumToStringConverter<GameType>());
+        }
+
+        public IQueryable<IEntity> GetAll()
+        {
+            return this.Set<IEntity>().AsNoTracking();
+        }
+
+        public async Task<IEntity> GetByIdAsync(int id)
+        {
+            return await this.Set<IEntity>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Id == id);
+        }
+
+        public async Task CreateAsync(IEntity entity)
+        {
+            await this.Set<IEntity>().AddAsync(entity);
+            await this.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(IEntity entity)
+        {
+            await this.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var entity = await this.Set<IEntity>().FindAsync(id);
+            this.Set<IEntity>().Remove(entity);
+            await this.SaveChangesAsync();
         }
     }
 }

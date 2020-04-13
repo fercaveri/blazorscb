@@ -227,6 +227,9 @@ namespace SurrealCB.Data.Migrations
                         .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
 
+                    b.Property<int>("Gold")
+                        .HasColumnType("int");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);

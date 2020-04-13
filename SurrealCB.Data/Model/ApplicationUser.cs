@@ -14,6 +14,7 @@ namespace SurrealCB.Data.Model
         public string LastName { get; set; }
         [MaxLength(64)]
         public string FullName { get; set; }
+        public int Gold { get; set; }
         public virtual ICollection<ApiLogItem> ApiLogItems { get; set; }
         public virtual UserProfile Profile { get; set; }
         public virtual ICollection<Message> Messages { get; set; }

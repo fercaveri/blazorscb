@@ -10,9 +10,9 @@ namespace SurrealCB.Data
      where TEntity : IEntity
     {
         IQueryable<TEntity> GetAll();
-        Task<TEntity> GetById(int id);
-        Task Create(TEntity entity);
-        Task Update(int id, TEntity entity);
-        Task Delete(int id);
+        Task<TEntity> GetByIdAsync(int id);
+        Task CreateAsync(TEntity entity);
+        Task UpdateAsync(TEntity entity);
+        Task DeleteAsync(int id);
     }
 }

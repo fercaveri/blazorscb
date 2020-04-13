@@ -1,6 +1,6 @@
 <MatTooltip Tooltip="@PassiveHelper.GetPassiveTuple(p, p1, p2, p3).Item1">
     <div @ref="context.Current" class="uicard-passive">
-        <div> <img class="card-icon passive-@PassiveHelper.GetPassiveTuple(p, p1, p2, p3).Item2" 
+        <div> <img class="card-icon icon-@PassiveHelper.GetPassiveTuple(p, p1, p2, p3).Item2" 
                    src="@($"_content/SurrealCB.CommonUI/icons/{PassiveHelper.GetPassiveTuple(p, p1, p2, p3).Item2}.svg")" /></div>
         @if (p1 != 0)
         {<div class="uicard-passive-param"> @(p1 + RenderPercentage())  </div>}

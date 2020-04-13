@@ -6,34 +6,40 @@
 <div class="card-status">
     @if (card != null)
     {
-        <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.GetHp()" Imm="@card.GetImm()" Name="@card.GetName()" Element="@card.Card.Element"
-                Tier="@card.Card.Tier" Rarity="@card.Card.Rarity" AType="@card.Card.AtkType" ImgSrc="@card.Card.ImgSrc" Passives="@card.GetPassives()"></UICard>
-        <div>
-            <p>Current Exp: @card.CurrentExp</p>
-            <p>Next Level: @ExpHelper.GetNextLevelExp(card.Card.BaseExp, card.Card.Tier, card.CurrentExp)</p>
+        <div class="status-left-panel">
+            <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.GetHp()" Imm="@card.GetImm()" Name="@card.GetName()" Element="@card.Card.Element"
+                    Tier="@card.Card.Tier" Rarity="@card.Card.Rarity" AType="@card.Card.AtkType" ImgSrc="@card.Card.ImgSrc" Passives="@card.GetPassives()"></UICard>
+            <div>
+                <p>Current Exp: @card.CurrentExp</p>
+                <p>Next Level: @ExpHelper.GetNextLevelExp(card.Card.BaseExp, card.Card.Tier, card.CurrentExp)</p>
+            </div>
         </div>
         <div class="card-status-levels" style="grid-template-columns: @GetLevelColumns()">
             @foreach (var levelBoost in card.Card.LevelBoosts)
             {
-
                 <div class="card-level-boost" style="grid-column: @(card.Card.LevelBoosts.Where(x => x.Level == levelBoost.Level).OrderBy(x => x.Cost).IndexOf(levelBoost) + 2);
-                         grid-row: @levelBoost.Level">
+                         grid-row: @GetGridRow(levelBoost.Level)" @onclick="() => ActivateBoost(levelBoost)">
                     <MatTooltip Tooltip="@GetBoostTooltip(levelBoost)">
-                        <img @ref="@context.Current" src="@($"_content/SurrealCB.CommonUI/icons/{GetBoostIcon(levelBoost)}.svg")" />
+                        <div @ref="@context.Current" class="boost-container @(card.ActiveLvlBoosts.Any(x => x.Id == levelBoost.Id) ? $"active icon-{GetBoostIcon(levelBoost)}" : "") ">
+                            <img class="boost-img" src="@($"_content/SurrealCB.CommonUI/icons/{GetBoostIcon(levelBoost)}.svg")" />
+                        </div>
                     </MatTooltip>
-                    <div class="card-level-side">
-                        <img src="_content/SurrealCB.CommonUI/icons/gold.svg" />
-                        <span>@levelBoost.Cost</span>
-                        @if (levelBoost.RequiredItems?.Any() == true)
-                        {
-                            <img src="_content/SurrealCB.CommonUI/icons/reward.svg" />
-                        }
-                    </div>
+                    @if (!card.ActiveLvlBoosts.Any(x => x.Id == levelBoost.Id))
+                    {
+                        <div class="card-level-side">
+                            <img src="_content/SurrealCB.CommonUI/icons/gold.svg" />
+                            <span>@levelBoost.Cost</span>
+                            @if (levelBoost.RequiredItems?.Any() == true)
+                            {
+                                <img src="_content/SurrealCB.CommonUI/icons/reward.svg" />
+                            }
+                        </div>
+                    }
                 </div>
             }
             @foreach (var level in card.Card.LevelBoosts.Select(x => x.Level).Distinct().OrderBy(x => x))
             {
-                <div style="grid-row: @level; grid-column: 1">
+                <div style="grid-row: @GetGridRow(level); grid-column: 1">
                     Level @level
                 </div>
             }
@@ -67,6 +73,21 @@
         }
     }
 
+    private async Task ActivateBoost(LevelBoost lb)
+    {
+        ApiResponseDto apiResponse = await Http.GetJsonAsync<ApiResponseDto>($"api/card/player/levelboost/{Id}/{lb.Id}");
+
+        if (apiResponse.StatusCode == Status200OK)
+        {
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Level Boost Activated");
+            this.card.ActiveLvlBoosts.Add(lb);
+        }
+        else
+        {
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Todo List Retrieval Failed");
+        }
+    }
+
     private string GetLevelColumns()
     {
         var colCount = card.Card.LevelBoosts.GroupBy(x => x.Level).Max(g => g.Count());
@@ -74,6 +95,12 @@
         else if (colCount == 2) return "33.3% 33.3% 33.3%";
         else if (colCount == 3) return "25% 25% 25% 25%";
         return "100%";
+    }
+
+    private int GetGridRow(int level)
+    {
+        var levels = this.card.Card.LevelBoosts.Select(x => x.Level).Distinct().OrderBy(x => x);
+        return levels.IndexOf(level) + 1;
     }
 
     private string GetBoostIcon(LevelBoost boost)

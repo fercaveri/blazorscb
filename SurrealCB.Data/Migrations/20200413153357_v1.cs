@@ -42,7 +42,8 @@ namespace SurrealCB.Data.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     FirstName = table.Column<string>(maxLength: 64, nullable: true),
                     LastName = table.Column<string>(maxLength: 64, nullable: true),
-                    FullName = table.Column<string>(maxLength: 64, nullable: true)
+                    FullName = table.Column<string>(maxLength: 64, nullable: true),
+                    Gold = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
