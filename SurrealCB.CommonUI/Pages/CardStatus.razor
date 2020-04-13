@@ -15,21 +15,25 @@
         <div class="card-status-levels" style="grid-template-columns: @GetLevelColumns()">
             @foreach (var levelBoost in card.Card.LevelBoosts)
             {
-                <MatTooltip Tooltip="@GetBoostTooltip(levelBoost)">
-                    <div class="card-level-boost" style="grid-column: @(card.Card.LevelBoosts.Where(x => x.Level == levelBoost.Level).OrderBy(x => x.Cost).IndexOf(levelBoost) + 1);
+
+                <div class="card-level-boost" style="grid-column: @(card.Card.LevelBoosts.Where(x => x.Level == levelBoost.Level).OrderBy(x => x.Cost).IndexOf(levelBoost) + 2);
                          grid-row: @levelBoost.Level">
-                        <img src="@($"_content/SurrealCB.CommonUI/icons/{GetBoostIcon(levelBoost)}.svg")" />
+                    <MatTooltip Tooltip="@GetBoostTooltip(levelBoost)">
+                        <img @ref="@context.Current" src="@($"_content/SurrealCB.CommonUI/icons/{GetBoostIcon(levelBoost)}.svg")" />
+                    </MatTooltip>
+                    <div class="card-level-side">
+                        <img src="_content/SurrealCB.CommonUI/icons/gold.svg" />
+                        <span>@levelBoost.Cost</span>
+                        @if (levelBoost.RequiredItems?.Any() == true)
+                        {
+                            <img src="_content/SurrealCB.CommonUI/icons/reward.svg" />
+                        }
                     </div>
-                </MatTooltip>
-                <img src="_content/SurrealCB.CommonUI/icons/gold.svg" />
-                @if (levelBoost.RequiredItems?.Any() == true)
-                {
-                    <img src="_content/SurrealCB.CommonUI/icons/reward.svg" />
-                }
+                </div>
             }
             @foreach (var level in card.Card.LevelBoosts.Select(x => x.Level).Distinct().OrderBy(x => x))
             {
-                <div style="grid-row: @level">
+                <div style="grid-row: @level; grid-column: 1">
                     Level @level
                 </div>
             }

@@ -973,24 +973,46 @@ ul.breadcrumb {
 .card-status-levels {
     display: grid;
     grid-template-rows: 50px;
-    grid-row-gap: 20px;
+    grid-row-gap: 40px;
     width: 50%;
+    position: relative;
 }
 
     .card-status-levels img {
-        width: 50px;
-        height: 50px;
+        width: 70px;
+        height: 70px;
         border: 5px solid black;
         opacity: 0.5;
     }
 
-    .battle-card-effects {
-        position: absolute;
-        top: 15%;
-        left: 10px;
-        display: flex;
-        flex-direction: row;
-    }
+.card-level-boost {
+    position:relative 
+}
+
+.card-level-side {
+    position: absolute;
+    left: 70px;
+    top: 0px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-status-levels .card-level-side img {
+    width: 35px;
+    height: 35px;
+}
+
+.card-status-levels .card-level-side span {
+    text-align: center;
+}
+
+.battle-card-effects {
+    position: absolute;
+    top: 15%;
+    left: 10px;
+    display: flex;
+    flex-direction: row;
+}
 
     .battle-card-effects img {
         width: 25px;
