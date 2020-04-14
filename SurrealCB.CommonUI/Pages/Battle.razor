@@ -103,7 +103,7 @@
         {
             var card = this.cards.FirstOrDefault(x => x.Position == this.nextPosition);
             var who = -1;
-            if (card.PlayerCard.Card.AtkType != AtkType.ALL && card.PlayerCard.Card.AtkType != AtkType.HEAL)
+            if (card.PlayerCard.Card.AtkType != AtkType.ALL && card.PlayerCard.Card.AtkType != AtkType.RANDOM)
             {
                 do
                 {
@@ -112,6 +112,10 @@
                     who = random.Next(1, playerCardcount + 1) - 1;
                 }
                 while (this.cards.FirstOrDefault(x => x.Position == who).Hp == 0 && this.battleStatus == BattleEnd.CONTINUE);
+            }
+            if (card.PlayerCard.Card.AtkType == AtkType.HEAL)
+            {
+                who += 4;
             }
             ApiResponseDto atkResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/battle/perform?srcPos={nextPosition}&tarPos={who}", this.cards);
             var newStatus = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleStatus>(atkResponse.Result.ToString());

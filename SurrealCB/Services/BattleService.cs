@@ -48,6 +48,11 @@ namespace SurrealCB.Server
 
         public Task<ICollection<BattleAction>> PerformAttack(BattleCard srcCard, BattleCard tarCard)
         {
+            if (srcCard.PlayerCard.Card.AtkType == AtkType.HEAL)
+            {
+                var status = this.PerformHeal(srcCard, tarCard);
+                return status;
+            }
             ICollection<BattleAction> retList = new List<BattleAction>();
             var cancelStatus = this.ShouldCancelAttack(srcCard, tarCard);
             if (cancelStatus != CancelStatus.NONE)
@@ -63,6 +68,21 @@ namespace SurrealCB.Server
 
             var dmgType = tarCard.Hp == 0 ? HealthChange.DEATH : HealthChange.DAMAGE;
             retList.Add(new BattleAction { Number = dmg + extraDmg, Position = tarCard.Position, Type = dmgType });
+
+            return Task.FromResult(retList);
+        }
+
+        public Task<ICollection<BattleAction>> PerformHeal(BattleCard srcCard, BattleCard tarCard)
+        {
+            ICollection<BattleAction> retList = new List<BattleAction>();
+            var cancelStatus = this.ShouldCancelAttack(srcCard, tarCard);
+            if (cancelStatus != CancelStatus.NONE)
+            {
+                return Task.FromResult(retList);
+            }
+            tarCard.Hp = Math.Min(tarCard.GetHp(), tarCard.Hp + srcCard.GetAtk());
+            retList.Add(new BattleAction { Number = srcCard.GetAtk(), Position = tarCard.Position, Type = HealthChange.HEAL });
+            retList = retList.Concat(this.CalculateEffectsOnAttack(srcCard, tarCard, 0)).ToList();
 
             return Task.FromResult(retList);
         }

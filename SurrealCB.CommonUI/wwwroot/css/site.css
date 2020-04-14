@@ -965,6 +965,10 @@ ul.breadcrumb {
         color: green;
     }
 
+    .battle-card-dmg.dmg-HEAL {
+        color: #00ff99;
+    }
+
 /* CARD STATUS */
 
 .card-status {

@@ -10,7 +10,7 @@ using SurrealCB.Data;
 namespace SurrealCB.Data.Migrations
 {
     [DbContext(typeof(SCBDbContext))]
-    [Migration("20200413153357_v1")]
+    [Migration("20200414131706_v1")]
     partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -220,6 +220,9 @@ namespace SurrealCB.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<int>("Exp")
+                        .HasColumnType("int");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(64)")

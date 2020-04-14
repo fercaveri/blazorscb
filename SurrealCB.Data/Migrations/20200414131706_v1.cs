@@ -43,7 +43,8 @@ namespace SurrealCB.Data.Migrations
                     FirstName = table.Column<string>(maxLength: 64, nullable: true),
                     LastName = table.Column<string>(maxLength: 64, nullable: true),
                     FullName = table.Column<string>(maxLength: 64, nullable: true),
-                    Gold = table.Column<int>(nullable: false)
+                    Gold = table.Column<int>(nullable: false),
+                    Exp = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

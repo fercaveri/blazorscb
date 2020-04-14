@@ -39,7 +39,7 @@ namespace SurrealCB.CommonUI
 
         public async Task UpdateUserProfile()
         {
-            await _userProfileApi.Upsert(UserProfile);
+            await _userProfileApi.Update(UserProfile);
         }
 
         public async Task<UserProfileDto> GetUserProfile()
