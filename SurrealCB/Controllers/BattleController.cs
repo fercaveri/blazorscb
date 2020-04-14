@@ -42,7 +42,7 @@ namespace SurrealCB.Server.Controllers
             var userCards = await this.userService.GetUserCards();
             for (var i = 0; i < 4; i++)
             {
-                var pcard = userCards[random.Next(userCards.Count - 1)];
+                var pcard = userCards[random.Next(userCards.Count)];
                 battleCards.Add(new BattleCard(pcard)
                 {
                     Position = i
@@ -52,7 +52,7 @@ namespace SurrealCB.Server.Controllers
             var enemy = await this.repository.Enemies.FirstOrDefaultAsync(x => x.Id == enemyId);
             for (var i = 0; i < 4; i++)
             {
-                var pcard = enemy.Cards[random.Next(enemy.Cards.Count - 1)];
+                var pcard = enemy.Cards[random.Next(enemy.Cards.Count)];
                 battleCards.Add(new BattleCard(pcard)
                 {
                     Position = i + 4
@@ -81,7 +81,15 @@ namespace SurrealCB.Server.Controllers
                     while (tarPos == -1)
                     {
                         var random = new Random();
-                        var tryPos = random.Next(1, 4) + 3;
+                        int tryPos = -1;
+                        if (srcPos < 4)
+                        {
+                            tryPos = random.Next(1, 4) + 3;
+                        }
+                        else
+                        {
+                            tryPos = random.Next(1, 4) - 1;
+                        }
                         var tryCard = cards.FirstOrDefault(x => x.Position == tryPos);
                         if (tryCard != null)
                         {
@@ -95,7 +103,6 @@ namespace SurrealCB.Server.Controllers
                     List<BattleCard> targets;
                     if (srcPos < 4)
                     {
-                        //Check deep copy
                         targets = cards.Where(x => x.Position > 3).ToList();
                     }
                     else

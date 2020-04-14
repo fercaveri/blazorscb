@@ -24,14 +24,14 @@ namespace SurrealCB.CommonUI.Services
             _httpClient = httpClient;
         }
 
-        public async Task<ApiResponseDto> Get()
+        public Task<ApiResponseDto> Get()
         {
-            return await _httpClient.GetJsonAsync<ApiResponseDto>("api/user/get");
+            return _httpClient.GetJsonAsync<ApiResponseDto>("api/user/get");
         }
 
-        public async Task<ApiResponseDto> Update(UserProfileDto userProfile)
+        public Task<ApiResponseDto> Update(UserProfileDto userProfile)
         {
-            return await _httpClient.PostJsonAsync<ApiResponseDto>("api/user/update", userProfile);
+            return _httpClient.PostJsonAsync<ApiResponseDto>("api/user/update", userProfile);
         }
     }
 }

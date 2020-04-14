@@ -12,5 +12,6 @@ namespace SurrealCB.Data.Model
         DEATH,
         POISON,
         BLAZE,
+        BLEED,
     }
 }

@@ -1,6 +1,7 @@
 ﻿@inject HttpClient Http
 @inject IMatToaster matToaster
 @inject NavigationManager navigationManager
+@inject AppState appState 
 @page "/player_cards"
 
 <div class="card-list-container">
@@ -22,7 +23,7 @@
 
     private async Task GetUserCards()
     {
-        ApiResponseDto apiResponse = await Http.GetJsonAsync<ApiResponseDto>("api/card/player");
+        ApiResponseDto apiResponse = await Http.GetJsonAsync<ApiResponseDto>($"api/card/user");
 
         if (apiResponse.StatusCode == Status200OK)
         {

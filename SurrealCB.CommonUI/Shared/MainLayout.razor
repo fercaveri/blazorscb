@@ -48,7 +48,8 @@
                         </div>
                     </MatAppBarSection>
                     <MatAppBarSection Align="@MatAppBarSectionAlign.End">
-                        <!-- TODO: PROFILE -->
+                        <div><img src="_content/SurrealCB.CommonUI/icons/reward.svg" /> @currentGold</div>
+                        <div>EXP: @currentExp</div>
                     </MatAppBarSection>
                 </MatAppBarRow>
             </MatAppBar>
@@ -70,7 +71,8 @@
     bool _navMenuOpened = true;
     bool _navMinified = false;
     public string bbDrawerClass = "";
-
+    int currentGold = 0;
+    int currentExp = 0;
 
     private void CallLogin()
     {
@@ -89,6 +91,9 @@
         // Set Default landing page if you want for anonymous user.
         // Authenticated users are redirected after successful login.
         //navigationManager.NavigateTo("/");
+
+        currentGold = await appState.GetUserProfileGold();
+        currentExp = await appState.GetUserProfileExp();
 
         var user = (await authenticationStateTask).User;
 

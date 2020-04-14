@@ -761,7 +761,7 @@ ul.breadcrumb {
 
     .card-list-container .uicard-container {
         border: 1px solid black;
-        max-width: 20%;
+        max-width: 20vw;
         margin: 10px;
         border-radius: 5px;
     }
@@ -955,8 +955,7 @@ ul.breadcrumb {
     font-size: 80px;
     font-weight: bold;
     color: red;
-    animation-name: floating-dmg;
-    animation-duration: 1s;
+    animation: floating-dmg 1.5s, fade-out 1.5s;
     animation-iteration-count: 1;
     animation-timing-function: ease-in-out;
 }
@@ -965,9 +964,45 @@ ul.breadcrumb {
         color: green;
     }
 
+    .battle-card-dmg.dmg-BLEED {
+        color: #910428;
+    }
+
+    .battle-card-dmg.dmg-BLAZE {
+        color: #ff8800;
+    }
+
     .battle-card-dmg.dmg-HEAL {
         color: #00ff99;
     }
+
+@keyframes floating-dmg {
+    from {
+        transform: translate(0, 30px);
+    }
+
+    65% {
+        transform: translate(0, 0px);
+    }
+
+    to {
+        transform: translate(0, -0px);
+    }
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
 
 /* CARD STATUS */
 
@@ -1064,20 +1099,6 @@ ul.breadcrumb {
         width: 25px;
         height: 25px;
     }
-
-@keyframes floating-dmg {
-    from {
-        transform: translate(0, 30px);
-    }
-
-    65% {
-        transform: translate(0, 0px);
-    }
-
-    to {
-        transform: translate(0, -0px);
-    }
-}
 
 .battle-pos-0 {
     grid-column: 1;

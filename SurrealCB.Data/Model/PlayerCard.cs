@@ -16,6 +16,7 @@ namespace SurrealCB.Data.Model
         public Guid? ApplicationUserId { get; set; }
         public virtual List<CardPassive> GetPassives()
         {
+            //TODO: FIX NULL PASSIVE
             var list = new List<CardPassive> { };
             if (this.Card.Passive != null)
             {
@@ -59,7 +60,7 @@ namespace SurrealCB.Data.Model
         public double GetSpd()
         {
             var speed = this.Card.Spd;
-            speed += this.ActiveLvlBoosts.Where(x => x.Boost.Spd > 0).Sum(x => x.Boost.Spd);
+            speed -= this.ActiveLvlBoosts.Where(x => x.Boost.Spd > 0).Sum(x => x.Boost.Spd);
             //TODO: Rune 
             return speed;
         }

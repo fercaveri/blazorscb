@@ -61,8 +61,8 @@ namespace SurrealCB.Server
             }
             var dmg = this.CalculateDmg(srcCard, tarCard);
             var extraDmg = this.CalculateExtraDmg(srcCard, tarCard);
-            retList = retList.Concat(this.ApplyAttackStatus(srcCard, tarCard, dmg)).ToList();
             retList = retList.Concat(this.CalculateEffectsOnAttack(srcCard, tarCard, dmg)).ToList();
+            retList = retList.Concat(this.ApplyAttackStatus(srcCard, tarCard, dmg)).ToList();
             tarCard.Hp = tarCard.Hp - dmg - extraDmg;
             if (tarCard.Hp < 0) tarCard.Hp = 0;
 
@@ -290,7 +290,7 @@ namespace SurrealCB.Server
         {
             var actions = new List<BattleAction>();
             var srcEffs = srcCard.ActiveEffects;
-            var tarEffs = srcCard.ActiveEffects;
+            var tarEffs = tarCard.ActiveEffects;
             for (int i = srcEffs.Count - 1; i >= 0; i--)
             {
                 var eff = srcEffs[i];
@@ -300,6 +300,7 @@ namespace SurrealCB.Server
                         if (eff.Param2 > 0)
                         {
                             this.ApplyDmg(srcCard, (int)eff.Param1);
+                            actions.Add(new BattleAction { Number = (int)eff.Param1, Position = tarCard.Position, Type = HealthChange.BLEED });
                         }
                         else
                         {
@@ -318,6 +319,7 @@ namespace SurrealCB.Server
                         if (eff.Param2 > 0)
                         {
                             this.ApplyDmg(tarCard, (int)eff.Param1);
+                            actions.Add(new BattleAction { Number = (int)eff.Param1, Position = tarCard.Position, Type = HealthChange.BLAZE });
                         }
                         else
                         {

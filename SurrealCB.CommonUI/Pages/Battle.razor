@@ -34,7 +34,7 @@
                 <div class="battle-card-effects">
                     @foreach (var passive in card.ActiveEffects.Select(x => x.Passive))
                     {
-                        <img class="passive-@PassiveHelper.GetPassiveTuple(passive).Item2" src="_content/SurrealCB.CommonUI/icons/@(PassiveHelper.GetPassiveTuple(passive).Item2).svg">
+                        <img class="icon-@PassiveHelper.GetPassiveTuple(passive).Item2" src="_content/SurrealCB.CommonUI/icons/@(PassiveHelper.GetPassiveTuple(passive).Item2).svg">
                     }
                 </div>
             }
@@ -101,6 +101,7 @@
         }
         if (this.nextPosition > 3)
         {
+            StateHasChanged();
             var card = this.cards.FirstOrDefault(x => x.Position == this.nextPosition);
             var who = -1;
             if (card.PlayerCard.Card.AtkType != AtkType.ALL && card.PlayerCard.Card.AtkType != AtkType.RANDOM)
@@ -153,15 +154,24 @@
     private async Task CheckStatus(BattleStatus status)
     {
         this.cards = status.Cards.ToList();
-        this.nextPosition = status.NextPosition;
         if (status.Actions?.Count() > 0)
         {
-            //TODO: agarrar de a 1 accion por carta
-            this.Actions = status.Actions;
-            StateHasChanged();
-            await Task.Delay(1000);
+            var groupActions = status.Actions.GroupBy(x => x.Position).Select(x => x.First());
+            do
+            {
+                this.Actions = groupActions.ToList();
+                StateHasChanged();
+                await Task.Delay(1500);
+                foreach (var act in groupActions)
+                {
+                    status.Actions.Remove(act);
+                }
+                groupActions = status.Actions.GroupBy(x => x.Position).Select(x => x.First());
+            }
+            while (groupActions.Count() > 0);
             this.Actions.Clear();
         }
+        this.nextPosition = status.NextPosition;
         this.battleStatus = status.Status;
         if (this.battleStatus == BattleEnd.CONTINUE)
         {

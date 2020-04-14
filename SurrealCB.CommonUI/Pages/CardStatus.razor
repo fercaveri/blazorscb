@@ -110,6 +110,14 @@
         {
             return PassiveHelper.GetPassiveTuple(b.Passive.Passive).Item2;
         }
+        else if (b.Hp < 0 || b.Def < 0 || b.Spd < 0)
+        {
+            return "question";
+        }
+        else if (b.Hp != 0 && b.Def != 0)
+        {
+            return "strenght";
+        }
         else if (b.Hp != 0)
         {
             return "health";
@@ -138,29 +146,34 @@
     {
         var message = "";
         var b = lb.Boost;
-        if (b.Hp > 0)
+        if (b.Hp != 0)
         {
-            message += $"Hp +{b.Hp} / ";
+            message += $"Hp +{b.Hp}";
         }
-        if (b.Atk > 0)
+        if (b.Atk != 0)
         {
-            message += $"Atk +{b.Atk} / ";
+            if (message != "") message += " / ";
+            message += $"Atk +{b.Atk}";
         }
-        if (b.Def > 0)
+        if (b.Def != 0)
         {
-            message += $"Def +{b.Def} / ";
+            if (message != "") message += " / ";
+            message += $"Def +{b.Def}";
         }
-        if (b.Imm > 0)
+        if (b.Imm != 0)
         {
-            message += $"Imm +{b.Imm}% / ";
+            if (message != "") message += " / ";
+            message += $"Imm +{b.Imm}%";
         }
-        if (b.Spd > 0)
+        if (b.Spd != 0)
         {
-            message += $"Spd -{b.Spd} / ";
+            if (message != "") message += " / ";
+            message += $"Spd -{b.Spd}";
         }
         if (b.Passive != null)
         {
-            message += PassiveHelper.GetPassiveTuple(b.Passive.Passive, b.Passive.Param1, b.Passive.Param2, b.Passive.Param3) + " / ";
+            if (message != "") message += " / ";
+            message += PassiveHelper.GetPassiveTuple(b.Passive.Passive, b.Passive.Param1, b.Passive.Param2, b.Passive.Param3);
         }
         return message;
     }

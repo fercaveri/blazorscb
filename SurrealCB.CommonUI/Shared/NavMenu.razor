@@ -10,6 +10,9 @@
             <MatIcon>list_alt</MatIcon> <span class="miniHover">Card List</span>
         </MatNavItem>
 
+        <MatNavItem Href="@navigationManager.ToAbsoluteUri("player_cards").AbsoluteUri">
+            <MatIcon>list_alt</MatIcon> <span class="miniHover">Player Cards</span>
+        </MatNavItem>
         @*<MatNavSubMenu>
             <MatNavSubMenuHeader>
                 <MatNavItem AllowSelection="false" Disabled="@(!IsLoggedIn)">

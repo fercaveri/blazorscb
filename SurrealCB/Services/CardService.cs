@@ -34,6 +34,8 @@ namespace SurrealCB.Server
         public async Task ActivateLevelBoost(PlayerCard card, LevelBoost lb)
         {
             var userGold = await this.userService.GetUserGold();
+            //TODO: BORRAR!!!
+            userGold = 10000;
             if (lb.Cost > userGold)
             {
                 throw new ApiException("Gold insufficent", 400);

@@ -140,27 +140,17 @@ namespace SurrealCB.Data
             if (!_context.PlayerCards.Any())
             {
                 var userId = (await _context.Users.FirstOrDefaultAsync()).Id;
+                var pcards = new List<PlayerCard>();
+                for (var i = 1; i < 16; i++)
+                {
+                    pcards.Add(new PlayerCard
+                    {
+                        Card = this.cards.FirstOrDefault(x => x.Id == i),
+                        ApplicationUserId = userId
+                    });
+                }
                 _context.PlayerCards.AddRange(
-                   new PlayerCard
-                   {
-                       Card = this.cards.FirstOrDefault(x => x.Id == 1),
-                       ApplicationUserId = userId
-                   },
-                   new PlayerCard
-                   {
-                       Card = this.cards.FirstOrDefault(x => x.Id == 2),
-                       ApplicationUserId = userId
-                   },
-                   new PlayerCard
-                   {
-                       Card = this.cards.FirstOrDefault(x => x.Id == 3),
-                       ApplicationUserId = userId
-                   },
-                   new PlayerCard
-                   {
-                       Card = this.cards.FirstOrDefault(x => x.Id == 4),
-                       ApplicationUserId = userId
-                   }
+                   pcards
                 );
             }
 
@@ -362,7 +352,7 @@ namespace SurrealCB.Data
                         new LevelBoost { Id = 7, Boost = new CardBoost { Hp = 1 }, Level = 3, Cost = 25},
                         new LevelBoost { Id = 8, Boost = new CardBoost { Hp = 1 }, Level = 4, Cost = 60},
                         new LevelBoost { Id = 9, Boost = new CardBoost { Spd = 0.4 }, Level = 4, Cost = 100, RequiredItems = new List<RequiredItem>{ new RequiredItem { Item = this.GetItem("Horse Hair"), Amount = 2 } } },
-                        new LevelBoost { Id = 10, Boost = new CardBoost { Passive = new CardPassive { Id = 10000, Passive = Passive.DODGE, Param1 = 35} }, Level = 5, Cost = 400, ImprovedName = "Dodge Horse"},
+                        new LevelBoost { Id = 10, Boost = new CardBoost { Passive = new CardPassive { Id = 100000, Passive = Passive.DODGE, Param1 = 35} }, Level = 5, Cost = 400, ImprovedName = "Dodge Horse"},
                         new LevelBoost { Id = 11, Boost = new CardBoost { Spd = 0.3 }, Level = 5, Cost = 300, RequiredBoostId = 9, ImprovedName = "Speedy Horse"},
                     }
                 },
@@ -377,7 +367,7 @@ namespace SurrealCB.Data
                         new LevelBoost { Id = 13, Boost = new CardBoost { Hp = 1 }, Level = 3, Cost = 75},
                         new LevelBoost { Id = 14, Boost = new CardBoost { Def = 1 }, Level = 4, Cost = 250, RequiredItems = new List<RequiredItem>{ new RequiredItem { Item = this.GetItem("Fire Emblem"), Amount = 1 } } },
                         new LevelBoost { Id = 15, Boost = new CardBoost { Hp = 1 }, Level = 4, Cost = 150},
-                        new LevelBoost { Id = 16, Boost = new CardBoost { Passive = new CardPassive { Id = 10001, Passive = Passive.BLAZE, Param1 = 2, Param2 = 9} }, Level = 5, Cost = 600, ImprovedName = "Blazing Wraith"},
+                        new LevelBoost { Id = 16, Boost = new CardBoost { Passive = new CardPassive { Id = 100001, Passive = Passive.BLAZE, Param1 = 2, Param2 = 9} }, Level = 5, Cost = 600, ImprovedName = "Blazing Wraith"},
                         new LevelBoost { Id = 17, Boost = new CardBoost { Def = 1 }, Level = 5, Cost = 700, ImprovedName = "Armored Fire Wraith"},
                     }
                 },
@@ -390,7 +380,7 @@ namespace SurrealCB.Data
                         new LevelBoost { Id = 18, Boost = new CardBoost { Spd = 0.2 }, Level = 2, Cost = 30},
                         new LevelBoost { Id = 19, Boost = new CardBoost { Imm = 10 }, Level = 3, Cost = 90},
                         new LevelBoost { Id = 20, Boost = new CardBoost { Hp = 1 }, Level = 4, Cost = 300, },
-                        new LevelBoost { Id = 22, Boost = new CardBoost { Passive = new CardPassive { Id = 10002, Passive = Passive.BACKTRACK, Param1 = 1} }, Level = 5, Cost = 900, ImprovedName = "Time-Shift Grunt"},
+                        new LevelBoost { Id = 22, Boost = new CardBoost { Passive = new CardPassive { Id = 100002, Passive = Passive.BACKTRACK, Param1 = 1} }, Level = 5, Cost = 900, ImprovedName = "Time-Shift Grunt"},
                         new LevelBoost { Id = 23, Boost = new CardBoost { Def = 1 }, Level = 5, Cost = 750, ImprovedName = "Armored Grunt"}
                     }
                 },
@@ -398,16 +388,29 @@ namespace SurrealCB.Data
                 {
                     Id = 5, Name = "Dark Eye Fighter", Tier = 1, Rarity = Rarity.SPECIAL, AtkType = AtkType.RANDOM, Element = Element.FIRE,
                     Passive = new CardPassive { Id = 2, Passive = Passive.HP_SHATTER, Param1 = 10},
-                    Hp = 7, Atk = 1, Def = 0, Imm = 0, Spd = 1.3, Value = 50, BaseExp = 45, RuneSlots = 1,
+                    Hp = 6, Atk = 1, Def = 0, Imm = 0, Spd = 1.8, Value = 50, BaseExp = 45, RuneSlots = 1,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/dark_eye_fighter.png",
-                    LevelBoosts = null
+                    LevelBoosts = new List<LevelBoost>{
+                        new LevelBoost { Id = 24, Boost = new CardBoost { Spd = 0.1 }, Level = 2, Cost = 100},
+                        new LevelBoost { Id = 25, Boost = new CardBoost { Spd = 0.1 }, Level = 3, Cost = 250},
+                        new LevelBoost { Id = 26, Boost = new CardBoost { Spd = 0.1 }, Level = 4, Cost = 600, },
+                        new LevelBoost { Id = 21, Boost = new CardBoost { Hp = 1 }, Level = 4, Cost = 350, },
+                        new LevelBoost { Id = 27, Boost = new CardBoost { Passive = new CardPassive { Id = 100003, Passive = Passive.HP_SHATTER, Param1 = 15} }, Level = 5, Cost = 1000, ImprovedName = "Dark Eye Breaker"},
+                        new LevelBoost { Id = 28, Boost = new CardBoost { Hp = 2 }, Level = 5, Cost = 1250, ImprovedName = "Great Dark Eye Fighter", RequiredItems = new List<RequiredItem>{ new RequiredItem { Item = this.GetItem("Dark Shield"), Amount = 1 } } }
+                    }
                 },
                 new Card
                 {
                     Id = 6, Name = "Mosquito", Tier = 1, Rarity = Rarity.COMMON, AtkType = AtkType.NORMAL, Element = Element.WIND, Passive = null,
                     Hp = 3, Atk = 2, Def = 0, Imm = 25, Spd = 1.5, Value = 20, BaseExp = 20, RuneSlots = 0,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/mosquito.png",
-                    LevelBoosts = null
+                    LevelBoosts = new List<LevelBoost>{
+                        new LevelBoost { Id = 29, Boost = new CardBoost { Imm = 15 }, Level = 2, Cost = 40},
+                        new LevelBoost { Id = 30, Boost = new CardBoost { Imm = 20 }, Level = 3, Cost = 90},
+                        new LevelBoost { Id = 31, Boost = new CardBoost { Spd = 0.1 }, Level = 4, Cost = 200, },
+                        new LevelBoost { Id = 32, Boost = new CardBoost { Hp = 1 }, Level = 5, Cost = 500, ImprovedName = "Great Mosquito", RequiredItems = new List<RequiredItem>{ new RequiredItem { Item = this.GetItem("Leaf"), Amount = 3 } } },
+                        new LevelBoost { Id = 75, Boost = new CardBoost { Hp = 1, Def = 1, Spd = 0.1 }, Level = 6, Cost = 3000, ImprovedName = "Imperial Mosquito", RequiredItems = new List<RequiredItem>{ new RequiredItem { Item = this.GetItem("Light Wings"), Amount = 1 } } }
+                    }
                 },
                 new Card
                 {
@@ -415,7 +418,13 @@ namespace SurrealCB.Data
                     Passive = new CardPassive { Id = 3, Passive = Passive.POISON, Param1 = 1, Param2 = 2, Param3 = 4},
                     Hp = 4, Atk = 1, Def = 0, Imm = 25, Spd = 2.1, Value = 30, BaseExp = 25, RuneSlots = 0,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/poison_mosquito.png",
-                    LevelBoosts = null
+                    LevelBoosts = new List<LevelBoost>{
+                        new LevelBoost { Id = 33, Boost = new CardBoost { Spd = 0.1 }, Level = 2, Cost = 60},
+                        new LevelBoost { Id = 34, Boost = new CardBoost { Imm = 25 }, Level = 3, Cost = 190},
+                        new LevelBoost { Id = 35, Boost = new CardBoost { Spd = 0.2 }, Level = 4, Cost = 400, },
+                        new LevelBoost { Id = 36, Boost = new CardBoost { Hp = 1 }, Level = 5, Cost = 850, ImprovedName = "Great Poison Mosquito", RequiredItems = new List<RequiredItem>{ new RequiredItem { Item = this.GetItem("Leaf"), Amount = 3 } } },
+                        new LevelBoost { Id = 37, Boost = new CardBoost { Hp = 1, Def = 1, Spd = 0.1 }, Level = 6, Cost = 4000, ImprovedName = "Imperial Poison Mosquito", RequiredItems = new List<RequiredItem>{ new RequiredItem { Item = this.GetItem("Light Wings"), Amount = 1 } } }
+                    }
                 },
                 new Card
                 {
@@ -423,7 +432,14 @@ namespace SurrealCB.Data
                     Passive = new CardPassive { Id = 4, Passive = Passive.DODGE, Param1 = 25},
                     Hp = 4, Atk = 1, Def = 0, Imm = 50, Spd = 2.6, Value = 30, BaseExp = 25, RuneSlots = 0,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/crow.png",
-                    LevelBoosts = null
+                    LevelBoosts = new List<LevelBoost>{
+                        new LevelBoost { Id = 38, Boost = new CardBoost { Spd = 0.2 }, Level = 2, Cost = 65},
+                        new LevelBoost { Id = 39, Boost = new CardBoost { Spd = 0.3 }, Level = 3, Cost = 200},
+                        new LevelBoost { Id = 40, Boost = new CardBoost { Atk = 1 }, Level = 4, Cost = 700, },
+                        new LevelBoost { Id = 41, Boost = new CardBoost { Passive = new CardPassive { Id = 100004, Passive = Passive.DODGE, Param1 = 35} }, Level = 4, Cost = 1000, ImprovedName = "Fast Crow"},
+                        new LevelBoost { Id = 42, Boost = new CardBoost { Passive = new CardPassive { Id = 100005, Passive = Passive.DODGE, Param1 = 50} }, Level = 5, Cost = 3000, ImprovedName = "Lighting Crow"},
+                        new LevelBoost { Id = 43, Boost = new CardBoost { Hp = 1, Def = 1 }, Level = 5, Cost = 1300, ImprovedName = "Elite Crow"},
+                    }
                 },
                 new Card
                 {
@@ -431,23 +447,38 @@ namespace SurrealCB.Data
                     Passive = null,
                     Hp = 6, Atk = 3, Def = 0, Imm = 0, Spd = 4.8, Value = 20, BaseExp = 20, RuneSlots = 0,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/imp.png",
-                    LevelBoosts = null
+                    LevelBoosts = new List<LevelBoost>{
+                        new LevelBoost { Id = 44, Boost = new CardBoost { Spd = 0.2 }, Level = 2, Cost = 40},
+                        new LevelBoost { Id = 45, Boost = new CardBoost { Imm = 20 }, Level = 3, Cost = 150},
+                        new LevelBoost { Id = 46, Boost = new CardBoost { Atk = 1 }, Level = 4, Cost = 350, },
+                        new LevelBoost { Id = 47, Boost = new CardBoost { Hp = 1 }, Level = 5, Cost = 700, ImprovedName = "Feline Imp"},
+                    }
                 },
                 new Card
                 {
                     Id = 10, Name = "Lirin", Tier = 1, Rarity = Rarity.SPECIAL, AtkType = AtkType.RANDOM, Element = Element.DARK,
                     Passive = new CardPassive { Id = 5, Passive = Passive.DOOM, Param1 = 8},
-                    Hp = 9, Atk = 0, Def = 0, Imm = 100, Spd = 9, Value = 60, BaseExp = 60, RuneSlots = 1,
+                    Hp = 9, Atk = 0, Def = 0, Imm = 100, Spd = 7, Value = 60, BaseExp = 60, RuneSlots = 1,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/lirin.png",
-                    LevelBoosts = null
+                    LevelBoosts = new List<LevelBoost>{
+                        new LevelBoost { Id = 48, Boost = new CardBoost { Spd = 0.3 }, Level = 2, Cost = 200},
+                        new LevelBoost { Id = 49, Boost = new CardBoost { Spd = 0.3 }, Level = 3, Cost = 400},
+                        new LevelBoost { Id = 50, Boost = new CardBoost { Spd = 0.4 }, Level = 4, Cost = 800},
+                        new LevelBoost { Id = 51, Boost = new CardBoost { Def = 1 }, Level = 5, Cost = 6000, ImprovedName = "KLirin"},
+                    }
                 },
                 new Card
                 {
                     Id = 11, Name = "Little Beast", Tier = 1, Rarity = Rarity.COMMON, AtkType = AtkType.NORMAL, Element = Element.EARTH,
                     Passive = null,
-                    Hp = 3, Atk = 2, Def = 2, Imm = 35, Spd = 3.7, Value = 25, BaseExp = 25, RuneSlots = 0,
+                    Hp = 3, Atk = 2, Def = 1, Imm = 35, Spd = 3.7, Value = 25, BaseExp = 25, RuneSlots = 0,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/little_beast.png",
-                    LevelBoosts = null
+                    LevelBoosts = new List<LevelBoost>{
+                        new LevelBoost { Id = 52, Boost = new CardBoost { Spd = 0.2 }, Level = 2, Cost = 40},
+                        new LevelBoost { Id = 53, Boost = new CardBoost { Hp = 1 }, Level = 3, Cost = 230},
+                        new LevelBoost { Id = 54, Boost = new CardBoost { Imm = 10 }, Level = 4, Cost = 500},
+                        new LevelBoost { Id = 55, Boost = new CardBoost { Def = 1 }, Level = 5, Cost = 1700, ImprovedName = "Middle Beast"},
+                    }
                 },
                 new Card
                 {
@@ -455,23 +486,41 @@ namespace SurrealCB.Data
                     Passive = new CardPassive { Id = 6, Passive = Passive.POISON, Param1 = 2, Param2 = 3, Param3 = 6 },
                     Hp = 6, Atk = 1, Def = 0, Imm = 0, Spd = 5.3, Value = 25, BaseExp = 35, RuneSlots = 0,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/reptillion.png",
-                    LevelBoosts = null
+                    LevelBoosts = new List<LevelBoost>{
+                        new LevelBoost { Id = 56, Boost = new CardBoost { Spd = 0.3 }, Level = 2, Cost = 70},
+                        new LevelBoost { Id = 57, Boost = new CardBoost { Hp = 1 }, Level = 3, Cost = 270},
+                        new LevelBoost { Id = 58, Boost = new CardBoost { Spd = 0.3 }, Level = 4, Cost = 550},
+                        new LevelBoost { Id = 59, Boost = new CardBoost { Atk = 1 }, Level = 5, Cost = 1900, ImprovedName = "Fiere Reptillion"},
+                        new LevelBoost { Id = 60, Boost = new CardBoost { Passive = new CardPassive { Id = 100006, Passive = Passive.POISON, Param1 = 2, Param2 = 2.5, Param3 = 5} }, Level = 5, Cost = 1300, ImprovedName = "Poisonus Reptillion"},
+                    }
                 },
                 new Card
                 {
-                    Id = 13, Name = "Elkchampion", Tier = 1, Rarity = Rarity.LEGENDARY, AtkType = AtkType.ALL, Element = Element.LIGHT,
+                    Id = 13, Name = "ELKchampion", Tier = 1, Rarity = Rarity.LEGENDARY, AtkType = AtkType.ALL, Element = Element.LIGHT,
                     Passive = new CardPassive { Id = 7, Passive = Passive.IGNORE_DEF },
                     Hp = 8, Atk = 1, Def = 1, Imm = 0, Spd = 5, Value = 120, BaseExp = 200, RuneSlots = 1,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/elkchampion.png",
-                    LevelBoosts = null
+                    LevelBoosts = new List<LevelBoost>{
+                        new LevelBoost { Id = 61, Boost = new CardBoost { Spd = 0.2 }, Level = 2, Cost = 250},
+                        new LevelBoost { Id = 62, Boost = new CardBoost { Hp = 1 }, Level = 3, Cost = 650},
+                        new LevelBoost { Id = 63, Boost = new CardBoost { Imm = 15 }, Level = 4, Cost = 1250},
+                        new LevelBoost { Id = 64, Boost = new CardBoost { Spd = 0.8 }, Level = 5, Cost = 10000, ImprovedName = "ELiteKchampion"},
+                        new LevelBoost { Id = 65, Boost = new CardBoost { Passive = new CardPassive { Id = 100007, Passive = Passive.DODGE, Param1 = 15} }, Level = 5, Cost = 1300, ImprovedName = "DodgeELKchampion"},
+                    }
                 },
                 new Card
                 {
                     Id = 14, Name = "Little Hidra", Tier = 1, Rarity = Rarity.SPECIAL, AtkType = AtkType.RANDOM, Element = Element.WATER,
                     Passive = null,
-                    Hp = 9, Atk = 1, Def = 0, Imm = 0, Spd = 1.2, Value = 80, BaseExp = 120, RuneSlots = 1,
+                    Hp = 9, Atk = 1, Def = 0, Imm = 0, Spd = 1.5, Value = 80, BaseExp = 120, RuneSlots = 1,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/little_hidra.png",
-                    LevelBoosts = null
+                    LevelBoosts = new List<LevelBoost>{
+                        new LevelBoost { Id = 66, Boost = new CardBoost { Spd = 0.1 }, Level = 2, Cost = 180},
+                        new LevelBoost { Id = 67, Boost = new CardBoost { Hp = 1 }, Level = 3, Cost = 400},
+                        new LevelBoost { Id = 68, Boost = new CardBoost { Imm = 25 }, Level = 4, Cost = 1000},
+                        new LevelBoost { Id = 69, Boost = new CardBoost { Spd = 0.4 }, Level = 5, Cost = 6000, ImprovedName = "Little Fast Hidra"},
+                        new LevelBoost { Id = 70, Boost = new CardBoost { Hp = -4, Atk = 1, Def = 1 }, Level = 5, Cost = 8000, ImprovedName = "Berseker Hidra"},
+                    }
                 },
                 new Card
                 {
@@ -479,7 +528,12 @@ namespace SurrealCB.Data
                     Passive = null,
                     Hp = 6, Atk = 2, Def = 0, Imm = 0, Spd = 3.5, Value = 40, BaseExp = 40, RuneSlots = 0,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/triton.png",
-                    LevelBoosts = null
+                    LevelBoosts = new List<LevelBoost>{
+                        new LevelBoost { Id = 71, Boost = new CardBoost { Spd = 0.2 }, Level = 2, Cost = 70},
+                        new LevelBoost { Id = 72, Boost = new CardBoost { Hp = 1 }, Level = 3, Cost = 210},
+                        new LevelBoost { Id = 73, Boost = new CardBoost { Def = 1 }, Level = 4, Cost = 550},
+                        new LevelBoost { Id = 74, Boost = new CardBoost { Atk = 1 }, Level = 5, Cost = 1700, ImprovedName = "TRIton"},
+                    }
                 },
             };
             return cards;
