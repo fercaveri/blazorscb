@@ -1,6 +1,6 @@
 <div class="uicard-container uicard-element-@Element uicard-rarity-@Rarity mat-elevation-z4">
     <div class="uicard-title">
-        <div> @Name </div>
+        <div> <span class="uicard-level">@Level</span>@Name </div>
         <div> @Tier  </div>
     </div>
     <MatDivider> </MatDivider>
@@ -57,6 +57,8 @@
     public List<Rune> Runes { get; set; }
     [Parameter]
     public List<CardPassive> Passives { get; set; }
+    [Parameter]
+    public int Level { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

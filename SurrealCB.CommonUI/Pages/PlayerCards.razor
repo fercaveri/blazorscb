@@ -1,15 +1,15 @@
 ﻿@inject HttpClient Http
 @inject IMatToaster matToaster
 @inject NavigationManager navigationManager
-@inject AppState appState 
+@inject AppState appState
 @page "/player_cards"
 
 <div class="card-list-container">
     @foreach (PlayerCard card in this.cards)
     {
         <div @onclick="() => NavigateToPlayerCard(card.Id)">
-            <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.GetHp()" Imm="@card.GetImm()" Name="@card.Card.Name" Element="@card.Card.Element"
-                    Tier="@card.Card.Tier" Rarity="@card.Card.Rarity" AType="@card.Card.AtkType" ImgSrc="@card.Card.ImgSrc" Passives="@card.GetPassives()"></UICard>
+            <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.GetHp()" Imm="@card.GetImm()" Name="@card.GetName()" Element="@card.Card.Element"
+                    Tier="@card.Card.Tier" Rarity="@card.Card.Rarity" AType="@card.Card.AtkType" ImgSrc="@card.Card.ImgSrc" Passives="@card.GetPassives()" Level="card.GetLevel()"></UICard>
         </div>
     }
 </div>

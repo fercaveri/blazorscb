@@ -781,6 +781,12 @@ ul.breadcrumb {
         flex-direction: row;
     }
 
+.uicard-level {
+    padding: 5px;
+    border: 1px solid black;
+    font-weight: bold;
+}
+
 .card-icon {
     width: 20px;
     height: 20px;
@@ -1166,31 +1172,31 @@ ul.breadcrumb {
 }
 
 .uicard-element-FIRE {
-    background-color: #ef9a9a;
+    background-color: rgba(239, 154, 154, 0.5);
 }
 
 .uicard-element-WATER {
-    background-color: #90caf9;
+    background-color: rgba(144, 202, 249, 0.5);
 }
 
 .uicard-element-EARTH {
-    background-color: #bcaaa4;
+    background-color: rgba(188, 170, 164, 0.5);
 }
 
 .uicard-element-DARK {
-    background-color: #9fa8da;
+    background-color: rgba(159, 168, 218, 0.5);
 }
 
 .uicard-element-LIGHT {
-    background-color: #fff59d;
+    background-color: rgba(255, 245, 157, 0.5);
 }
 
 .uicard-element-NATURE {
-    background-color: #a5d6a7;
+    background-color: rgba(165, 214, 167, 0.5);
 }
 
 .uicard-element-WIND {
-    background-color: #80deea;
+    background-color: rgba(128, 222, 234, 0.5);
 }
 
 .uicard-element-NONE {

@@ -5,9 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace SurrealCB.Data.Model
 {
     public class Card : Stats
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public override int Id { get; set; } 
+    { 
         public string Name { get; set; }
         public int Tier { get; set; }
         public Rarity Rarity { get; set; }

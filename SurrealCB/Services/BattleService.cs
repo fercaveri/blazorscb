@@ -32,8 +32,18 @@ namespace SurrealCB.Server
             var timeElapsed = nextCard.Time;
             foreach (var card in cards)
             {
-                //TODO: Apply freeze etc
-                card.Time = Math.Max(card.Time - timeElapsed, 0);
+                var cardTimeElapsed = timeElapsed;
+                var passives = card.ActiveEffects;
+                foreach (var passive in passives)
+                {
+                    switch (passive.Passive)
+                    {
+                        case Passive.FREEZE:
+                            cardTimeElapsed -= cardTimeElapsed / passive.Param1;
+                            break;
+                    };
+                }
+                card.Time = Math.Max(card.Time - cardTimeElapsed, 0);
             }
             nextCard.Time = nextCard.GetSpd();
             var actions = this.CheckNextTurnStatus(cards, timeElapsed);
@@ -254,6 +264,7 @@ namespace SurrealCB.Server
                         case Passive.POISON:
                         case Passive.BLEED:
                         case Passive.BLAZE:
+                        case Passive.FREEZE:
                             var eff = tarCard.ActiveEffects.FirstOrDefault(x => x.Passive == passive.Passive);
                             if (eff != null)
                             {

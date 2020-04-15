@@ -286,7 +286,9 @@ namespace SurrealCB.Data.Migrations
             modelBuilder.Entity("SurrealCB.Data.Model.Card", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("Atk")
                         .HasColumnType("int");
@@ -378,7 +380,9 @@ namespace SurrealCB.Data.Migrations
             modelBuilder.Entity("SurrealCB.Data.Model.CardPassive", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<double>("Param1")
                         .HasColumnType("float");
@@ -504,7 +508,9 @@ namespace SurrealCB.Data.Migrations
             modelBuilder.Entity("SurrealCB.Data.Model.LevelBoost", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("BoostId")
                         .HasColumnType("int");

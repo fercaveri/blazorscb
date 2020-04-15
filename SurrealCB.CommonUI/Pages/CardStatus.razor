@@ -173,7 +173,7 @@
         if (b.Passive != null)
         {
             if (message != "") message += " / ";
-            message += PassiveHelper.GetPassiveTuple(b.Passive.Passive, b.Passive.Param1, b.Passive.Param2, b.Passive.Param3);
+            message += PassiveHelper.GetPassiveTuple(b.Passive.Passive, b.Passive.Param1, b.Passive.Param2, b.Passive.Param3).Item1;
         }
         return message;
     }

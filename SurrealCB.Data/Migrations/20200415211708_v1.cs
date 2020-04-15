@@ -55,7 +55,8 @@ namespace SurrealCB.Data.Migrations
                 name: "CardPassives",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Passive = table.Column<string>(nullable: false),
                     Param1 = table.Column<double>(nullable: false),
                     Param2 = table.Column<double>(nullable: false),
@@ -275,7 +276,8 @@ namespace SurrealCB.Data.Migrations
                 name: "Cards",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Hp = table.Column<int>(nullable: false),
                     Atk = table.Column<int>(nullable: false),
                     Def = table.Column<int>(nullable: false),
@@ -511,7 +513,8 @@ namespace SurrealCB.Data.Migrations
                 name: "LevelBoosts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Level = table.Column<int>(nullable: false),
                     BoostId = table.Column<int>(nullable: true),
                     ImprovedName = table.Column<string>(nullable: true),

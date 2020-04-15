@@ -22,7 +22,8 @@ namespace SurrealCB.Data.Model
             {
                 list.Add(this.Card.Passive);
             }
-            list = list.Concat(this.ActiveLvlBoosts.OrderBy(x => x.Level).Select(x => x.Boost.Passive)).Distinct().ToList();
+            list = list.Concat(this.ActiveLvlBoosts.Where(x => x.Boost.Passive != null).OrderBy(x => x.Level).Select(x => x.Boost.Passive)).ToList();
+            list = list.GroupBy(p => p.Passive).Select(g => g.Last()).ToList();
             return list;
         }
 
@@ -69,6 +70,12 @@ namespace SurrealCB.Data.Model
         {
             var improvedName = this.ActiveLvlBoosts.OrderByDescending(x => x.Level).FirstOrDefault(x => x.ImprovedName != null)?.ImprovedName;
             return improvedName != null ? improvedName : this.Card.Name;
+        }
+
+        public int GetLevel()
+        {
+            if (this.ActiveLvlBoosts?.Any() != true) return 1;
+            return this.ActiveLvlBoosts.Max(x => x.Level);
         }
     }
 }

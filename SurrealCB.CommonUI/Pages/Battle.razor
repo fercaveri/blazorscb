@@ -10,7 +10,7 @@
         <div class="battle-card @(nextPosition == card.Position ? "active" : "") battle-pos-@card.Position @(card.Hp == 0 ? "battle-death" : "") health-@GetHealthStatus(card)"
              @onclick="() => PlayerPerform(card.Position)">
             <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.Hp" Imm="@card.GetImm()" Name="@card.PlayerCard.GetName()"
-                    Element="@card.PlayerCard.Card.Element" Tier="@card.PlayerCard.Card.Tier" Rarity="@card.PlayerCard.Card.Rarity"
+                    Element="@card.PlayerCard.Card.Element" Tier="@card.PlayerCard.Card.Tier" Rarity="@card.PlayerCard.Card.Rarity" Level="card.PlayerCard.GetLevel()"
                     ImgSrc="@card.PlayerCard.Card.ImgSrc" Passives="@card.PlayerCard.GetPassives()" AType="card.PlayerCard.Card.AtkType"></UICard>
             <MatProgressBar Progress="@GetHpBar(card)"></MatProgressBar>
             <MatProgressBar Progress="@GetSpeedBar(card)" Class="speed-bar"></MatProgressBar>
