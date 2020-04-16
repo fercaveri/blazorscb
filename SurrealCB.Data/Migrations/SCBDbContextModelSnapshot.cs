@@ -426,7 +426,7 @@ namespace SurrealCB.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ExpGain")
+                    b.Property<int>("CardCount")
                         .HasColumnType("int");
 
                     b.Property<int>("Level")
@@ -437,6 +437,9 @@ namespace SurrealCB.Data.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("RandomCards")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("RewardId")
                         .HasColumnType("int");

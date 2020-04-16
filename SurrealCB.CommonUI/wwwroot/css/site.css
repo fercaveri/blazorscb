@@ -773,7 +773,8 @@ ul.breadcrumb {
 
 .uicard-title, .uicard-footer-up, .uicard-footer-down {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    padding: 0 5px;
 }
 
     .uicard-footer-up div {
@@ -782,9 +783,38 @@ ul.breadcrumb {
     }
 
 .uicard-level {
-    padding: 5px;
-    border: 1px solid black;
+    padding: 0 5px;
+    margin-right: 5px;
+    border: 2px solid #666;
     font-weight: bold;
+}
+
+.uicard-name {
+    font-size: 85%;
+}
+
+.level-2 {
+    background-color: #83e6a0;
+}
+
+.level-3 {
+    background-color: #49a0d6;
+}
+
+.level-4 {
+    background-color: #c461cf;
+}
+
+.level-5 {
+    background-color: #e0ce43;
+}
+
+.level-6 {
+    background-color: #d48e50;
+}
+
+.level-7 {
+    background-color: #c44141;
 }
 
 .card-icon {
@@ -893,6 +923,33 @@ ul.breadcrumb {
 
 .map-tier-5 {
     border: 5px ridge purple;
+}
+
+/* MAP */
+
+@media (min-width: 592px) {
+    .mdc-dialog .mdc-dialog__surface {
+        max-width: 100vw !important;
+    }
+}
+
+.uimap-container {
+    position: relative;
+    height: 70vh;
+    width: 70vw;
+}
+
+.uimap-img {
+    height: 100%;
+    width: 100%;
+}
+
+.uimap-enemy {
+    position: absolute;
+    padding: 5px;
+    border: 2px solid black;
+    background-color: white;
+    cursor: pointer;
 }
 
 /* Battle */
@@ -1249,4 +1306,8 @@ ul.breadcrumb {
 
 .icon-ignore_defense {
     filter: invert(10%) sepia(92%) saturate(2745%) hue-rotate(233deg) brightness(84%) contrast(110%);
+}
+
+.icon-freeze {
+    filter: invert(70%) sepia(18%) saturate(2919%) hue-rotate(126deg) brightness(92%) contrast(101%);
 }

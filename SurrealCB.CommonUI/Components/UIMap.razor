@@ -1,0 +1,47 @@
+@inject NavigationManager navigationManager
+
+@if (Map != null)
+{
+    <div class="uimap-container">
+        <img class="uimap-img" src="_content/SurrealCB.CommonUI/images/maps/@(Map.SrcImg)" />
+        @foreach (var enemyNpc in Map.Enemies)
+        {
+            <MatTooltip Tooltip="@GetEnemyTooltip(enemyNpc)">
+                <div @onclick="() => StartBattle(enemyNpc.Id)" @ref="context.Current" class="uimap-enemy" style="bottom: @enemyNpc.Y%; left: @enemyNpc.X%;">
+                    @enemyNpc.Level
+                </div>
+            </MatTooltip>
+        }
+    </div>
+}
+
+@code
+{
+    [Parameter]
+    public Map Map { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    private void StartBattle(int id)
+    {
+        navigationManager.NavigateTo($"battle/{id}");
+    }
+
+    private string GetEnemyTooltip(EnemyNpc enemyNpc)
+    {
+        var message = "";
+        var rew = enemyNpc.Reward;
+        if (rew.Exp > 0)
+        {
+            message += $"Exp: {rew.Exp.ToString()} ";
+        }
+        if (rew.Gold > 0)
+        {
+            message += $"Gold: {rew.Exp.ToString()} ";
+        }
+        return message;
+    }
+}

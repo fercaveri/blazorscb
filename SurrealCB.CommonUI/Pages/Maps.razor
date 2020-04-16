@@ -3,12 +3,11 @@
 @inject NavigationManager navigationManager
 @page "/maps"
 
-
 <div class="maps-container">
     @foreach (Map map in this.maps)
     {
-        <div class="map-item map-@(map.Difficult) map-tier-@GetTier(map.MinLevel)" @onclick="() => StartBattle(map)">
-            <img class="map-thumb" src="@(GetThumbnail(map.SrcImg))" />
+        <div class="map-item map-@(map.Difficult) map-tier-@GetTier(map.MinLevel)" @onclick="() => OpenMap(map)">
+            <img class="map-thumb" src="_content/SurrealCB.CommonUI/images/maps/@(GetThumbnail(map.SrcImg))" />
             <div class="map-stats">
                 <span class="map-name"> @map.Name</span>
                 <div class="map-bottom-stats">
@@ -24,18 +23,37 @@
             <!-- TODO: Hacer candado con tooltip de nivel o required monster etc-->
         </div>
     }
+
+    <MatDialog IsOpen="@(selectedMapId != -1)">
+        <UIMap Map="maps.FirstOrDefault(x => x.Id == selectedMapId)"></UIMap>
+    </MatDialog>
 </div>
 
 @code {
     List<Map> maps = new List<Map>();
+    int selectedMapId = -1;
+
     protected override async Task OnInitializedAsync()
     {
         await GetAllCards();
     }
 
+    private void OpenMap(Map map)
+    {
+        this.selectedMapId = map.Id;
+    }
+
+    private void CheckClose(bool opened)
+    {
+        if (!opened)
+        {
+            this.selectedMapId = -1;
+        }
+    }
+
     private async Task GetAllCards()
     {
-        ApiResponseDto apiResponse = await Http.GetJsonAsync<ApiResponseDto>("api/map/GetAll");
+        ApiResponseDto apiResponse = await Http.GetJsonAsync<ApiResponseDto>("api/map/all");
 
         if (apiResponse.StatusCode == Status200OK)
         {

@@ -10,7 +10,7 @@ using SurrealCB.Data;
 namespace SurrealCB.Data.Migrations
 {
     [DbContext(typeof(SCBDbContext))]
-    [Migration("20200415211708_v1")]
+    [Migration("20200416202850_v1")]
     partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -428,7 +428,7 @@ namespace SurrealCB.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ExpGain")
+                    b.Property<int>("CardCount")
                         .HasColumnType("int");
 
                     b.Property<int>("Level")
@@ -439,6 +439,9 @@ namespace SurrealCB.Data.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("RandomCards")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("RewardId")
                         .HasColumnType("int");

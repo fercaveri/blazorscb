@@ -84,11 +84,11 @@ namespace SurrealCB.Server.Controllers
                         int tryPos = -1;
                         if (srcPos < 4)
                         {
-                            tryPos = random.Next(1, 4) + 3;
+                            tryPos = random.Next(1, 5) + 3;
                         }
                         else
                         {
-                            tryPos = random.Next(1, 4) - 1;
+                            tryPos = random.Next(1, 5) - 1;
                         }
                         var tryCard = cards.FirstOrDefault(x => x.Position == tryPos);
                         if (tryCard != null)
@@ -100,16 +100,7 @@ namespace SurrealCB.Server.Controllers
                 }
                 else if (srcCard.PlayerCard.Card.AtkType == AtkType.ALL)
                 {
-                    List<BattleCard> targets;
-                    if (srcPos < 4)
-                    {
-                        targets = cards.Where(x => x.Position > 3).ToList();
-                    }
-                    else
-                    {
-                        targets = cards.Where(x => x.Position < 4).ToList();
-                    }
-                    var act = await this.battleService.AttackAll(srcCard, targets);
+                    var act = await this.battleService.AttackAll(srcCard, cards);
                     var end = await this.battleService.CheckWinOrLose(cards, srcPos);
                     return new ApiResponse(Status200OK, "Damage applied successfully", new BattleStatus { Cards = cards, Actions = act, NextPosition = -1, Status = end });
                 }
@@ -123,7 +114,7 @@ namespace SurrealCB.Server.Controllers
             {
                 return new ApiResponse(Status400BadRequest, "Wrong request");
             }
-            var actions = await this.battleService.PerformAttack(srcCard, tarCard);
+            var actions = await this.battleService.PerformAttack(srcCard, tarCard, cards);
             var shouldEnd = await this.battleService.CheckWinOrLose(cards, srcPos);
             return new ApiResponse(Status200OK, "Damage applied successfully", new BattleStatus { Cards = cards, Actions = actions, NextPosition = -1, Status = shouldEnd });
         }

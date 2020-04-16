@@ -332,32 +332,6 @@ namespace SurrealCB.Data
             return items;
         }
 
-        private LevelBoost DoBoost(int level, int cost, int hp = 0, int atk = 0, int def = 0, double spd = 0,
-            int imm = 0, Passive p = Passive.NONE, double p1 = 0, double p2 = 0, double p3 = 0, string name = "")
-        {
-            return new LevelBoost
-            {
-                Level = level,
-                Cost = cost,
-                Boost = new CardBoost
-                {
-                    Hp = hp,
-                    Atk = atk,
-                    Def = def,
-                    Spd = spd,
-                    Imm = imm,
-                    Passive = p != Passive.NONE ? new CardPassive
-                    {
-                        Passive = p,
-                        Param1 = p1,
-                        Param2 = p2,
-                        Param3 = p3
-                    } : null
-                },
-                ImprovedName = name
-            };
-        }
-
         private Card[] FillCards()
         {
             Card[] cards =
@@ -454,7 +428,7 @@ namespace SurrealCB.Data
                     Hp = 2, Atk = 1, Def = 0, Imm = 0, Spd = 2.1, Value = 26, BaseExp = 26, RuneSlots = 0,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/moon_elf.png",
                     LevelBoosts = new List<LevelBoost>{
-                        DoBoost(2, 30, spd: 0.1), DoBoost(3, 120, p: Passive.DODGE, p1: 58), DoBoost(4, 320, hp: 1), 
+                        DoBoost(2, 30, spd: 0.1), DoBoost(3, 120, p: Passive.DODGE, p1: 58), DoBoost(4, 320, hp: 1),
                         DoBoost(5, 1100, p: Passive.DODGE, p1: 65, name: "Light Moon Elf")
                     }
                 },
@@ -612,7 +586,7 @@ namespace SurrealCB.Data
                     Hp = 9, Atk = 1, Def = 0, Imm = 0, Spd = 1.5, Value = 80, BaseExp = 120, RuneSlots = 1,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/little_hidra.png",
                     LevelBoosts = new List<LevelBoost>{
-                        DoBoost(2, 140, spd: 0.1), DoBoost(3, 350, hp: 1), DoBoost(4, 850, imm: 25), 
+                        DoBoost(2, 140, spd: 0.1), DoBoost(3, 350, hp: 1), DoBoost(4, 850, imm: 25),
                         DoBoost(5, 4500, spd: 0.4, name: "Little Fast Hidra"), DoBoost(5, 6500, hp: -4, atk: 1, def: 1, name: "Berseker Hidra")
                     }
                 },
@@ -638,27 +612,32 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Mountain", MinLevel = 1, Difficult = MapDifficult.EASY, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/mountain.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "mountain.jpg",
                     Enemies = new List<EnemyNpc>
                     {
-                        new EnemyNpc
-                        {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 10 },
-                            Cards = new List<PlayerCard>{
-                                this.GetPlayerCard("Goblin"), this.GetPlayerCard("Horse"), this.GetPlayerCard("Horse", 3)
-                            }
-                        }
+                        DoEnemy("Rocks Encounter", 1, new List<PlayerCard>{ this.GetPlayerCard("Little Beast"), this.GetPlayerCard("Goblin") },
+                        DoReward(10, 5), X: 5, Y: 25, false, 3),
+                        DoEnemy("Forest Encounter", 1, new List<PlayerCard>{ this.GetPlayerCard("Goblin"), this.GetPlayerCard("Horse"), this.GetPlayerCard("Horse", 2)}, 
+                        DoReward(15, 10), X: 40, Y: 20, false, 3),
+                        DoEnemy("Lake Encounter", 1, new List<PlayerCard>{ this.GetPlayerCard("Dawn Duck"), this.GetPlayerCard("Mosquito"), this.GetPlayerCard("Mosquito", 2)},
+                        DoReward(12, 7), X: 65, Y: 40, false, 3),
+                        DoEnemy("Snowfield", 1, new List<PlayerCard>{ this.GetPlayerCard("Native"), this.GetPlayerCard("Snow Rat")},
+                        DoReward(17, 10), X: 45, Y: 55, true, 4),
+                        DoEnemy("Volcan", 1, new List<PlayerCard>{ this.GetPlayerCard("Ogre"), this.GetPlayerCard("Fire Snake"), this.GetPlayerCard("Ogre", 2)},
+                        DoReward(14, 9), X: 28, Y: 80, false, 3),
+                        DoEnemy("Great Volcan", 2, new List<PlayerCard>{ this.GetPlayerCard("Ogre"), this.GetPlayerCard("Fire Wraith", 2), this.GetPlayerCard("Ogre", 3)},
+                        DoReward(25, 15), X: 40, Y: 83, false, 3),
                     }
                 },
                 new Map
                 {
                     Name = "Swamp", MinLevel = 1, Difficult = MapDifficult.NORMAL, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 200 }, SrcImg = "_content/SurrealCB.CommonUI/images/maps/swamp.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 200 }, SrcImg = "swamp.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Entering", Level = 1, ExpGain = 7, X = 10, Y = 0, Reward = new Reward { Gold = 12 },
+                            Name = "Entering", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 12 },
                             Cards = new List<PlayerCard>{
                                 this.GetPlayerCard("Grunt"), this.GetPlayerCard("Goblin", 3)
                             }
@@ -668,12 +647,12 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Skies", MinLevel = 3, Difficult = MapDifficult.HARD, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 200 }, SrcImg = "_content/SurrealCB.CommonUI/images/maps/skies.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 200 }, SrcImg = "skies.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Rainbow", Level = 1, ExpGain = 7, X = 10, Y = 0, Reward = new Reward { Gold = 16 },
+                            Name = "Rainbow", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 16 },
                             Cards = new List<PlayerCard>{
                                 this.GetPlayerCard("Poison Mosquito", 4), this.GetPlayerCard("Mosquito", 4)
                             }
@@ -683,12 +662,12 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Snow Mountain", MinLevel = 6, Difficult = MapDifficult.INSANE, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/snow_mountain.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "snow_mountain.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 10 },
+                            Name = "Forest Encounter", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 10 },
                             Cards = new List<PlayerCard>{
                                 this.GetPlayerCard("Triton")
                             }
@@ -698,12 +677,12 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Swampcamp", MinLevel = 8, Difficult = MapDifficult.HARD, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/swampcamp.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "swampcamp.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Name = "Forest Encounter", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
                             Cards = new List<PlayerCard>{
                                 this.GetPlayerCard("Reptillion", 5), this.GetPlayerCard("Reptillion")
                             }
@@ -713,12 +692,12 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Megacloud", MinLevel = 10, Difficult = MapDifficult.HELL, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/megacloud.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "megacloud.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Name = "Forest Encounter", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
                             Cards = new List<PlayerCard>{
                                 this.GetPlayerCard("Horse", 5), this.GetPlayerCard("Grunt", 5)
                             }
@@ -728,12 +707,12 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Fire Mountain", MinLevel = 11, Difficult = MapDifficult.INSANE, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/fire_mountain.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "fire_mountain.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 200 },
+                            Name = "Forest Encounter", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 200 },
                             Cards = new List<PlayerCard>{
                                 this.GetPlayerCard("Horse"), this.GetPlayerCard("Grunt")
                             }
@@ -743,12 +722,12 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Beautiful Mountain", MinLevel = 11, Difficult = MapDifficult.EASY, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/beautiful_mountain.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "beautiful_mountain.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Name = "Forest Encounter", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
                             Cards = new List<PlayerCard>{
                                 this.GetPlayerCard("Horse"), this.GetPlayerCard("Grunt"), this.GetPlayerCard("Dark Eye Fighter"), this.GetPlayerCard("Mosquito")
                             }
@@ -758,14 +737,14 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Darkpit", MinLevel = 13, Difficult = MapDifficult.NORMAL, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/darkpit.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "darkpit.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Name = "Forest Encounter", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
                             Cards = new List<PlayerCard>{
-                                this.GetPlayerCard("Horse"), this.GetPlayerCard("Grunt"), this.GetPlayerCard("Dark Eye Fighter"), this.GetPlayerCard("Mosquito")
+                                this.GetPlayerCard("Horse"), this.GetPlayerCard("Grunt"), this.GetPlayerCard("Dark Eye Fighter", 3), this.GetPlayerCard("Mosquito", 5)
                             }
                         }
                     }
@@ -773,14 +752,14 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Green Swamp", MinLevel = 15, Difficult = MapDifficult.EASY, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/green_swamp.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "green_swamp.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Name = "Forest Encounter", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
                             Cards = new List<PlayerCard>{
-                                this.GetPlayerCard("Horse"), this.GetPlayerCard("Grunt"), this.GetPlayerCard("Dark Eye Fighter"), this.GetPlayerCard("Mosquito")
+                                this.GetPlayerCard("Little Hidra"), this.GetPlayerCard("Lirin"), this.GetPlayerCard("Reptillion", 5), this.GetPlayerCard("Poison Mosquito", 6)
                             }
                         }
                     }
@@ -788,14 +767,14 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Innora", MinLevel = 15, Difficult = MapDifficult.INSANE, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/innora.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 100}, SrcImg = "innora.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Name = "Forest Encounter", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
                             Cards = new List<PlayerCard>{
-                                this.GetPlayerCard("Horse"), this.GetPlayerCard("Grunt"), this.GetPlayerCard("Dark Eye Fighter"), this.GetPlayerCard("Mosquito")
+                                this.GetPlayerCard("Crow", 5), this.GetPlayerCard("Fire Wraith", 5), this.GetPlayerCard("Dark Eye Fighter", 5)
                             }
                         }
                     }
@@ -803,12 +782,12 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Bluepoint", MinLevel = 17, Difficult = MapDifficult.NORMAL, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/bluepoint.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "bluepoint.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Name = "Forest Encounter", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
                             Cards = new List<PlayerCard>{
                                 this.GetPlayerCard("Dark Eye Fighter"), this.GetPlayerCard("Mosquito"), this.GetPlayerCard("ELKChampion"), this.GetPlayerCard("Grunt")
                             }
@@ -818,14 +797,14 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Demon Church", MinLevel = 18, Difficult = MapDifficult.INSANE, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/demon_church.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "demon_church.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Name = "Forest Encounter", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
                             Cards = new List<PlayerCard>{
-                                this.GetPlayerCard("Poison Mosquito"),
+                                this.GetPlayerCard("Poison Mosquito", 6),
                             }
                         }
                     }
@@ -833,14 +812,14 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Goffinger", MinLevel = 20, Difficult = MapDifficult.HELL, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/elysium.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "elysium.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Name = "Forest Encounter", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
                             Cards = new List<PlayerCard>{
-                                this.GetPlayerCard("Little Beast"),
+                                this.GetPlayerCard("Little Beast", 5),
                             }
                         }
                     }
@@ -848,14 +827,14 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Dark Floating Castle", MinLevel = 27, Difficult = MapDifficult.INSANE, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/dark_floating_castle.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "dark_floating_castle.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Name = "Forest Encounter", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
                             Cards = new List<PlayerCard>{
-                                this.GetPlayerCard("Mosquito"),
+                                this.GetPlayerCard("ELKChampion", 5),
                             }
                         }
                     }
@@ -863,12 +842,12 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Elysium", MinLevel = 30, Difficult = MapDifficult.HELL, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/elysium.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "elysium.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Name = "Forest Encounter", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
                             Cards = new List<PlayerCard>{
                                 this.GetPlayerCard("Reptillion"),
                             }
@@ -878,12 +857,12 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Above Everything", MinLevel = 33, Difficult = MapDifficult.HARD, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/above_everything.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "above_everything.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Name = "Forest Encounter", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
                             Cards = new List<PlayerCard>{
                                 this.GetPlayerCard("ELKChampion"),
                             }
@@ -893,12 +872,12 @@ namespace SurrealCB.Data
                 new Map
                 {
                     Name = "Nortrex", MinLevel = 40, Difficult = MapDifficult.HELL, Type = GameType.NORMAL, RequiredEnemies = null,
-                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "_content/SurrealCB.CommonUI/images/maps/nortrex.jpg",
+                    RequiredMaps = null, CompletionReward = new Reward { Gold = 1000}, SrcImg = "nortrex.jpg",
                     Enemies = new List<EnemyNpc>
                     {
                         new EnemyNpc
                         {
-                            Name = "Forest Encounter", Level = 1, ExpGain = 5, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
+                            Name = "Forest Encounter", Level = 1, X = 10, Y = 0, Reward = new Reward { Gold = 150 },
                             Cards = new List<PlayerCard>{
                                 this.GetPlayerCard("Lirin"),
                             }
@@ -923,6 +902,58 @@ namespace SurrealCB.Data
                 CardId = card.Id,
                 ActiveLvlBoosts = levelBoosts,
                 Runes = runes
+            };
+        }
+
+        private LevelBoost DoBoost(int level, int cost, int hp = 0, int atk = 0, int def = 0, double spd = 0,
+            int imm = 0, Passive p = Passive.NONE, double p1 = 0, double p2 = 0, double p3 = 0, string name = "")
+        {
+            return new LevelBoost
+            {
+                Level = level,
+                Cost = cost,
+                Boost = new CardBoost
+                {
+                    Hp = hp,
+                    Atk = atk,
+                    Def = def,
+                    Spd = spd,
+                    Imm = imm,
+                    Passive = p != Passive.NONE ? new CardPassive
+                    {
+                        Passive = p,
+                        Param1 = p1,
+                        Param2 = p2,
+                        Param3 = p3
+                    } : null
+                },
+                ImprovedName = name
+            };
+        }
+
+        private EnemyNpc DoEnemy(string name, int level, List<PlayerCard> cards, Reward reward, int X = 0, int Y = 0, bool randomCards = true, int cardCount = 4)
+        {
+            return new EnemyNpc
+            {
+                Name = name,
+                Level = level,
+                RandomCards = randomCards,
+                CardCount = cardCount,
+                X = X,
+                Y = Y,
+                Reward = reward,
+                Cards = cards
+            };
+        }
+
+        private Reward DoReward(int gold = 0, int exp = 0, Card card = null, List<Item> items = null)
+        {
+            return new Reward
+            {
+                Gold = gold,
+                Exp = exp,
+                Card = card,
+                Items = items
             };
         }
 

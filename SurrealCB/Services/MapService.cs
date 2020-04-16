@@ -11,6 +11,7 @@ namespace SurrealCB.Server
     public interface IMapService
     {
         Task<List<Map>> GetAll();
+        Task<Map> GetById(int id);
     }
     public class MapService : IMapService
     {
@@ -27,5 +28,10 @@ namespace SurrealCB.Server
             return maps;
         }
         
+        public async Task<Map> GetById(int id)
+        {
+            var map = await this.repository.Maps.FirstOrDefaultAsync(x => x.Id == id);
+            return map;
+        }
     }
 }

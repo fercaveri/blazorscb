@@ -29,7 +29,11 @@ namespace SurrealCB.Data.Model
         BERSEKER, //Incrementa en X el ataque por cada golpe dado
         DISPELL, //Elimina efectos negativos al curar --> tiene que usarse con heal
         ATK_SHATTER, //Reduce el ataque del enemigo en X durante X segundos
-        
-        
+        CLEAVE, //Dania en un X% a los enemigos del costado del atacado
+        DISABLE, //Deja inactiva la carta por X segundos (no puede ser atacada ni atacar)
+        REFLECT, //Refleja estados en un X%,
+        VANISH, //Reduce en X el ataque propio por cada golpe hasta llegar a 0
+        SURPRISE, //Golpea en X a pos2 en Y a pos3 y en Z a pos 4
+        CONFUSSION, //La carta golpea al azar a cualquiera del tablero
     }
 }

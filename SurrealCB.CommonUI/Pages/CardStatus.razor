@@ -8,7 +8,7 @@
     {
         <div class="status-left-panel">
             <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.GetHp()" Imm="@card.GetImm()" Name="@card.GetName()" Element="@card.Card.Element"
-                    Tier="@card.Card.Tier" Rarity="@card.Card.Rarity" AType="@card.Card.AtkType" ImgSrc="@card.Card.ImgSrc" Passives="@card.GetPassives()"></UICard>
+                    Tier="@card.Card.Tier" Rarity="@card.Card.Rarity" AType="@card.Card.AtkType" ImgSrc="@card.Card.ImgSrc" Passives="@card.GetPassives()" Level="card.GetLevel()"></UICard>
             <div>
                 <p>Current Exp: @card.CurrentExp</p>
                 <p>Next Level: @ExpHelper.GetNextLevelExp(card.Card.BaseExp, card.Card.Tier, card.CurrentExp)</p>

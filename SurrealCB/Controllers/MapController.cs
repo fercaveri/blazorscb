@@ -30,11 +30,18 @@ namespace SurrealCB.Server.Controllers
             this.cardService = cardService;
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet("all")]
         public async Task<ApiResponse> GetAll()
         {
             var maps = await this.mapService.GetAll();
             return new ApiResponse(Status200OK, "Get All Maps Successful", maps);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ApiResponse> GetAll(int id)
+        {
+            var map = await this.mapService.GetById(id);
+            return new ApiResponse(Status200OK, "Get All Maps Successful", map);
         }
     }
 }

@@ -63,13 +63,14 @@ namespace SurrealCB.Data.Model
             var speed = this.Card.Spd;
             speed -= this.ActiveLvlBoosts.Where(x => x.Boost.Spd > 0).Sum(x => x.Boost.Spd);
             //TODO: Rune 
+            speed = Math.Round(speed, 2, MidpointRounding.AwayFromZero);
             return speed;
         }
 
         public string GetName()
         {
-            var improvedName = this.ActiveLvlBoosts.OrderByDescending(x => x.Level).FirstOrDefault(x => x.ImprovedName != null)?.ImprovedName;
-            return improvedName != null ? improvedName : this.Card.Name;
+            var improvedName = this.ActiveLvlBoosts.OrderByDescending(x => x.Level).FirstOrDefault(x => !string.IsNullOrEmpty(x.ImprovedName))?.ImprovedName;
+            return !string.IsNullOrEmpty(improvedName) ? improvedName : this.Card.Name;
         }
 
         public int GetLevel()
