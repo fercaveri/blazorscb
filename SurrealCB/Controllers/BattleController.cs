@@ -82,14 +82,16 @@ namespace SurrealCB.Server.Controllers
                     {
                         var random = new Random();
                         int tryPos = -1;
+                        List<int> currentPositions;
                         if (srcPos < 4)
                         {
-                            tryPos = random.Next(1, 5) + 3;
+                            currentPositions = cards.Where(x => x.Position < 4 && x.Hp > 0).Select(x => x.Position).ToList();
                         }
                         else
                         {
-                            tryPos = random.Next(1, 5) - 1;
+                            currentPositions = cards.Where(x => x.Position > 3 && x.Hp > 0).Select(x => x.Position).ToList();
                         }
+                        tryPos = currentPositions[random.Next(0, currentPositions.Count() + 1)];
                         var tryCard = cards.FirstOrDefault(x => x.Position == tryPos);
                         if (tryCard != null)
                         {

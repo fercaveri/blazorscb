@@ -9,7 +9,8 @@
     {
         <div @onclick="() => NavigateToPlayerCard(card.Id)">
             <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.GetHp()" Imm="@card.GetImm()" Name="@card.GetName()" Element="@card.Card.Element"
-                    Tier="@card.Card.Tier" Rarity="@card.Card.Rarity" AType="@card.Card.AtkType" ImgSrc="@card.Card.ImgSrc" Passives="@card.GetPassives()" Level="card.GetLevel()"></UICard>
+                    Tier="@card.Card.Tier" Rarity="@card.Card.Rarity" AType="@card.Card.AtkType" ImgSrc="@card.Card.ImgSrc" Passives="@card.GetPassives()" 
+                    Level="card.GetLevel()" Runes="card.GetRuneList()"></UICard>
         </div>
     }
 </div>

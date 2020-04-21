@@ -11,6 +11,7 @@ namespace SurrealCB.Server
     public interface IUserService
     {
         Task<List<PlayerCard>> GetUserCards();
+        Task<List<PlayerRune>> GetUserRunes();
         Task<int> GetUserGold();
         Task<Guid> GetUserId();
         Task<ApplicationUser> GetUser(Guid id);
@@ -28,6 +29,12 @@ namespace SurrealCB.Server
         {
             var cards = (await this.repository.Users.FirstOrDefaultAsync()).Cards.ToList();
             return cards;
+        }
+
+        public async Task<List<PlayerRune>> GetUserRunes()
+        {
+            var runes = (await this.repository.Users.FirstOrDefaultAsync()).Runes.Where(x => !this.repository.PlayerRunes.Select(y => y.RuneId).Contains(x.RuneId)).ToList();
+            return runes;
         }
 
         public async Task<int> GetUserGold()

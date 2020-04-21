@@ -68,5 +68,12 @@ namespace SurrealCB.Server.Controllers
             var userCards = await this.userService.GetUserCards();
             return new ApiResponse(Status200OK, "Get All Cards Successful", userCards);
         }
+
+        [HttpGet("user")]
+        public async Task<ApiResponse> GetUserRunes()
+        {
+            var runes = await this.userService.GetUserRunes();
+            return new ApiResponse(Status200OK, "Get Runes Successful", runes);
+        }
     }
 }

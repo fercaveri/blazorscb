@@ -52,19 +52,15 @@ namespace SurrealCB.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CardPassives",
+                name: "CardBoosts",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Passive = table.Column<string>(nullable: false),
-                    Param1 = table.Column<double>(nullable: false),
-                    Param2 = table.Column<double>(nullable: false),
-                    Param3 = table.Column<double>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CardPassives", x => x.Id);
+                    table.PrimaryKey("PK_CardBoosts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -249,25 +245,45 @@ namespace SurrealCB.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CardBoosts",
+                name: "CardPassives",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Hp = table.Column<int>(nullable: false),
-                    Atk = table.Column<int>(nullable: false),
-                    Def = table.Column<int>(nullable: false),
-                    Imm = table.Column<int>(nullable: false),
-                    Spd = table.Column<double>(nullable: false),
-                    PassiveId = table.Column<int>(nullable: true)
+                    Passive = table.Column<string>(nullable: false),
+                    Param1 = table.Column<double>(nullable: false),
+                    Param2 = table.Column<double>(nullable: false),
+                    Param3 = table.Column<double>(nullable: false),
+                    CardBoostId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CardBoosts", x => x.Id);
+                    table.PrimaryKey("PK_CardPassives", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CardBoosts_CardPassives_PassiveId",
-                        column: x => x.PassiveId,
-                        principalTable: "CardPassives",
+                        name: "FK_CardPassives_CardBoosts_CardBoostId",
+                        column: x => x.CardBoostId,
+                        principalTable: "CardBoosts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StatBoosts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Type = table.Column<string>(nullable: false),
+                    Amount = table.Column<double>(nullable: false),
+                    CardBoostId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StatBoosts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StatBoosts_CardBoosts_CardBoostId",
+                        column: x => x.CardBoostId,
+                        principalTable: "CardBoosts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -516,6 +532,11 @@ namespace SurrealCB.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Hp = table.Column<int>(nullable: false),
+                    Atk = table.Column<int>(nullable: false),
+                    Def = table.Column<int>(nullable: false),
+                    Imm = table.Column<int>(nullable: false),
+                    Spd = table.Column<double>(nullable: false),
                     Level = table.Column<int>(nullable: false),
                     BoostId = table.Column<int>(nullable: true),
                     ImprovedName = table.Column<string>(nullable: true),
@@ -561,11 +582,12 @@ namespace SurrealCB.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
                     BoostId = table.Column<int>(nullable: true),
-                    Rarity = table.Column<int>(nullable: false),
+                    Rarity = table.Column<string>(nullable: false),
                     Element = table.Column<int>(nullable: false),
                     Value = table.Column<int>(nullable: false),
                     MinTier = table.Column<int>(nullable: false),
                     MaxTier = table.Column<int>(nullable: false),
+                    ImgSrc = table.Column<string>(nullable: true),
                     PlayerCardId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -583,6 +605,33 @@ namespace SurrealCB.Data.Migrations
                         principalTable: "PlayerCards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PlayerRunes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RuneId = table.Column<int>(nullable: false),
+                    Rarity = table.Column<int>(nullable: false),
+                    ApplicationUserId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlayerRunes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlayerRunes_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PlayerRunes_Runes_RuneId",
+                        column: x => x.RuneId,
+                        principalTable: "Runes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -697,9 +746,9 @@ namespace SurrealCB.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CardBoosts_PassiveId",
-                table: "CardBoosts",
-                column: "PassiveId");
+                name: "IX_CardPassives_CardBoostId",
+                table: "CardPassives",
+                column: "CardBoostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CardRecipes_ResultId",
@@ -787,6 +836,16 @@ namespace SurrealCB.Data.Migrations
                 column: "EnemyNpcId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PlayerRunes_ApplicationUserId",
+                table: "PlayerRunes",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlayerRunes_RuneId",
+                table: "PlayerRunes",
+                column: "RuneId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RequiredItem_CardRecipeId",
                 table: "RequiredItem",
                 column: "CardRecipeId");
@@ -832,6 +891,11 @@ namespace SurrealCB.Data.Migrations
                 column: "PlayerCardId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StatBoosts_CardBoostId",
+                table: "StatBoosts",
+                column: "CardBoostId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserProfiles_UserId",
                 table: "UserProfiles",
                 column: "UserId",
@@ -865,7 +929,13 @@ namespace SurrealCB.Data.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
+                name: "PlayerRunes");
+
+            migrationBuilder.DropTable(
                 name: "RequiredItem");
+
+            migrationBuilder.DropTable(
+                name: "StatBoosts");
 
             migrationBuilder.DropTable(
                 name: "UserProfiles");
@@ -892,9 +962,6 @@ namespace SurrealCB.Data.Migrations
                 name: "Runes");
 
             migrationBuilder.DropTable(
-                name: "CardBoosts");
-
-            migrationBuilder.DropTable(
                 name: "PlayerCards");
 
             migrationBuilder.DropTable(
@@ -914,6 +981,9 @@ namespace SurrealCB.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "CardPassives");
+
+            migrationBuilder.DropTable(
+                name: "CardBoosts");
         }
     }
 }

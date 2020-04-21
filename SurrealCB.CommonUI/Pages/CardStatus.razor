@@ -8,7 +8,8 @@
     {
         <div class="status-left-panel">
             <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.GetHp()" Imm="@card.GetImm()" Name="@card.GetName()" Element="@card.Card.Element"
-                    Tier="@card.Card.Tier" Rarity="@card.Card.Rarity" AType="@card.Card.AtkType" ImgSrc="@card.Card.ImgSrc" Passives="@card.GetPassives()" Level="card.GetLevel()"></UICard>
+                    Tier="@card.Card.Tier" Rarity="@card.Card.Rarity" AType="@card.Card.AtkType" ImgSrc="@card.Card.ImgSrc" Passives="@card.GetPassives()" 
+                    Level="card.GetLevel()" Runes="card.GetRuneList()"></UICard>
             <div>
                 <p>Current Exp: @card.CurrentExp</p>
                 <p>Next Level: @ExpHelper.GetNextLevelExp(card.Card.BaseExp, card.Card.Tier, card.CurrentExp)</p>
@@ -106,35 +107,37 @@
     private string GetBoostIcon(LevelBoost boost)
     {
         var b = boost.Boost;
-        if (b.Passive != null)
+        if (b.Passives.FirstOrDefault() != null)
         {
-            return PassiveHelper.GetPassiveTuple(b.Passive.Passive).Item2;
+            return PassiveHelper.GetPassiveTuple(b.Passives.FirstOrDefault().Passive).Item2;
         }
-        else if (b.Hp < 0 || b.Def < 0 || b.Spd < 0)
+        //else if (b.Hp < 0 || b.Def < 0 || b.Spd < 0)
+        else if (b.StatBoosts.Count > 1 && b.StatBoosts.Any(x => x.Amount < 0))
         {
             return "question";
         }
-        else if (b.Hp != 0 && b.Def != 0)
+        //b.Hp != 0 && b.Def != 0
+        else if (b.StatBoosts.Count > 1)
         {
             return "strenght";
         }
-        else if (b.Hp != 0)
+        else if (b.StatBoosts.FirstOrDefault().Type == BoostType.HP || b.StatBoosts.FirstOrDefault().Type == BoostType.HPPERC)
         {
             return "health";
         }
-        else if (b.Atk != 0)
+        else if (b.StatBoosts.FirstOrDefault().Type == BoostType.ATK || b.StatBoosts.FirstOrDefault().Type == BoostType.ATKPERC)
         {
             return "sword";
         }
-        else if (b.Def != 0)
+        else if (b.StatBoosts.FirstOrDefault().Type == BoostType.DEF || b.StatBoosts.FirstOrDefault().Type == BoostType.DEFPERC)
         {
             return "shield";
         }
-        else if (b.Spd != 0)
+        else if (b.StatBoosts.FirstOrDefault().Type == BoostType.SPD || b.StatBoosts.FirstOrDefault().Type == BoostType.SPDPERC)
         {
             return "speed";
         }
-        else if (b.Imm != 0)
+        else if (b.StatBoosts.FirstOrDefault().Type == BoostType.IMM || b.StatBoosts.FirstOrDefault().Type == BoostType.IMMPERC)
         {
             return "wall";
         }
@@ -145,35 +148,45 @@
     private string GetBoostTooltip(LevelBoost lb)
     {
         var message = "";
-        var b = lb.Boost;
-        if (b.Hp != 0)
+        var stats = lb.Boost.StatBoosts;
+        foreach (var boost in stats)
         {
-            message += $"Hp +{b.Hp}";
+            if (boost.Type == BoostType.HP || boost.Type == BoostType.HPPERC)
+            {
+                message += $"Hp +{boost.Amount}";
+                if (boost.Type == BoostType.HPPERC) message += "%";
+            }
+            if (boost.Type == BoostType.ATK || boost.Type == BoostType.ATKPERC)
+            {
+                message += $"Atk +{boost.Amount}";
+                if (boost.Type == BoostType.ATKPERC) message += "%";
+            }
+            if (boost.Type == BoostType.DEF || boost.Type == BoostType.DEFPERC)
+            {
+                message += $"Def +{boost.Amount}";
+                if (boost.Type == BoostType.DEFPERC) message += "%";
+            }
+            if (boost.Type == BoostType.IMM || boost.Type == BoostType.IMMPERC)
+            {
+                message += $"Imm +{boost.Amount}%";
+                if (boost.Type == BoostType.IMMPERC) message += "%";
+            }
+            if (boost.Type == BoostType.SPD || boost.Type == BoostType.SPDPERC)
+            {
+                message += $"Spd Improved {boost.Amount}";
+                if (boost.Type == BoostType.SPDPERC) message += "%";
+            }
+            if (boost.Type == BoostType.PASSIVEPERC)
+            {
+                message += $"Passive Improved {boost.Amount}%";
+            }
+            message += " / ";
         }
-        if (b.Atk != 0)
+
+        foreach (var p in lb.Boost.Passives)
         {
             if (message != "") message += " / ";
-            message += $"Atk +{b.Atk}";
-        }
-        if (b.Def != 0)
-        {
-            if (message != "") message += " / ";
-            message += $"Def +{b.Def}";
-        }
-        if (b.Imm != 0)
-        {
-            if (message != "") message += " / ";
-            message += $"Imm +{b.Imm}%";
-        }
-        if (b.Spd != 0)
-        {
-            if (message != "") message += " / ";
-            message += $"Spd -{b.Spd}";
-        }
-        if (b.Passive != null)
-        {
-            if (message != "") message += " / ";
-            message += PassiveHelper.GetPassiveTuple(b.Passive.Passive, b.Passive.Param1, b.Passive.Param2, b.Passive.Param3).Item1;
+            message += PassiveHelper.GetPassiveTuple(p.Passive, p.Param1, p.Param2, p.Param3).Item1;
         }
         return message;
     }

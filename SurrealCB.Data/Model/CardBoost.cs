@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace SurrealCB.Data.Model
 {
-    public class CardBoost : Stats
+    public class CardBoost : IEntity
     {
-        public virtual CardPassive Passive { get; set; }
-        //Si quiero mejorar una pasiva existente usar un nuevo cardpassive con el mismo id
+        public virtual ICollection<StatBoost> StatBoosts { get; set; }
+        public virtual ICollection<CardPassive> Passives { get; set; }
     }
 }

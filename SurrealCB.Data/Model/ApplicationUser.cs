@@ -20,5 +20,6 @@ namespace SurrealCB.Data.Model
         public virtual UserProfile Profile { get; set; }
         public virtual ICollection<Message> Messages { get; set; }
         public virtual ICollection<PlayerCard> Cards { get; set; }
+        public virtual ICollection<PlayerRune> Runes { get; set; }
     }
 }

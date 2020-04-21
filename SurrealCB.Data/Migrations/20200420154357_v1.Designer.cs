@@ -10,7 +10,7 @@ using SurrealCB.Data;
 namespace SurrealCB.Data.Migrations
 {
     [DbContext(typeof(SCBDbContext))]
-    [Migration("20200416202850_v1")]
+    [Migration("20200420154357_v1")]
     partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -354,27 +354,7 @@ namespace SurrealCB.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Atk")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Def")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Hp")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Imm")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PassiveId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Spd")
-                        .HasColumnType("float");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("PassiveId");
 
                     b.ToTable("CardBoosts");
                 });
@@ -385,6 +365,9 @@ namespace SurrealCB.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CardBoostId")
+                        .HasColumnType("int");
 
                     b.Property<double>("Param1")
                         .HasColumnType("float");
@@ -400,6 +383,8 @@ namespace SurrealCB.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CardBoostId");
 
                     b.ToTable("CardPassives");
                 });
@@ -517,6 +502,9 @@ namespace SurrealCB.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("Atk")
+                        .HasColumnType("int");
+
                     b.Property<int?>("BoostId")
                         .HasColumnType("int");
 
@@ -524,6 +512,15 @@ namespace SurrealCB.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Cost")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Def")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Hp")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Imm")
                         .HasColumnType("int");
 
                     b.Property<string>("ImprovedName")
@@ -537,6 +534,9 @@ namespace SurrealCB.Data.Migrations
 
                     b.Property<int?>("RequiredBoostId")
                         .HasColumnType("int");
+
+                    b.Property<double>("Spd")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -669,6 +669,31 @@ namespace SurrealCB.Data.Migrations
                     b.ToTable("PlayerCards");
                 });
 
+            modelBuilder.Entity("SurrealCB.Data.Model.PlayerRune", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<Guid?>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Rarity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RuneId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("RuneId");
+
+                    b.ToTable("PlayerRunes");
+                });
+
             modelBuilder.Entity("SurrealCB.Data.Model.RequiredItem", b =>
                 {
                     b.Property<int>("Id")
@@ -745,6 +770,9 @@ namespace SurrealCB.Data.Migrations
                     b.Property<int>("Element")
                         .HasColumnType("int");
 
+                    b.Property<string>("ImgSrc")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("MaxTier")
                         .HasColumnType("int");
 
@@ -757,8 +785,9 @@ namespace SurrealCB.Data.Migrations
                     b.Property<int?>("PlayerCardId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Rarity")
-                        .HasColumnType("int");
+                    b.Property<string>("Rarity")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Value")
                         .HasColumnType("int");
@@ -787,6 +816,30 @@ namespace SurrealCB.Data.Migrations
                     b.HasIndex("ResultId");
 
                     b.ToTable("RuneRecipes");
+                });
+
+            modelBuilder.Entity("SurrealCB.Data.Model.StatBoost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<int?>("CardBoostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CardBoostId");
+
+                    b.ToTable("StatBoosts");
                 });
 
             modelBuilder.Entity("SurrealCB.Data.Model.UserProfile", b =>
@@ -887,11 +940,11 @@ namespace SurrealCB.Data.Migrations
                         .HasForeignKey("PassiveId");
                 });
 
-            modelBuilder.Entity("SurrealCB.Data.Model.CardBoost", b =>
+            modelBuilder.Entity("SurrealCB.Data.Model.CardPassive", b =>
                 {
-                    b.HasOne("SurrealCB.Data.Model.CardPassive", "Passive")
-                        .WithMany()
-                        .HasForeignKey("PassiveId");
+                    b.HasOne("SurrealCB.Data.Model.CardBoost", null)
+                        .WithMany("Passives")
+                        .HasForeignKey("CardBoostId");
                 });
 
             modelBuilder.Entity("SurrealCB.Data.Model.CardRecipe", b =>
@@ -998,6 +1051,19 @@ namespace SurrealCB.Data.Migrations
                         .HasForeignKey("EnemyNpcId");
                 });
 
+            modelBuilder.Entity("SurrealCB.Data.Model.PlayerRune", b =>
+                {
+                    b.HasOne("SurrealCB.Data.Model.ApplicationUser", null)
+                        .WithMany("Runes")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("SurrealCB.Data.Model.Rune", "Rune")
+                        .WithMany()
+                        .HasForeignKey("RuneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SurrealCB.Data.Model.RequiredItem", b =>
                 {
                     b.HasOne("SurrealCB.Data.Model.CardRecipe", null)
@@ -1044,6 +1110,13 @@ namespace SurrealCB.Data.Migrations
                     b.HasOne("SurrealCB.Data.Model.Rune", "Result")
                         .WithMany()
                         .HasForeignKey("ResultId");
+                });
+
+            modelBuilder.Entity("SurrealCB.Data.Model.StatBoost", b =>
+                {
+                    b.HasOne("SurrealCB.Data.Model.CardBoost", null)
+                        .WithMany("StatBoosts")
+                        .HasForeignKey("CardBoostId");
                 });
 
             modelBuilder.Entity("SurrealCB.Data.Model.UserProfile", b =>

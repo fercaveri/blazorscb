@@ -28,12 +28,14 @@
         public DbSet<PlayerCard> PlayerCards { get; set; }
         public DbSet<CardPassive> CardPassives { get; set; }
         public DbSet<CardBoost> CardBoosts { get; set; }
+        public DbSet<StatBoost> StatBoosts { get; set; }
         public DbSet<LevelBoost> LevelBoosts { get; set; }
         public DbSet<Map> Maps { get; set; }
         public DbSet<EnemyNpc> Enemies { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<Reward> Rewards { get; set; }
         public DbSet<Rune> Runes { get; set; }
+        public DbSet<PlayerRune> PlayerRunes { get; set; }
         public DbSet<CardRecipe> CardRecipes { get; set; }
         public DbSet<ItemRecipe> ItemRecipes { get; set; }
         public DbSet<RuneRecipe> RuneRecipes { get; set; }
@@ -56,6 +58,11 @@
                 .HasOne(a => a.Card)
                 .WithMany()
                 .HasForeignKey(a => a.CardId);
+
+            builder.Entity<PlayerRune>()
+                .HasOne(a => a.Rune)
+                .WithMany()
+                .HasForeignKey(a => a.RuneId);
 
             builder.Entity<LevelBoost>()
                 .HasOne(x => x.RequiredBoost)
@@ -82,6 +89,8 @@
             builder.Entity<CardPassive>().Property(p => p.Passive).HasConversion(new EnumToStringConverter<Passive>());
             builder.Entity<Map>().Property(p => p.Difficult).HasConversion(new EnumToStringConverter<MapDifficult>());
             builder.Entity<Map>().Property(p => p.Type).HasConversion(new EnumToStringConverter<GameType>());
+            builder.Entity<Rune>().Property(p => p.Rarity).HasConversion(new EnumToStringConverter<Rarity>());
+            builder.Entity<StatBoost>().Property(p => p.Type).HasConversion(new EnumToStringConverter<BoostType>());
         }
 
         public IQueryable<IEntity> GetAll()

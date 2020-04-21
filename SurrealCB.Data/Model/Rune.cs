@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace SurrealCB.Data.Model
 {
@@ -11,5 +12,6 @@ namespace SurrealCB.Data.Model
         public int Value { get; set; }
         public int MinTier { get; set; }
         public int MaxTier { get; set; }
+        public string ImgSrc { get; set; }
     }
 }

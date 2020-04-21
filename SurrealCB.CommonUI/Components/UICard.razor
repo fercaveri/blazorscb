@@ -7,7 +7,15 @@
         <div> @Tier  </div>
     </div>
     <MatDivider> </MatDivider>
-    <div class="uicard-image"> <img src="@ImgSrc" /> </div>
+    <div class="uicard-image">
+        <img src="@ImgSrc" />
+        <div class="uicard-rune-container">
+            @foreach (var rune in Runes)
+            {
+                <div class="uicard-rune"> <img src="rune"> </div>
+            }
+        </div>
+    </div>
     <MatDivider> </MatDivider>
     <div class="uicard-footer">
         <div class="uicard-footer-up">
@@ -57,7 +65,7 @@
     [Parameter]
     public Element Element { get; set; }
     [Parameter]
-    public List<Rune> Runes { get; set; }
+    public List<Rune> Runes { get; set; } = new List<Rune>();
     [Parameter]
     public List<CardPassive> Passives { get; set; }
     [Parameter]

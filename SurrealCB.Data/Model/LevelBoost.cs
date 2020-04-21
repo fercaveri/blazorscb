@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SurrealCB.Data.Model
 {
-    public class LevelBoost : IEntity
+    public class LevelBoost : Stats
     {
         public int Level { get; set; }
         public virtual CardBoost Boost { get; set; }

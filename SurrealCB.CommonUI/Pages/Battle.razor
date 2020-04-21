@@ -14,11 +14,11 @@
                     ImgSrc="@card.PlayerCard.Card.ImgSrc" Passives="@card.PlayerCard.GetPassives()" AType="card.PlayerCard.Card.AtkType"></UICard>
             <MatProgressBar Progress="@GetHpBar(card)"></MatProgressBar>
             <MatProgressBar Progress="@GetSpeedBar(card)" Class="speed-bar"></MatProgressBar>
-            @if (card.Hp > 0 && Actions.Any(x => x.Position == card.Position))
+            @if (Actions.Any(x => x.Position == card.Position))
             {
                 if (Actions.FirstOrDefault(x => x.Position == card.Position).Type == HealthChange.DEATH)
                 {
-                    <div class="battle-card-dmg">
+                    <div class="battle-card-dmg card-death">
                         <img src="_content/SurrealCB.CommonUI/icons/skull.svg">
                     </div>
                 }

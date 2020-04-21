@@ -88,6 +88,10 @@ namespace SurrealCB.Server
             }
             var dmg = this.CalculateDmg(srcCard, tarCard);
             var extraDmg = this.CalculateExtraDmg(srcCard, tarCard);
+            if (tarCard.GetPassives().Any(x => x.Passive == Passive.GHOST))
+            {
+                dmg = extraDmg = 0;
+            }
             retList = retList.Concat(this.CalculateEffectsOnAttack(srcCard, tarCard, cards, dmg)).ToList();
             retList = retList.Concat(this.ApplyAttackStatus(srcCard, tarCard, dmg)).ToList();
             tarCard.Hp = tarCard.Hp - dmg - extraDmg;
@@ -170,6 +174,7 @@ namespace SurrealCB.Server
                         case Passive.BLAZE:
                         case Passive.STUN:
                         case Passive.FREEZE:
+                        case Passive.BLIND:
                             eff.Param2 -= timeElapsed;
                             if (eff.Param2 <= 0)
                             {
@@ -220,6 +225,20 @@ namespace SurrealCB.Server
             //TODO: status negativos de mi carta
             var passives = tarCard.PlayerCard.GetPassives();
             var random = new Random();
+            foreach (var effect in srcCard.ActiveEffects)
+            {
+                switch (effect.Passive)
+                {
+                    case Passive.BLIND:
+                        var res = random.Next(100);
+                        if (res <= effect.Param1)
+                        {
+                            status = CancelStatus.MISS;
+                            return status;
+                        }
+                        break;
+                };
+            }
             foreach (var passive in passives)
             {
                 switch (passive.Passive)
@@ -241,16 +260,35 @@ namespace SurrealCB.Server
         {
             var dmg = srcCard.GetAtk();
             var passives = srcCard.PlayerCard.GetPassives();
+            var tarPassives = tarCard.PlayerCard.GetPassives();
             var def = tarCard.GetDef();
             foreach (var passive in passives)
             {
                 switch (passive.Passive)
                 {
+                    case Passive.DEVIANT:
+                        var rand = new Random();
+                        dmg = rand.Next(srcCard.GetAtk(), (int)passive.Param1 + 1);
+                        break;
                     case Passive.IGNORE_DEF:
                         def = 0;
                         break;
                     case Passive.PIERCING:
                         def = Math.Max(def - (int)passive.Param1, 0);
+                        break;
+                };
+            }
+            foreach (var passive in passives)
+            {
+                switch (passive.Passive)
+                {
+                    case Passive.TOUGH:
+                        var rand = new Random();
+                        var num = rand.Next(0, 100);
+                        if (num < (int)passive.Param1)
+                        {
+                            dmg -= (int)passive.Param2;
+                        }
                         break;
                 };
             }
@@ -266,8 +304,15 @@ namespace SurrealCB.Server
             {
                 switch (passive.Passive)
                 {
-                    case Passive.HP_SHATTER:
+                    case Passive.SHATTER:
                         dmg += (int)Math.Ceiling((double)(tarCard.Hp / passive.Param1));
+                        break;
+                    case Passive.BLOWMARK:
+                        var mark = tarCard.ActiveEffects.FirstOrDefault(x => x.Passive == Passive.BLOWMARK);
+                        if (mark != null)
+                        {
+                            dmg += (int)mark.Param1;
+                        }
                         break;
                 };
             }
@@ -281,6 +326,7 @@ namespace SurrealCB.Server
             var tarPassives = tarCard.PlayerCard.GetPassives();
             var random = new Random();
             var randNum = random.Next(1, 100);
+            if (tarCard.GetPassives().Any(x => x.Passive == Passive.IMMUNE)) return actions;
             if (randNum > tarCard.GetImm())
             {
                 foreach (var passive in srcPassives)
@@ -292,6 +338,7 @@ namespace SurrealCB.Server
                             tarCard.Time = Math.Round(tarCard.Time, 2, MidpointRounding.AwayFromZero);
                             break;
                         case Passive.POISON:
+                        case Passive.BLIND:
                         case Passive.BLEED:
                         case Passive.BLAZE:
                         case Passive.FREEZE:
@@ -312,6 +359,32 @@ namespace SurrealCB.Server
                                 Param3 = passive.Param3
                             });
                             break;
+                        case Passive.BLOWMARK:
+                            var mark = tarCard.ActiveEffects.FirstOrDefault(x => x.Passive == passive.Passive && x.FromPosition == srcCard.Position);
+                            if (mark != null)
+                            {
+                                mark.Param1 += passive.Param1;
+                            }
+                            else
+                            {
+                                tarCard.ActiveEffects.Add(new ActiveEffect
+                                {
+                                    FromPosition = srcCard.Position,
+                                    Id = passive.Id,
+                                    Passive = passive.Passive,
+                                    Param1 = passive.Param1,
+                                });
+                            }
+                            break;
+                        case Passive.OBLIVION:
+                            var rand = new Random();
+                            var num = rand.Next(0, 100);
+                            if (num < (int)passive.Param1)
+                            {
+                                //TODO: Check this if can be refined
+                                tarCard.Hp = 0;
+                            }
+                            break;
                     };
                 }
             }
@@ -322,7 +395,7 @@ namespace SurrealCB.Server
                 {
                     switch (passive.Passive)
                     {
-                        //TODO: spike armor
+                        //TODO: POISONUS Y ROUGH
                     };
                 }
             }
@@ -383,6 +456,10 @@ namespace SurrealCB.Server
                         {
                             srcEffs.RemoveAt(i);
                         }
+                        break;
+                    case Passive.ABLAZE:
+                        this.ApplyDmg(srcCard, (int)eff.Param1);
+                        actions.Add(new BattleAction { Number = (int)eff.Param1, Position = srcCard.Position, Type = HealthChange.BLAZE });
                         break;
                 };
             }

@@ -2,14 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using SurrealCB.Data.Helper;
 
 namespace SurrealCB.Data.Model
 {
     public class PlayerCard : IEntity
     {
         public int CurrentExp { get; set; }
-        public virtual List<Rune> Runes { get; set; }
-        public virtual List<LevelBoost> ActiveLvlBoosts { get; set; }
+        public virtual List<Rune> Runes { get; set; } = new List<Rune>();
+        public virtual List<LevelBoost> ActiveLvlBoosts { get; set; } = new List<LevelBoost>();
         public int CardId { get; set; }
         public virtual Card Card { get; set; }
         public int? EnemyNpcId { get; set; }
@@ -22,49 +23,43 @@ namespace SurrealCB.Data.Model
             {
                 list.Add(this.Card.Passive);
             }
-            list = list.Concat(this.ActiveLvlBoosts.Where(x => x.Boost.Passive != null).OrderBy(x => x.Level).Select(x => x.Boost.Passive)).ToList();
+            if (this.ActiveLvlBoosts.Any())
+            {
+                //TODO: ESTOY AGARRANDO LA PRIMER PASIVA NOMAS
+                var secondList = this.ActiveLvlBoosts.Where(x => x.Boost.Passives?.Any() == true);
+                if (secondList.Any())
+                {
+                    list = list.Concat(secondList.OrderBy(x => x.Level).Select(x => x.Boost.Passives).FirstOrDefault()).ToList();
+                }
+
+            }
             list = list.GroupBy(p => p.Passive).Select(g => g.Last()).ToList();
             return list;
         }
 
         public int GetHp()
         {
-            var hp = this.Card.Hp;
-            hp += this.ActiveLvlBoosts.Where(x => x.Boost.Hp > 0).Sum(x => x.Boost.Hp);
-            //TODO: RUNES;
-            return hp;
+            return (int)StatHelper.BoostStat(this.Card.Hp, BoostType.HP, this.ActiveLvlBoosts, this.GetRuneList());
         }
 
         public int GetAtk()
         {
-            var attack = this.Card.Atk;
-            attack += this.ActiveLvlBoosts.Where(x => x.Boost.Atk > 0).Sum(x => x.Boost.Atk);
-            //TODO: RUNES;
-            return attack;
+            return (int)StatHelper.BoostStat(this.Card.Atk, BoostType.ATK, this.ActiveLvlBoosts, this.GetRuneList());
         }
 
         public int GetDef()
         {
-            var deffense = this.Card.Def;
-            deffense += this.ActiveLvlBoosts.Where(x => x.Boost.Def > 0).Sum(x => x.Boost.Def);
-            return deffense;
+            return (int)StatHelper.BoostStat(this.Card.Def, BoostType.DEF, this.ActiveLvlBoosts, this.GetRuneList());
         }
 
         public int GetImm()
         {
-            var immunity = this.Card.Imm;
-            immunity += this.ActiveLvlBoosts.Where(x => x.Boost.Imm > 0).Sum(x => x.Boost.Imm);
-            //TODO: Rune 
-            return immunity;
+            return (int)StatHelper.BoostStat(this.Card.Imm, BoostType.IMM, this.ActiveLvlBoosts, this.GetRuneList());
         }
 
         public double GetSpd()
         {
-            var speed = this.Card.Spd;
-            speed -= this.ActiveLvlBoosts.Where(x => x.Boost.Spd > 0).Sum(x => x.Boost.Spd);
-            //TODO: Rune 
-            speed = Math.Round(speed, 2, MidpointRounding.AwayFromZero);
-            return speed;
+            return StatHelper.BoostStat(this.Card.Spd, BoostType.SPD, this.ActiveLvlBoosts, this.GetRuneList());
         }
 
         public string GetName()
@@ -77,6 +72,17 @@ namespace SurrealCB.Data.Model
         {
             if (this.ActiveLvlBoosts?.Any() != true) return 1;
             return this.ActiveLvlBoosts.Max(x => x.Level);
+        }
+
+        public List<Rune> GetRuneList()
+        {
+            var runes = this.Runes;
+            var diff = this.Card.RuneSlots - runes.Count;
+            for (var i = 0; i < diff; i++)
+            {
+                runes.Add(null);
+            }
+            return runes;
         }
     }
 }
