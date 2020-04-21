@@ -36,6 +36,9 @@ namespace SurrealCB.Data.Model
         KNOCKOUT, //Mata si la vida del enemigo es X o menor
         LIFESTEAL, //Se cura un X% del danio causado
         REFLECT, //Refleja estados en un X%,
+        REGURGITATE, //Se cura un X% del danio causado
+        BURNOUT, //Se cura un X% del danio causado
+        RUNEBREAKER, //Deshabilita las runas enemigas
 
         //NO USADO
 
@@ -44,6 +47,9 @@ namespace SurrealCB.Data.Model
 
         //NO USADO NI ICONO
 
+        DEFLECT, //Un X% de desviar el golpe a un companiero
+        GUARDIAN, //Mientras este vivo, nadie puede atacar a otra carta
+        DESTROYER, //Aniade X de danio por cada X de hp del oponente
         SPIKE_ARMOR, //Devuelve el X% de danio al atacante
         REFINEMENT, //Incrementa en X el ataque por cada golpe dado
         DISPELL, //Elimina efectos negativos al curar --> tiene que usarse con heal

@@ -39,6 +39,8 @@ namespace SurrealCB.CommonUI.Services
             Passive.KNOCKOUT => Tuple.Create($"Kill the enemy if his hp is below {p1}.", "knockout"),
             Passive.LIFESTEAL => Tuple.Create($"Regain {p1}% of the dealt damage as hp.", "lifesteal"),
             Passive.REFLECT => Tuple.Create($"Has a {p1}% chances to reflect the passive effect.", "reflect"),
+            Passive.REGURGITATE => Tuple.Create($"Heals {p1} on every hit.", "regurgitate"),
+            Passive.BURNOUT => Tuple.Create($"Inflicts {p1} dmg every time the card is hit or attacks, during for {p2} seconds.", "burnout"),
             _ => Tuple.Create("", ""),
         };
     }

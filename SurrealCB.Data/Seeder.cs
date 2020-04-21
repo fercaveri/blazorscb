@@ -766,24 +766,89 @@ namespace SurrealCB.Data
 
                 new Card
                 {
+                    Name = "Blazing Golem", Tier = 1, Rarity = Rarity.RARE, AtkType = AtkType.NORMAL, Element = Element.FIRE,
+                    Passive = new CardPassive { Passive = Passive.ABLAZE, Param1 = 1},
+                    Hp = 4, Atk = 3, Def = 2, Imm = 0, Spd = 6.1, Value = 62, BaseExp = 46, RuneSlots = 1,
+                    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/blazing_golem.png",
+                    LevelBoosts = new List<LevelBoost>{
+                        DoBoost(2, 110, spd: 0.5), DoBoost(3, 350, hp: 1), DoBoost(4, 1100, spd: 0.6), DoBoost(5, 6500, def: 1, name: "Hard Blazing Golem"),
+                        DoBoost(6, 16500, hp: 1, atk: 1, name: "Durable Blazing Golem")
+                    }
+                },
+                new Card
+                {
+                    Name = "Fire Golem", Tier = 1, Rarity = Rarity.RARE, AtkType = AtkType.NORMAL, Element = Element.FIRE,
+                    Passive = new CardPassive { Passive = Passive.BURNOUT, Param1 = 1, Param2 = 3},
+                    Hp = 6, Atk = 1, Def = 0, Imm = 20, Spd = 3.1, Value = 77, BaseExp = 54, RuneSlots = 1,
+                    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/fire_golem.png",
+                    LevelBoosts = new List<LevelBoost>{
+                        DoBoost(2, 145, spd: 0.3), DoBoost(3, 480, hp: 1), DoBoost(4, 1650, imm: 15), DoBoost(5, 9000, p: Passive.BURNOUT, p1: 2, p2: 2.5, name: "Burnout Golem"),
+                        DoBoost(5, 8000, hp: 2, atk: 2, name: "Great Fire Golem")
+                    }
+                },
+                new Card
+                {
                     Name = "Dark Eye Fighter", Tier = 1, Rarity = Rarity.SPECIAL, AtkType = AtkType.RANDOM, Element = Element.DARK,
                     Passive = new CardPassive { Passive = Passive.SHATTER, Param1 = 10},
-                    Hp = 6, Atk = 1, Def = 0, Imm = 0, Spd = 1.8, Value = 50, BaseExp = 45, RuneSlots = 1,
+                    Hp = 6, Atk = 1, Def = 0, Imm = 0, Spd = 1.8, Value = 65, BaseExp = 48, RuneSlots = 1,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/dark_eye_fighter.png",
                     LevelBoosts = new List<LevelBoost>{
-                        DoBoost(2, 100, spd: 0.1), DoBoost(3, 260, spd: 0.1), DoBoost(4, 480, spd: 0.1), DoBoost(4, 650, hp: 1),
-                        DoBoost(5, 2400, p: Passive.SHATTER, p1: 15, name: "Dark Eye Breaker"), DoBoost(5, 2700, hp: 2, name: "Great Dark Eye Fighter")
-                        //new LevelBoost { Id = 28, Boost = new CardBoost { Hp = 2 }, Level = 5, Cost = 1250, ImprovedName = "Great Dark Eye Fighter", RequiredItems = new List<RequiredItem>{ new RequiredItem { Item = this.GetItem("Dark Shield"), Amount = 1 } } }
+                        DoBoost(2, 120, spd: 0.1), DoBoost(3, 380, spd: 0.1), DoBoost(4, 1200, spd: 0.15), DoBoost(4, 1600, hp: 1),
+                        DoBoost(5, 6400, p: Passive.SHATTER, p1: 15, name: "Dark Eye Breaker"), DoBoost(5, 7700, hp: 2, name: "Great Dark Eye Fighter")
+                    }
+                },
+                new Card
+                {
+                    Name = "Moon Vampire", Tier = 1, Rarity = Rarity.SPECIAL, AtkType = AtkType.NORMAL, Element = Element.DARK,
+                    Passive = new CardPassive { Passive = Passive.REGURGITATE, Param1 = 2},
+                    Hp = 7, Atk = 2, Def = 0, Imm = 20, Spd = 2.7, Value = 70, BaseExp = 50, RuneSlots = 1,
+                    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/moon_vampire.png",
+                    LevelBoosts = new List<LevelBoost>{
+                        DoBoost(2, 130, spd: 0.2), DoBoost(3, 420, imm: 10), DoBoost(4, 1550, hp: 2),
+                        DoBoost(5, 7200, atk: 1, name: "Moonlight Vampire"), DoBoost(6, 33000, p: Passive.REGURGITATE, p1: 3, name: "Darkmoon Vampire")
+                    }
+                },
+                new Card
+                {
+                    Name = "RockIT", Tier = 1, Rarity = Rarity.RARE, AtkType = AtkType.RANDOM, Element = Element.EARTH,
+                    Passive = new CardPassive { Passive = Passive.TOUGH, Param1 = 50, Param2 = 1},
+                    Hp = 10, Atk = 4, Def = 1, Imm = 0, Spd = 9, Value = 80, BaseExp = 55, RuneSlots = 1,
+                    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/blazing_golem.png",
+                    LevelBoosts = new List<LevelBoost>{
+                        DoBoost(2, 180, spd: 0.5), DoBoost(3, 580, hp: 2), DoBoost(4, 1900, atk: 1), DoBoost(5, 11000, atk: 1, hp: 2, name: "RockTHEM"),
+                        DoBoost(6, 40000, p: Passive.TOUGH, p1: 60, p2: 2, name: "RockROCK")
+                    }
+                },
+                new Card
+                {
+                    Name = "Rune Golem", Tier = 1, Rarity = Rarity.SPECIAL, AtkType = AtkType.NORMAL, Element = Element.EARTH,
+                    Passive = new CardPassive { Passive = Passive.RUNEBREAKER},
+                    Hp = 7, Atk = 1, Def = 1, Imm = 50, Spd = 2.8, Value = 65, BaseExp = 47, RuneSlots = 1,
+                    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/rune_golem.png",
+                    LevelBoosts = new List<LevelBoost>{
+                        DoBoost(2, 115, spd: 0.2), DoBoost(3, 370, hp: 1), DoBoost(4, 1200, spd: 0.3), DoBoost(5, 5500, atk: 1, name: "Runebreaker Golem"),
+                        DoBoost(5, 6500, def: 1, name: "Durune Golem")
+                    }
+                },
+                new Card
+                {
+                    Name = "Skellrex", Tier = 1, Rarity = Rarity.SPECIAL, AtkType = AtkType.RANDOM, Element = Element.NONE,
+                    Passive = new CardPassive { Passive = Passive.LIFESTEAL, Param1 = 100},
+                    Hp = 10, Atk = 1, Def = -1, Imm = 0, Spd = 1.4, Value = 75, BaseExp = 53, RuneSlots = 1,
+                    ImgSrc = "_content/SurrealCB.CommonUI/images/cards/skellrex.png",
+                    LevelBoosts = new List<LevelBoost>{
+                        DoBoost(2, 135, spd: 0.1), DoBoost(3, 460, spd: 0.1), DoBoost(4, 1600, atk: 1), DoBoost(5, 9500, hp: 3, name: "High Skellrex"),
+                        DoBoost(6, 33000, imm: 50, name: "Near-Immune Skellrex")
                     }
                 },
                 new Card
                 {
                     Name = "Lirin", Tier = 1, Rarity = Rarity.SPECIAL, AtkType = AtkType.RANDOM, Element = Element.NONE,
                     Passive = new CardPassive { Passive = Passive.DOOM, Param1 = 8},
-                    Hp = 9, Atk = 0, Def = 0, Imm = 100, Spd = 7, Value = 60, BaseExp = 60, RuneSlots = 1,
+                    Hp = 9, Atk = 0, Def = 0, Imm = 100, Spd = 7, Value = 70, BaseExp = 52, RuneSlots = 1,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/lirin.png",
                     LevelBoosts = new List<LevelBoost>{
-                        DoBoost(2, 120, spd: 0.3), DoBoost(3, 290, spd: 0.3), DoBoost(4, 800, spd: 0.4), DoBoost(5, 6000, def: 1, name: "KLirin"),
+                        DoBoost(2, 120, spd: 0.3), DoBoost(3, 390, spd: 0.3), DoBoost(4, 1300, spd: 0.4), DoBoost(5, 6000, def: 1, name: "KLirin"),
                         DoBoost(5, 8000, p: Passive.DOOM, p1: 2, name: "Insta-Killirin")
                     }
                 },
@@ -791,22 +856,25 @@ namespace SurrealCB.Data
                 {
                     Name = "Little Hidra", Tier = 1, Rarity = Rarity.SPECIAL, AtkType = AtkType.RANDOM, Element = Element.WATER,
                     Passive = null,
-                    Hp = 9, Atk = 1, Def = 0, Imm = 0, Spd = 1.5, Value = 80, BaseExp = 120, RuneSlots = 1,
+                    Hp = 9, Atk = 1, Def = 0, Imm = 0, Spd = 1.5, Value = 78, BaseExp = 55, RuneSlots = 1,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/little_hidra.png",
                     LevelBoosts = new List<LevelBoost>{
-                        DoBoost(2, 140, spd: 0.1), DoBoost(3, 350, hp: 1), DoBoost(4, 850, imm: 25),
-                        DoBoost(5, 4500, spd: 0.4, name: "Little Fast Hidra"), DoBoost(5, 6500, hp: -4, atk: 1, def: 1, name: "Berseker Hidra")
+                        DoBoost(2, 140, spd: 0.1), DoBoost(3, 530, hp: 1), DoBoost(4, 1850, imm: 25),
+                        DoBoost(5, 10500, spd: 0.4, name: "Little Fast Hidra"), DoBoost(5, 11000, hp: -4, atk: 1, def: 1, name: "Berseker Hidra")
                     }
                 },
+
+                // TIER 1 CARD LEGENDARY
+
                 new Card
                 {
                     Name = "ELKchampion", Tier = 1, Rarity = Rarity.LEGENDARY, AtkType = AtkType.ALL, Element = Element.LIGHT,
                     Passive = new CardPassive { Passive = Passive.IGNORE_DEF },
-                    Hp = 8, Atk = 1, Def = 1, Imm = 0, Spd = 5, Value = 120, BaseExp = 200, RuneSlots = 1,
+                    Hp = 8, Atk = 1, Def = 1, Imm = 0, Spd = 5, Value = 250, BaseExp = 120, RuneSlots = 1,
                     ImgSrc = "_content/SurrealCB.CommonUI/images/cards/elkchampion.png",
                     LevelBoosts = new List<LevelBoost>{
-                        DoBoost(2, 250, spd: 0.2), DoBoost(3, 650, hp: 1), DoBoost(4, 1250, imm: 15),
-                        DoBoost(5, 8500, spd: 0.8, name: "ELiteKchampion"), DoBoost(5, 6500, p: Passive.DODGE, p1: 15, name: "DodgeELKchampion")
+                        DoBoost(2, 250, spd: 0.2), DoBoost(3, 850, hp: 1), DoBoost(4, 2650, imm: 15),
+                        DoBoost(5, 22500, spd: 0.8, name: "ELiteKchampion"), DoBoost(5, 26500, p: Passive.DODGE, p1: 15, name: "DodgeELKchampion")
                     }
                 },
             };
