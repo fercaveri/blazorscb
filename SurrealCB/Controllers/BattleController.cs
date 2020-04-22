@@ -42,7 +42,7 @@ namespace SurrealCB.Server.Controllers
             var userCards = await this.userService.GetUserCards();
             for (var i = 0; i < 4; i++)
             {
-                var pcard = userCards[random.Next(userCards.Count)];
+                var pcard = userCards[random.Next(0, userCards.Count)];
                 battleCards.Add(new BattleCard(pcard)
                 {
                     Position = i
@@ -50,9 +50,9 @@ namespace SurrealCB.Server.Controllers
             }
 
             var enemy = await this.repository.Enemies.FirstOrDefaultAsync(x => x.Id == enemyId);
-            for (var i = 0; i < 4; i++)
+            for (var i = 0; i < enemy.CardCount; i++)
             {
-                var pcard = enemy.Cards[random.Next(enemy.Cards.Count)];
+                var pcard = enemy.Cards[random.Next(0, enemy.Cards.Count)];
                 battleCards.Add(new BattleCard(pcard)
                 {
                     Position = i + 4

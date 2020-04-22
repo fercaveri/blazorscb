@@ -213,6 +213,15 @@ namespace SurrealCB.Server
                                 actions.Add(new BattleAction { Position = card.Position, Type = HealthChange.DEATH });
                             }
                             break;
+                        case Passive.BURN:
+                            eff.Param3 -= timeElapsed;
+                            if (eff.Param3 <= 0)
+                            {
+                                this.ApplyDmg(card, (int)eff.Param2);
+                                card.ActiveEffects.RemoveAt(i);
+                                actions.Add(new BattleAction { Position = card.Position, Type = HealthChange.BLAZE, Number = (int)eff.Param2 });
+                            }
+                            break;
                     };
                 }
             }
@@ -331,6 +340,7 @@ namespace SurrealCB.Server
             {
                 foreach (var passive in srcPassives)
                 {
+                    randNum = random.Next(0, 100);
                     switch (passive.Passive)
                     {
                         case Passive.BACKTRACK:
@@ -377,12 +387,25 @@ namespace SurrealCB.Server
                             }
                             break;
                         case Passive.OBLIVION:
-                            var rand = new Random();
-                            var num = rand.Next(0, 100);
-                            if (num < (int)passive.Param1)
+                            if (randNum < (int)passive.Param1)
                             {
                                 //TODO: Check this if can be refined
                                 tarCard.Hp = 0;
+                            }
+                            break;
+                        case Passive.BURN:
+                            if (randNum < (int)passive.Param1)
+                            {
+                                this.ApplyDmg(tarCard, (int)passive.Param2);
+                                actions.Add(new BattleAction { Number = (int)passive.Param2, Type = HealthChange.BLAZE, Position = tarCard.Position });
+                                tarCard.ActiveEffects.Add(new ActiveEffect
+                                {
+                                    FromPosition = srcCard.Position,
+                                    Id = passive.Id,
+                                    Passive = passive.Passive,
+                                    Param2 = passive.Param2,
+                                    Param3 = passive.Param3,
+                                });
                             }
                             break;
                     };

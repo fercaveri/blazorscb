@@ -35,7 +35,7 @@ namespace SurrealCB.Server
         {
             var userGold = await this.userService.GetUserGold();
             //TODO: BORRAR!!!
-            userGold = 10000;
+            userGold = 10000000;
             if (lb.Cost > userGold)
             {
                 throw new ApiException("Gold insufficent", 400);

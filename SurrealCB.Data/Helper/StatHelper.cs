@@ -38,12 +38,28 @@ namespace SurrealCB.Data.Helper
             var baseAmount = amount;
             foreach (var boost in percBoosts)
             {
-                amount += (baseAmount * boost.Amount / 100);
+                if (type == BoostType.SPD)
+                {
+                    amount -= (baseAmount * boost.Amount / 100);
+                    amount = Math.Round(amount, 2, MidpointRounding.AwayFromZero);
+                }
+                else
+                {
+                    amount += (baseAmount * boost.Amount / 100);
+                }
             }
 
             foreach (var boost in flatBoosts)
             {
-                amount += boost.Amount;
+                if (type == BoostType.SPD)
+                {
+                    amount -= boost.Amount;
+                    amount = Math.Round(amount, 2, MidpointRounding.AwayFromZero);
+                }
+                else
+                {
+                    amount += boost.Amount;
+                }
             }
             return amount;
         }

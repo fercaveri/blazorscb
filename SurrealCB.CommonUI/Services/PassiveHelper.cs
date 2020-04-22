@@ -36,11 +36,16 @@ namespace SurrealCB.CommonUI.Services
             Passive.OBLIVION => Tuple.Create($"Has a {p1}% chance to insta-kill the enemy.", "oblivion"),
             Passive.BURN => Tuple.Create($"Has a {p1}% chance to burn the enemy, inflicting {p2} extra dmg and repeating it after {p3} seconds.", "burn"),
             Passive.BERSEKER => Tuple.Create($"When the hp goes below 50%, increase the attack by {p1} and speed by {p2}.", "berseker"),
-            Passive.KNOCKOUT => Tuple.Create($"Kill the enemy if his hp is below {p1}.", "knockout"),
+            Passive.KNOCKOUT => Tuple.Create($"Kill the enemy if his hp is below or equal to {p1}.", "knockout"),
+            Passive.RUNEBREAKER => Tuple.Create($"Disable all enemy runes until die.", "runebreaker"),
             Passive.LIFESTEAL => Tuple.Create($"Regain {p1}% of the dealt damage as hp.", "lifesteal"),
             Passive.REFLECT => Tuple.Create($"Has a {p1}% chances to reflect the passive effect.", "reflect"),
             Passive.REGURGITATE => Tuple.Create($"Heals {p1} on every hit.", "regurgitate"),
             Passive.BURNOUT => Tuple.Create($"Inflicts {p1} dmg every time the card is hit or attacks, during for {p2} seconds.", "burnout"),
+            Passive.WINTER => Tuple.Create($"Reduce the enemies speed by {p1}% until this card dies.", "winter"),
+            Passive.SURPRISEATTACK => Tuple.Create($"Start the battle attacking regardless the speed.", "surpriseattack"),
+            Passive.ELECTRIFY => Tuple.Create($"Has a {p1}% to lose the turn during, during {p2} seconds.", "electrify"),
+            Passive.THIEF => Tuple.Create($"Hides for {p1} seconds on attack, making it unselectable.", "thief"),
             _ => Tuple.Create("", ""),
         };
     }
