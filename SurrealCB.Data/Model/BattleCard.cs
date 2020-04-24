@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SurrealCB.Data.Model
 {
@@ -16,6 +17,10 @@ namespace SurrealCB.Data.Model
             this.PlayerCard = pcard;
             this.Hp = pcard.GetHp();
             this.Time = pcard.GetSpd();
+            if (this.GetPassives().Any(x => x.Passive == Passive.SURPRISEATTACK))
+            {
+                this.Time = 0;
+            }
         }
 
         public BattleCard()
@@ -38,7 +43,16 @@ namespace SurrealCB.Data.Model
         public int GetAtk()
         {
             var attack = this.PlayerCard.GetAtk();
-            //TODO: Active effs
+            foreach (var activeEff in this.ActiveEffects)
+            {
+                switch (activeEff.Passive)
+                {
+                    case Passive.BERSEKER:
+                        attack += (int)activeEff.Param1;
+                        break;
+                }
+
+            }
             return attack;
         }
 
@@ -59,7 +73,16 @@ namespace SurrealCB.Data.Model
         public double GetSpd()
         {
             var speed = this.PlayerCard.GetSpd();
-            //TODO: Active effs
+            foreach (var activeEff in this.ActiveEffects)
+            {
+                switch (activeEff.Passive)
+                {
+                    case Passive.BERSEKER:
+                        speed -= (int)activeEff.Param2;
+                        break;
+                }
+
+            }
             return speed;
         }
     }

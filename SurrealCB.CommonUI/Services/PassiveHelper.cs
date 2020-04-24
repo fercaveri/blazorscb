@@ -34,7 +34,7 @@ namespace SurrealCB.CommonUI.Services
             Passive.DEVIANT => Tuple.Create($"The attack deals random damage between the base dmg and {p1}.", "deviant"),
             Passive.ABLAZE => Tuple.Create($"Deals {p1} damage to enemies that hits you.", "ablaze"),
             Passive.OBLIVION => Tuple.Create($"Has a {p1}% chance to insta-kill the enemy.", "oblivion"),
-            Passive.BURN => Tuple.Create($"Has a {p1}% chance to burn the enemy, inflicting {p2} extra dmg and repeating it after {p3} seconds.", "burn"),
+            Passive.BURN => Tuple.Create($"Has a {p1}% chance to burn the enemy, inflicting {p2} extra dmg and repeating the chance after {p3} seconds.", "burn"),
             Passive.BERSEKER => Tuple.Create($"When the hp goes below 50%, increase the attack by {p1} and speed by {p2}.", "berseker"),
             Passive.KNOCKOUT => Tuple.Create($"Kill the enemy if his hp is below or equal to {p1}.", "knockout"),
             Passive.RUNEBREAKER => Tuple.Create($"Disable all enemy runes until die.", "runebreaker"),
@@ -46,6 +46,11 @@ namespace SurrealCB.CommonUI.Services
             Passive.SURPRISEATTACK => Tuple.Create($"Start the battle attacking regardless the speed.", "surpriseattack"),
             Passive.ELECTRIFY => Tuple.Create($"Has a {p1}% to lose the turn during, during {p2} seconds.", "electrify"),
             Passive.THIEF => Tuple.Create($"Hides for {p1} seconds on attack, making it unselectable.", "thief"),
+            Passive.DOUBLE_ATTACK => Tuple.Create($"{p1}% to perform a double attack.", "double_attack"),
+            Passive.ENDURABLE => Tuple.Create($"Reduces the final dmg (after applying defenses) by {p1}%.", "endurable"),
+            Passive.FLEE => Tuple.Create($"{p1}% chances to flee after being attacked.", "flee"),
+            Passive.FLAMMABLE => Tuple.Create($"Takes double damage for fire effects.", "flammable"),
+            Passive.SCORCHED => Tuple.Create($"Scorch every enemy that attacks you, receiving {p1} dmg every time the enemy is hit, for {p2} seconds.", "scorched"),
             _ => Tuple.Create("", ""),
         };
     }

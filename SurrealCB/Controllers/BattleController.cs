@@ -43,6 +43,7 @@ namespace SurrealCB.Server.Controllers
             for (var i = 0; i < 4; i++)
             {
                 var pcard = userCards[random.Next(0, userCards.Count)];
+                logger.LogInformation($"Card used: {pcard.Id} name {pcard.GetName()} with index {userCards.IndexOf(pcard)}");
                 battleCards.Add(new BattleCard(pcard)
                 {
                     Position = i
@@ -85,13 +86,13 @@ namespace SurrealCB.Server.Controllers
                         List<int> currentPositions;
                         if (srcPos < 4)
                         {
-                            currentPositions = cards.Where(x => x.Position < 4 && x.Hp > 0).Select(x => x.Position).ToList();
+                            currentPositions = cards.Where(x => x.Position > 3 && x.Hp > 0).Select(x => x.Position).ToList();
                         }
                         else
                         {
-                            currentPositions = cards.Where(x => x.Position > 3 && x.Hp > 0).Select(x => x.Position).ToList();
+                            currentPositions = cards.Where(x => x.Position < 4 && x.Hp > 0).Select(x => x.Position).ToList();
                         }
-                        tryPos = currentPositions[random.Next(0, currentPositions.Count() + 1)];
+                        tryPos = currentPositions[random.Next(0, currentPositions.Count())];
                         var tryCard = cards.FirstOrDefault(x => x.Position == tryPos);
                         if (tryCard != null)
                         {

@@ -13,5 +13,7 @@ namespace SurrealCB.Data.Model
         POISON,
         BLAZE,
         BLEED,
+        REFLECT,
+        FLEE,
     }
 }

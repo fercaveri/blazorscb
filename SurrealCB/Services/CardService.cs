@@ -40,7 +40,7 @@ namespace SurrealCB.Server
             {
                 throw new ApiException("Gold insufficent", 400);
             }
-            card.ActiveLvlBoosts.Add(lb);
+            card.ActiveLvlBoosts.Add(new ActiveLevelBoost { LevelBoostId = lb.Id, PlayerCardId = card.Id});
             await this.repository.UpdateAsync(card);
         }
     }

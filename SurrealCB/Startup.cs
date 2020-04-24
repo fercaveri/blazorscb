@@ -78,6 +78,7 @@ namespace SurrealCB.Server
             services.AddControllers().AddNewtonsoftJson(setup =>
             {
                 setup.SerializerSettings.Converters.Add(new StringEnumConverter());
+                setup.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
             services.AddDbContext<SCBDbContext>(options =>
                     options.UseLazyLoadingProxies()

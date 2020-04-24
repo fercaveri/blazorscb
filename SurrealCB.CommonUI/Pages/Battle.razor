@@ -94,11 +94,7 @@
         this.nextPosition = battleStatus.NextPosition;
         this.Actions = battleStatus.Actions;
         this.battleStatus = battleStatus.Status;
-        if (this.Actions.Any())
-        {
-            StateHasChanged();
-            await Task.Delay(1000);
-        }
+        await this.ShowActions(battleStatus);
         if (this.nextPosition > 3)
         {
             StateHasChanged();
@@ -139,6 +135,7 @@
         if (this.nextPosition < 4 && this.nextPosition != -1)
         {
             var card = this.cards.FirstOrDefault(x => x.Position == pos);
+            if (card.ActiveEffects.Any(x => x.Passive == Passive.THIEF)) return;
             var mine = this.cards.FirstOrDefault(x => x.Position == this.nextPosition);
             if (card.Hp > 0 &&
                 ((mine.PlayerCard.Card.AtkType == AtkType.NORMAL && pos > 3) ||
@@ -154,6 +151,21 @@
     private async Task CheckStatus(BattleStatus status)
     {
         this.cards = status.Cards.ToList();
+        await this.ShowActions(status);
+        this.nextPosition = status.NextPosition;
+        this.battleStatus = status.Status;
+        if (this.battleStatus == BattleEnd.CONTINUE)
+        {
+            await this.CheckNext();
+        }
+        else
+        {
+            ApiResponseDto atkResponse = await Http.GetJsonAsync<ApiResponseDto>($"api/battle/reward/{EnemyId}/");
+        }
+    }
+
+    private async Task ShowActions(BattleStatus status)
+    {
         if (status.Actions?.Count() > 0)
         {
             var groupActions = status.Actions.GroupBy(x => x.Position).Select(x => x.First());
@@ -170,16 +182,6 @@
             }
             while (groupActions.Count() > 0);
             this.Actions.Clear();
-        }
-        this.nextPosition = status.NextPosition;
-        this.battleStatus = status.Status;
-        if (this.battleStatus == BattleEnd.CONTINUE)
-        {
-            await this.CheckNext();
-        }
-        else
-        {
-            ApiResponseDto atkResponse = await Http.GetJsonAsync<ApiResponseDto>($"api/battle/reward/{EnemyId}/");
         }
     }
 

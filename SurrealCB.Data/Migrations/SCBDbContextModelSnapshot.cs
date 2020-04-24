@@ -148,6 +148,28 @@ namespace SurrealCB.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("SurrealCB.Data.Model.ActiveLevelBoost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("LevelBoostId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlayerCardId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LevelBoostId");
+
+                    b.HasIndex("PlayerCardId");
+
+                    b.ToTable("ActiveLevelBoost");
+                });
+
             modelBuilder.Entity("SurrealCB.Data.Model.ApiLogItem", b =>
                 {
                     b.Property<int>("Id")
@@ -527,9 +549,6 @@ namespace SurrealCB.Data.Migrations
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PlayerCardId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("RequiredBoostId")
                         .HasColumnType("int");
 
@@ -541,8 +560,6 @@ namespace SurrealCB.Data.Migrations
                     b.HasIndex("BoostId");
 
                     b.HasIndex("CardId");
-
-                    b.HasIndex("PlayerCardId");
 
                     b.HasIndex("RequiredBoostId");
 
@@ -924,6 +941,21 @@ namespace SurrealCB.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SurrealCB.Data.Model.ActiveLevelBoost", b =>
+                {
+                    b.HasOne("SurrealCB.Data.Model.LevelBoost", "LevelBoost")
+                        .WithMany()
+                        .HasForeignKey("LevelBoostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SurrealCB.Data.Model.PlayerCard", null)
+                        .WithMany("ActiveLvlBoosts")
+                        .HasForeignKey("PlayerCardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SurrealCB.Data.Model.ApiLogItem", b =>
                 {
                     b.HasOne("SurrealCB.Data.Model.ApplicationUser", null)
@@ -989,14 +1021,9 @@ namespace SurrealCB.Data.Migrations
                         .WithMany("LevelBoosts")
                         .HasForeignKey("CardId");
 
-                    b.HasOne("SurrealCB.Data.Model.PlayerCard", null)
-                        .WithMany("ActiveLvlBoosts")
-                        .HasForeignKey("PlayerCardId");
-
                     b.HasOne("SurrealCB.Data.Model.LevelBoost", "RequiredBoost")
                         .WithMany()
-                        .HasForeignKey("RequiredBoostId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("RequiredBoostId");
                 });
 
             modelBuilder.Entity("SurrealCB.Data.Model.Map", b =>

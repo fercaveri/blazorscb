@@ -798,6 +798,12 @@ ul.breadcrumb {
     padding: 0 5px;
 }
 
+.uicard-level-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
     .uicard-footer-up div {
         display: flex;
         flex-direction: row;
@@ -979,7 +985,7 @@ ul.breadcrumb {
     grid-template-columns: 18% 18% 18% 18%;
     grid-template-rows: 40% 40%;
     grid-column-gap: 9%;
-    grid-row-gap: 10%;
+    grid-row-gap: 12%;
 }
 
     .battle-container .mdc-linear-progress {
@@ -1332,6 +1338,22 @@ ul.breadcrumb {
     filter: invert(39%) sepia(54%) saturate(2883%) hue-rotate(1deg) brightness(102%) contrast(105%);
 }
 
+.icon-burnout {
+    filter: invert(39%) sepia(54%) saturate(2883%) hue-rotate(1deg) brightness(102%) contrast(105%);
+}
+
+.icon-burn {
+    filter: invert(39%) sepia(54%) saturate(2883%) hue-rotate(1deg) brightness(102%) contrast(105%);
+}
+
+.icon-flammable {
+    filter: invert(39%) sepia(54%) saturate(2883%) hue-rotate(1deg) brightness(102%) contrast(105%);
+}
+
+.icon-scorched {
+    filter: invert(39%) sepia(54%) saturate(2883%) hue-rotate(1deg) brightness(102%) contrast(105%);
+}
+
 .icon-piercing {
     filter: invert(19%) sepia(61%) saturate(3885%) hue-rotate(296deg) brightness(78%) contrast(124%);
 }
@@ -1344,6 +1366,38 @@ ul.breadcrumb {
     filter: invert(70%) sepia(18%) saturate(2919%) hue-rotate(126deg) brightness(92%) contrast(101%);
 }
 
+.icon-winter {
+    filter: invert(15%) sepia(37%) saturate(5808%) hue-rotate(214deg) brightness(88%) contrast(105%);
+}
+
+.icon-runebreaker {
+    filter: invert(66%) sepia(53%) saturate(935%) hue-rotate(19deg) brightness(95%) contrast(98%);
+}
+
+.icon-endurable {
+    filter: invert(67%) sepia(7%) saturate(0%) hue-rotate(279deg) brightness(89%) contrast(82%);
+}
+
+.icon-double_attack {
+    filter: invert(32%) sepia(10%) saturate(3065%) hue-rotate(117deg) brightness(93%) contrast(80%);
+}
+
+.icon-electrify {
+    filter: invert(46%) sepia(10%) saturate(583%) hue-rotate(242deg) brightness(94%) contrast(89%);
+}
+
+.icon-lifesteal {
+    filter: invert(12%) sepia(84%) saturate(4037%) hue-rotate(323deg) brightness(95%) contrast(106%);
+}
+
+.icon-regurgitate {
+    filter: invert(12%) sepia(84%) saturate(4037%) hue-rotate(323deg) brightness(95%) contrast(106%);
+}
+
+.icon-reflect {
+    filter: invert(35%) sepia(89%) saturate(911%) hue-rotate(145deg) brightness(94%) contrast(99%);
+}
+
 .icon-blind {
     filter: invert(64%) sepia(49%) saturate(486%) hue-rotate(185deg) brightness(98%) contrast(84%);
 }
@@ -1354,6 +1408,10 @@ ul.breadcrumb {
 
 .icon-bleed {
     filter: invert(14%) sepia(64%) saturate(3939%) hue-rotate(331deg) brightness(84%) contrast(111%);
+}
+
+.icon-surpriseattack {
+    filter: invert(68%) sepia(35%) saturate(2608%) hue-rotate(90deg) brightness(96%) contrast(88%);
 }
 
 .icon-blowmark {

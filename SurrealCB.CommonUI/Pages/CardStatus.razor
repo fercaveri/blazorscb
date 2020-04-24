@@ -21,11 +21,11 @@
                 <div class="card-level-boost" style="grid-column: @(card.Card.LevelBoosts.Where(x => x.Level == levelBoost.Level).OrderBy(x => x.Cost).IndexOf(levelBoost) + 2);
                          grid-row: @GetGridRow(levelBoost.Level)" @onclick="() => ActivateBoost(levelBoost)">
                     <MatTooltip Tooltip="@GetBoostTooltip(levelBoost)">
-                        <div @ref="@context.Current" class="boost-container @(card.ActiveLvlBoosts.Any(x => x.Id == levelBoost.Id) ? $"active icon-{GetBoostIcon(levelBoost)}" : "") ">
+                        <div @ref="@context.Current" class="boost-container @(card.ActiveLvlBoosts.Any(x => x.LevelBoost.Id == levelBoost.Id) ? $"active icon-{GetBoostIcon(levelBoost)}" : "") ">
                             <img class="boost-img" src="@($"_content/SurrealCB.CommonUI/icons/{GetBoostIcon(levelBoost)}.svg")" />
                         </div>
                     </MatTooltip>
-                    @if (!card.ActiveLvlBoosts.Any(x => x.Id == levelBoost.Id))
+                    @if (!card.ActiveLvlBoosts.Any(x => x.LevelBoost.Id == levelBoost.Id))
                     {
                         <div class="card-level-side">
                             <img src="_content/SurrealCB.CommonUI/icons/gold.svg" />
@@ -76,12 +76,13 @@
 
     private async Task ActivateBoost(LevelBoost lb)
     {
+        if (card.ActiveLvlBoosts.Any(x => x.LevelBoost.Id == lb.Id)) return;
         ApiResponseDto apiResponse = await Http.GetJsonAsync<ApiResponseDto>($"api/card/player/levelboost/{Id}/{lb.Id}");
 
         if (apiResponse.StatusCode == Status200OK)
         {
             matToaster.Add(apiResponse.Message, MatToastType.Success, "Level Boost Activated");
-            this.card.ActiveLvlBoosts.Add(lb);
+            this.card.ActiveLvlBoosts.Add(new ActiveLevelBoost { LevelBoost = lb});
         }
         else
         {

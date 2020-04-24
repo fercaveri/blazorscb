@@ -22,26 +22,30 @@ namespace SurrealCB.Data.Model
         DODGE, //Evade el ataque con un X% de chances
         IMMUNE, //Ninguna pasiva le hace efecto
         TOUGH, //Un X% de reducir el danio un X
+        ENDURABLE, //Reduce el danio final en X%
         GHOST, //No recibe danio directo al ser atacado, solo con efectos secundarios
         BLOWMARK, //Marca al objetivo por cada golpe, anadiendo X danio al proximo ataque
         BLIND, //Ciega al enemigo dejandole un X% de que missee durante X segundos
         DEVIANT, //El ataque es aleatorio entre el atk base y X
         ABLAZE, //Al golpearte, el enemigo recibe X de danio
+        SCORCHED, //Al golpearte, el enemigo se quema, recibiendo X por cada ataque durante Y seg
         OBLIVION, //X% de matar al enemigo,
-        BURN, //Un X% de daniar al enemigo con Z de danio extra y luego de Y segundos dania nuevamente,
-
-        //HACER ESTAS LOGICAS
-
+        BURN, //Un X% de daniar al enemigo con Z de danio extra y luego de Y segundos tambien X% de daniar con Z,
         BERSEKER, //Mitad de vida o menos, incrementa danio y velocidad
         KNOCKOUT, //Mata si la vida del enemigo es X o menor
         LIFESTEAL, //Se cura un X% del danio causado
-        REFLECT, //Refleja estados en un X%,
+        REFLECT, //Refleja estados en un X%
         REGURGITATE, //Se cura un X por cada ataque
-        BURNOUT, //Quema por X de danio y luego repite a los Y segundos
-        RUNEBREAKER, //Deshabilita las runas enemigas
+        BURNOUT, //Quema por X de danio y cuando ataca y es atacado
         SURPRISEATTACK, //Start the battle attacking regardless the speed
         ELECTRIFY, //X% de perder el turno durante Y segundos
         THIEF, //Se esconde durante X segundos al atacar, siendo inseleccionable
+        DOUBLE_ATTACK, //X% de atacar dos veces
+        FLEE, //X% de escapar al ser atacado
+        FLAMMABLE, //Take double damage for fire effects
+
+        //HACER ESTAS LOGICAS
+        RUNEBREAKER, //Deshabilita las runas enemigas
 
         //NO USADO PERO CON ICONO
 
