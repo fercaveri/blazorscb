@@ -127,6 +127,15 @@
                 var newStatus = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleStatus>(atkResponse.Result.ToString());
                 await this.CheckStatus(newStatus);
             }
+            else if (nextPlayerCard.ActiveEffects.Any(x => x.Passive == Passive.CONFUSSION))
+            {
+                var playerCardcount = this.cards.Where(x => x.Position < 4).Count();
+                var random = new Random();
+                var who = random.Next(1, playerCardcount + 1) - 1;
+                ApiResponseDto atkResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/battle/perform?srcPos={nextPosition}&tarPos={who}", this.cards);
+                var newStatus = Newtonsoft.Json.JsonConvert.DeserializeObject<BattleStatus>(atkResponse.Result.ToString());
+                await this.CheckStatus(newStatus);
+            }
         }
     }
 

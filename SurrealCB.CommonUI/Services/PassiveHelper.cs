@@ -51,6 +51,9 @@ namespace SurrealCB.CommonUI.Services
             Passive.FLEE => Tuple.Create($"{p1}% chances to flee after being attacked.", "flee"),
             Passive.FLAMMABLE => Tuple.Create($"Takes double damage for fire effects.", "flammable"),
             Passive.SCORCHED => Tuple.Create($"Scorch every enemy that attacks you, receiving {p1} dmg every time the enemy is hit, for {p2} seconds.", "scorched"),
+            Passive.MELT => Tuple.Create($"Deal {p1} extra dmg on hit.", "melt"),
+            Passive.TIMESHIFT => Tuple.Create($"Absorbs {p1}% of the elapsed time, reducing time for next turn and increasing that amout to the enemy.", "timeshift"),
+            Passive.CONFUSSION => Tuple.Create($"Confuses the enemy, making it attacking his teammates, during {p1} seconds.", "confussion"),
             _ => Tuple.Create("", ""),
         };
     }

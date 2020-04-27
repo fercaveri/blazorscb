@@ -53,10 +53,15 @@ namespace SurrealCB.Server.Controllers
             var enemy = await this.repository.Enemies.FirstOrDefaultAsync(x => x.Id == enemyId);
             for (var i = 0; i < enemy.CardCount; i++)
             {
+                var index = i;
+                if (enemy.CardCount < 3)
+                {
+                    index += 1;
+                }
                 var pcard = enemy.Cards[random.Next(0, enemy.Cards.Count)];
                 battleCards.Add(new BattleCard(pcard)
                 {
-                    Position = i + 4
+                    Position = index + 4
                 });
             }
 

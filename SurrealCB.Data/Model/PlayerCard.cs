@@ -22,6 +22,18 @@ namespace SurrealCB.Data.Model
             {
                 list.Add(this.Card.Passive);
             }
+            var levelOnePassives = this.Card.LevelBoosts.Where(x => x.Level == 1);
+            if (levelOnePassives?.Any() == true)
+            {
+                foreach (var lb in levelOnePassives)
+                {
+                    var passive = lb.Boost.Passives.FirstOrDefault();
+                    if (passive != null)
+                    {
+                        list.Add(passive);
+                    }
+                }
+            }
             if (this.ActiveLvlBoosts.Any())
             {
                 //TODO: ESTOY AGARRANDO LA PRIMER PASIVA NOMAS

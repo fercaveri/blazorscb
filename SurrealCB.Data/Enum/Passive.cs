@@ -37,12 +37,17 @@ namespace SurrealCB.Data.Model
         REFLECT, //Refleja estados en un X%
         REGURGITATE, //Se cura un X por cada ataque
         BURNOUT, //Quema por X de danio y cuando ataca y es atacado
+        WINTER, //Reduce spd enemigo en X%
         SURPRISEATTACK, //Start the battle attacking regardless the speed
         ELECTRIFY, //X% de perder el turno durante Y segundos
         THIEF, //Se esconde durante X segundos al atacar, siendo inseleccionable
         DOUBLE_ATTACK, //X% de atacar dos veces
         FLEE, //X% de escapar al ser atacado
         FLAMMABLE, //Take double damage for fire effects
+        MELT, //Deals X extra fire dmg on hit
+        TIMESHIFT, //Chupa time actual
+        CONFUSSION, //La carta golpea al azar a cualquiera del tablero durante X segundos,
+        HELLFIRE, //Cada Y segundos dania a todos con X
 
         //HACER ESTAS LOGICAS
         RUNEBREAKER, //Deshabilita las runas enemigas
@@ -65,7 +70,6 @@ namespace SurrealCB.Data.Model
         DISABLE, //Deja inactiva la carta por X segundos (no puede ser atacada ni atacar)
         VANISH, //Reduce en X el ataque propio por cada golpe hasta llegar a 0
         MISTERY, //Golpea en X a pos2 en Y a pos3 y en Z a pos 4
-        CONFUSSION, //La carta golpea al azar a cualquiera del tablero
         NULLIFY, //Mientras este vivo, ningun aliado puede sufrir efectos
         MARKDOWN, //Luego de X marcas dania por Y en el prox ataque
         INTENSIFY, //Incrementa el danio sufrido por efectos un X%
@@ -83,10 +87,12 @@ namespace SurrealCB.Data.Model
         CHEER, //Incrementa atk aliado en X%
         HASTE, //Incrementa spd aliado en X%
         VITALIZER, //Incrementa hp aliado en X%
-        WINTER, //Reduce spd enemigo en X%
         CRITICAL, //X% de changes de golpear un Y% mas
         INCINERATE, //Damages for X every Y seconds until die or dispelled
         WRECKER, //Add the enemy def to the atk, and ignore defense
+        SHURIKEN, //Inflije X danio real y rebota, reduciendo X danio por golpe hasta 0
+        SLOWDOWN, //Reduce hasta morir
+        SPEEDSTEAL, //Chupa time total stackea hasta morir
 
         //TODO: NO PASIVAS PERO PUEDE SER FUEGO Y POISON ALL o BLEED
     }

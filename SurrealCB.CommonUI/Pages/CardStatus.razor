@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="card-status-levels" style="grid-template-columns: @GetLevelColumns()">
-            @foreach (var levelBoost in card.Card.LevelBoosts)
+            @foreach (var levelBoost in card.Card.LevelBoosts.Where(x => x.Level != 1))
             {
                 <div class="card-level-boost" style="grid-column: @(card.Card.LevelBoosts.Where(x => x.Level == levelBoost.Level).OrderBy(x => x.Cost).IndexOf(levelBoost) + 2);
                          grid-row: @GetGridRow(levelBoost.Level)" @onclick="() => ActivateBoost(levelBoost)">

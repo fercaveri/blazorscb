@@ -362,8 +362,8 @@ namespace SurrealCB.Server
                         break;
                 };
             }
-            dmg = this.ApplyElementToDmg(srcCard.PlayerCard.Card.Element, tarCard.PlayerCard.Card.Element, dmg);
-            var finalDmg = Math.Max(0, dmg - def);
+            dmg = this.ApplyElementToDmg(srcCard, tarCard, dmg, def);
+            var finalDmg = Math.Max(0, dmg);
             foreach (var passive in tarPassives)
             {
                 switch (passive.Passive)
@@ -426,18 +426,42 @@ namespace SurrealCB.Server
                         case Passive.POISON:
                         case Passive.BLIND:
                         case Passive.BLEED:
-                        case Passive.BLAZE:
-                        case Passive.BURNOUT:
                         case Passive.FREEZE:
                         case Passive.DOOM:
                         case Passive.STUN:
                         case Passive.ELECTRIFY:
+                        case Passive.CONFUSSION:
                             var eff = tarCard.ActiveEffects.FirstOrDefault(x => x.Passive == passive.Passive);
                             if (eff != null)
                             {
                                 tarCard.ActiveEffects.Remove(eff);
                             }
                             tarCard.ActiveEffects.Add(DoEff(srcCard.Position, passive.Id, passive.Passive, passive.Param1, passive.Param2, passive.Param3));
+                            break;
+                        case Passive.BLAZE:
+                        case Passive.BURNOUT:
+                            if (!(srcCard.PlayerCard.Card.Element == Element.FIRE && tarCard.PlayerCard.Card.Element == Element.WATER))
+                            {
+                                var fireEff = tarCard.ActiveEffects.FirstOrDefault(x => x.Passive == passive.Passive);
+                                if (fireEff != null)
+                                {
+                                    tarCard.ActiveEffects.Remove(fireEff);
+                                }
+                                tarCard.ActiveEffects.Add(DoEff(srcCard.Position, passive.Id, passive.Passive, passive.Param1, passive.Param2, passive.Param3));
+                            }
+                            break;
+                        case Passive.BURN:
+                            if (randNum < (int)passive.Param1 && !(srcCard.PlayerCard.Card.Element == Element.FIRE && tarCard.PlayerCard.Card.Element == Element.WATER))
+                            {
+                                actions.Add(this.ApplyDmg(tarCard, (int)passive.Param2, passive.Passive));
+                                tarCard.ActiveEffects.Add(DoEff(srcCard.Position, passive.Id, passive.Passive, passive.Param1, passive.Param2, passive.Param3));
+                            }
+                            break;
+                        case Passive.MELT:
+                            if (!(srcCard.PlayerCard.Card.Element == Element.FIRE && tarCard.PlayerCard.Card.Element == Element.WATER))
+                            {
+                                actions.Add(this.ApplyDmg(tarCard, (int)passive.Param1, passive.Passive));
+                            }
                             break;
                         case Passive.BLOWMARK:
                             var mark = tarCard.ActiveEffects.FirstOrDefault(x => x.Passive == passive.Passive && x.FromPosition == srcCard.Position);
@@ -473,15 +497,13 @@ namespace SurrealCB.Server
                             this.ApplyHeal(srcCard, (int)passive.Param1);
                             actions.Add(new BattleAction { Number = (int)passive.Param1, Type = HealthChange.HEAL, Position = srcCard.Position });
                             break;
-                        case Passive.BURN:
-                            if (randNum < (int)passive.Param1)
-                            {
-                                actions.Add(this.ApplyDmg(tarCard, (int)passive.Param2, passive.Passive));
-                                tarCard.ActiveEffects.Add(DoEff(srcCard.Position, passive.Id, passive.Passive, passive.Param1, passive.Param2, passive.Param3));
-                            }
-                            break;
                         case Passive.THIEF:
                             srcCard.ActiveEffects.Add(this.DoEff(srcCard.Position, passive.Id, passive.Passive, passive.Param1));
+                            break;
+                        case Passive.TIMESHIFT:
+                            var timeSteal = Math.Round((tarCard.GetSpd() - tarCard.Time) / passive.Param1, 2, MidpointRounding.AwayFromZero);
+                            srcCard.Time = Math.Min(0, srcCard.Time - timeSteal);
+                            tarCard.Time += timeSteal;
                             break;
                     };
                 }
@@ -542,7 +564,7 @@ namespace SurrealCB.Server
                             possibleTargetPos = cards.Where(x => x.Position < 4).Select(x => x.Position).ToArray();
                         }
                         var random = new Random();
-                        var targetPos = random.Next(0, possibleTargetPos.Length);
+                        var targetPos = possibleTargetPos[random.Next(0, possibleTargetPos.Length)];
                         actions.Add(this.ApplyDmg(cards.FirstOrDefault(x => x.Position == targetPos), (int)eff.Param1, eff.Passive));
                         break;
                 };
@@ -556,7 +578,7 @@ namespace SurrealCB.Server
                     case Passive.BLAZE:
                     case Passive.BURNOUT:
                     case Passive.SCORCHED:
-                        if (eff.Param2 > 0)
+                        if (eff.Param2 > 0 && !(tarCard.PlayerCard.Card.Element == Element.FIRE && srcCard.PlayerCard.Card.Element == Element.WATER))
                         {
                             actions.Add(this.ApplyDmg(tarCard, (int)eff.Param1, eff.Passive));
                         }
@@ -566,17 +588,59 @@ namespace SurrealCB.Server
                         }
                         break;
                     case Passive.ABLAZE:
-                        actions.Add(this.ApplyDmg(srcCard, (int)eff.Param1, eff.Passive));
+                        if (!(tarCard.PlayerCard.Card.Element == Element.FIRE && srcCard.PlayerCard.Card.Element == Element.WATER))
+                        {
+                            actions.Add(this.ApplyDmg(srcCard, (int)eff.Param1, eff.Passive));
+                        }
                         break;
                 };
             }
             return actions;
         }
 
-        public int ApplyElementToDmg(Element src, Element tar, int dmg)
+        public int ApplyElementToDmg(BattleCard srcCard, BattleCard tarCard, int dmg, int def)
         {
-            //TODO: hacerlo
-            return dmg;
+            var src = srcCard.PlayerCard.Card.Element;
+            var tar = tarCard.PlayerCard.Card.Element;
+            //FIRE --> NATURE extra dmg 50%
+            //WATER--> FIRE no puede ser quemado water
+            //EARTH --> WATER backtrack 1 seg
+            //WIND --> EARTH si el danio es 0, al menos sera 1
+            //DARK --> WIND un 10% de matarlo de una
+            //LIGHT --> DARK se cura TIER
+            //NATURE --> LIGHT un 25% de doble damage
+            var random = new Random();
+            var num = random.Next(0, 100);
+            var finalDmg = Math.Max(dmg - def, 0);
+            if (src == Element.FIRE && tar == Element.NATURE && num < 50)
+            {
+                finalDmg = Math.Max(0, (int)(dmg * 1.5) - def);
+            }
+            if (src == Element.EARTH && tar == Element.WATER)
+            {
+                tarCard.Time = Math.Min(tarCard.GetSpd(), tarCard.Time + 1);
+            }
+            if (src == Element.WIND && tar == Element.EARTH)
+            {
+                finalDmg = Math.Max(0, dmg - def);
+                if (finalDmg == 0)
+                {
+                    finalDmg = Math.Min(1, dmg + srcCard.PlayerCard.Card.Tier - def);
+                }
+            }
+            if (src == Element.DARK && tar == Element.WIND && num < 10)
+            {
+                finalDmg = 999;
+            }
+            if (src == Element.LIGHT && tar == Element.DARK )
+            {
+                srcCard.Hp = Math.Min(srcCard.GetHp(), srcCard.Hp + srcCard.PlayerCard.Card.Tier);
+            }
+            if (src == Element.NATURE && tar == Element.LIGHT && num < 25)
+            {
+                finalDmg = Math.Max(0, dmg - def) * 2;
+            }
+            return finalDmg;
         }
 
         public BattleAction ApplyDmg(BattleCard card, int dmg, Passive passive = Passive.NONE)
@@ -627,6 +691,7 @@ namespace SurrealCB.Server
             Passive.BURN => HealthChange.BLAZE,
             Passive.BURNOUT => HealthChange.BLAZE,
             Passive.SCORCHED => HealthChange.BLAZE,
+            Passive.MELT => HealthChange.BLAZE,
             Passive.POISON => HealthChange.POISON,
             Passive.POISONUS => HealthChange.POISON,
             Passive.BLEED => HealthChange.BLEED,
