@@ -24,24 +24,30 @@
             _userSession = userSession;
         }
 
+        public DbSet<ApiLogItem> ApiLogs { get; set; }
+        public DbSet<ActiveEffect> ActiveEffects { get; set; }
+        public DbSet<ActiveLevelBoost> ActiveLevelBoosts { get; set; }
+        //public DbSet<BattleCard> BattleCards { get; set; }
+        //public DbSet<BattleStatus> BattleStatuses { get; set; }
         public DbSet<Card> Cards { get; set; }
-        public DbSet<PlayerCard> PlayerCards { get; set; }
-        public DbSet<CardPassive> CardPassives { get; set; }
         public DbSet<CardBoost> CardBoosts { get; set; }
-        public DbSet<StatBoost> StatBoosts { get; set; }
+        //public DbSet<CardMetric> CardMetrics { get; set; }
+        public DbSet<CardPassive> CardPassives { get; set; }
+        //public DbSet<CardRecipe> CardRecipes { get; set; }
+        public DbSet<EnemyNpc> Enemies { get; set; }
+        //public DbSet<Item> Items { get; set; }
+        //public DbSet<ItemRecipe> ItemRecipes { get; set; }
         public DbSet<LevelBoost> LevelBoosts { get; set; }
         public DbSet<Map> Maps { get; set; }
-        public DbSet<EnemyNpc> Enemies { get; set; }
-        public DbSet<Item> Items { get; set; }
-        public DbSet<Reward> Rewards { get; set; }
-        public DbSet<Rune> Runes { get; set; }
-        public DbSet<PlayerRune> PlayerRunes { get; set; }
-        public DbSet<CardRecipe> CardRecipes { get; set; }
-        public DbSet<ItemRecipe> ItemRecipes { get; set; }
-        public DbSet<RuneRecipe> RuneRecipes { get; set; }
-        public DbSet<ApiLogItem> ApiLogs { get; set; }
-        public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<MapRequiredEnemy> MapRequiredEnemies { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<PlayerCard> PlayerCards { get; set; }
+        //public DbSet<PlayerRune> PlayerRunes { get; set; }
+        public DbSet<Reward> Rewards { get; set; }
+        //public DbSet<Rune> Runes { get; set; }
+        //public DbSet<RuneRecipe> RuneRecipes { get; set; }
+        public DbSet<StatBoost> StatBoosts { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -59,15 +65,20 @@
                 .WithMany()
                 .HasForeignKey(a => a.CardId);
 
+            builder.Entity<PassiveBoost>()
+                .HasOne(a => a.CardPassive)
+                .WithMany()
+                .HasForeignKey(a => a.CardPassiveId);
+
             builder.Entity<ActiveLevelBoost>()
                 .HasOne(a => a.LevelBoost)
                 .WithMany()
                 .HasForeignKey(a => a.LevelBoostId);
 
-            builder.Entity<PlayerRune>()
-                .HasOne(a => a.Rune)
-                .WithMany()
-                .HasForeignKey(a => a.RuneId);
+            //builder.Entity<PlayerRune>()
+            //    .HasOne(a => a.Rune)
+            //    .WithMany()
+            //    .HasForeignKey(a => a.RuneId);
 
             builder.Entity<MapRequiredEnemy>()
                 .HasKey(bc => new { bc.MapId, bc.EnemyId });
@@ -87,9 +98,11 @@
             builder.Entity<Card>().Property(p => p.Rarity).HasConversion(new EnumToStringConverter<Rarity>());
             builder.Entity<CardPassive>().Property(p => p.Passive).HasConversion(new EnumToStringConverter<Passive>());
             builder.Entity<Map>().Property(p => p.Difficult).HasConversion(new EnumToStringConverter<MapDifficult>());
-            builder.Entity<Map>().Property(p => p.Type).HasConversion(new EnumToStringConverter<GameType>());
+            builder.Entity<Map>().Property(p => p.GameType).HasConversion(new EnumToStringConverter<GameType>());
             builder.Entity<Rune>().Property(p => p.Rarity).HasConversion(new EnumToStringConverter<Rarity>());
-            builder.Entity<StatBoost>().Property(p => p.Type).HasConversion(new EnumToStringConverter<BoostType>());
+            builder.Entity<StatBoost>().Property(p => p.BoostType).HasConversion(new EnumToStringConverter<BoostType>());
+            //builder.Entity<BattleStatus>().Property(p => p.Status).HasConversion(new EnumToStringConverter<BattleEnd>());
+            builder.Entity<Item>().Property(p => p.ItemType).HasConversion(new EnumToStringConverter<ItemType>());
         }
 
         public IQueryable<IEntity> GetAll()

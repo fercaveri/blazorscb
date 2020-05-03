@@ -21,6 +21,18 @@ namespace SurrealCB.Data.Model
             {
                 this.Time = 0;
             }
+            var hellfire = this.GetPassives().FirstOrDefault(x => x.Passive == Passive.HELLFIRE);
+            if (hellfire != null)
+            {
+                this.ActiveEffects.Add(new ActiveEffect
+                {
+                    FromPosition = this.Position,
+                    Passive = Passive.HELLFIRE,
+                    Param1 = hellfire.Param1,
+                    Param2 = hellfire.Param2,
+                    Param3 = hellfire.Param3
+                });
+            }
         }
 
         public BattleCard()

@@ -48,6 +48,7 @@ namespace SurrealCB.Data.Model
         TIMESHIFT, //Chupa time actual
         CONFUSSION, //La carta golpea al azar a cualquiera del tablero durante X segundos,
         HELLFIRE, //Cada Y segundos dania a todos con X
+        TRANSFUSE, //Al golpear, un X% del danio es transferido a un aliado para curarlo
 
         //HACER ESTAS LOGICAS
         RUNEBREAKER, //Deshabilita las runas enemigas

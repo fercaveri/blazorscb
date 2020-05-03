@@ -5,7 +5,7 @@ namespace SurrealCB.Data.Model
 {
     public class StatBoost : IEntity
     {
-        public BoostType Type { get; set; }
+        public BoostType BoostType { get; set; }
         public double Amount { get; set; }
     }
 }

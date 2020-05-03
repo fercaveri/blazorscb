@@ -54,6 +54,8 @@ namespace SurrealCB.CommonUI.Services
             Passive.MELT => Tuple.Create($"Deal {p1} extra dmg on hit.", "melt"),
             Passive.TIMESHIFT => Tuple.Create($"Absorbs {p1}% of the elapsed time, reducing time for next turn and increasing that amout to the enemy.", "timeshift"),
             Passive.CONFUSSION => Tuple.Create($"Confuses the enemy, making it attacking his teammates, during {p1} seconds.", "confussion"),
+            Passive.TRANSFUSE => Tuple.Create($"Heals {p1}% of the dealt damage to an ally.", "transfuse"),
+            Passive.HELLFIRE => Tuple.Create($"Deals {p1} damage to all enemies every {p2} seconds.", "hellfire"),
             _ => Tuple.Create("", ""),
         };
     }

@@ -7,7 +7,7 @@ namespace SurrealCB.Data.Model
     {
         public int Gold { get; set; }
         public int Exp { get; set; }
-        public virtual List<Item> Items { get; set; }
-        public virtual Card Card { get; set; }
+        //public virtual List<Item> Items { get; set; }
+        //public virtual Card Card { get; set; }
     }
 }

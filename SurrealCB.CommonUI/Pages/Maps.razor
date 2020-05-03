@@ -4,6 +4,7 @@
 @page "/maps"
 
 <div class="maps-container">
+    <button @onclick="() => DoMetrics()">METRIK</button>
     @foreach (Map map in this.maps)
     {
         <div class="map-item map-@(map.Difficult) map-tier-@GetTier(map.MinLevel)" @onclick="() => OpenMap(map)">
@@ -66,6 +67,20 @@
         }
     }
 
+    private async Task DoMetrics()
+    {
+        ApiResponseDto apiResponse = await Http.GetJsonAsync<ApiResponseDto>("api/metrics/level");
+
+        if (apiResponse.StatusCode == Status200OK)
+        {
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Metrics Done");
+        }
+        else
+        {
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Todo List Retrieval Failed");
+        }
+    }
+
     private void StartBattle(Map map)
     {
         navigationManager.NavigateTo($"battle/{map.Enemies.FirstOrDefault().Id}");
@@ -88,7 +103,7 @@
         {
             reward += $"Gold: {map.CompletionReward.Gold} </br>";
         }
-        if (map.CompletionReward.Exp > 0)
+        @* if (map.CompletionReward.Exp > 0)
         {
             reward += $"Exp: { map.CompletionReward.Exp} </br>";
         }
@@ -99,7 +114,7 @@
         if (map.CompletionReward.Items != null && map.CompletionReward.Items.Any())
         {
             reward += $"Items: {string.Join(", ", map.CompletionReward.Items)}";
-        }
+        } *@
         return reward;
     }
 

@@ -48,6 +48,7 @@ namespace SurrealCB.Server
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IBattleService, BattleService>();
             services.AddScoped<IMapService, MapService>();
+            services.AddScoped<IMetricService, MetricService>();
             services.AddScoped<IUserSession, UserSession>();
 
             services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()

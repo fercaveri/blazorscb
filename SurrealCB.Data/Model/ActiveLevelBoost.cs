@@ -8,5 +8,6 @@ namespace SurrealCB.Data.Model
         public int LevelBoostId { get; set; }
         public int PlayerCardId { get; set; }
         public virtual LevelBoost LevelBoost { get; set; }
+        public virtual PlayerCard PlayerCard { get; set; }
     }
 }

@@ -30,7 +30,7 @@ namespace SurrealCB.Data.Model
                     var passive = lb.Boost.Passives.FirstOrDefault();
                     if (passive != null)
                     {
-                        list.Add(passive);
+                        list.Add(passive.CardPassive);
                     }
                 }
             }
@@ -40,7 +40,8 @@ namespace SurrealCB.Data.Model
                 var secondList = this.ActiveLvlBoosts.Where(x => x.LevelBoost?.Boost?.Passives?.Any() == true);
                 if (secondList.Any())
                 {
-                    list = list.Concat(secondList.OrderBy(x => x.LevelBoost?.Level).Select(x => x.LevelBoost.Boost.Passives).FirstOrDefault()).ToList();
+                    list = list.Concat(secondList.OrderBy(x => x.LevelBoost?.Level)
+                        .Select(x => x.LevelBoost.Boost.Passives).FirstOrDefault().Select(x => x.CardPassive).ToList()).ToList();
                 }
 
             }
@@ -103,22 +104,22 @@ namespace SurrealCB.Data.Model
             var percType = this.GetPercType(type);
             foreach (var statBoost in this.ActiveLvlBoosts?.Where(x => x != null && x.LevelBoost.Boost != null && x.LevelBoost.Boost.StatBoosts != null).Select(x => x.LevelBoost.Boost.StatBoosts).Where(x => x != null))
             {
-                foreach (var filteredBoost in statBoost.Where(x => x?.Type == percType))
+                foreach (var filteredBoost in statBoost.Where(x => x?.BoostType == percType))
                 {
                     percBoosts.Add(filteredBoost);
                 }
-                foreach (var filteredBoost in statBoost.Where(x => x?.Type == type))
+                foreach (var filteredBoost in statBoost.Where(x => x?.BoostType == type))
                 {
                     flatBoosts.Add(filteredBoost);
                 }
             }
             foreach (var rune in this.GetRuneList()?.Where(x => x != null && x.Boost != null && x.Boost.StatBoosts != null).Select(x => x.Boost.StatBoosts).Where(x => x != null))
             {
-                foreach (var filteredBoost in rune.Where(x => x?.Type == percType))
+                foreach (var filteredBoost in rune.Where(x => x?.BoostType == percType))
                 {
                     percBoosts.Add(filteredBoost);
                 }
-                foreach (var filteredBoost in rune.Where(x => x?.Type == type))
+                foreach (var filteredBoost in rune.Where(x => x?.BoostType == type))
                 {
                     flatBoosts.Add(filteredBoost);
                 }

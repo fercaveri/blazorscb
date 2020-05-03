@@ -30,10 +30,10 @@
                         <div class="card-level-side">
                             <img src="_content/SurrealCB.CommonUI/icons/gold.svg" />
                             <span>@levelBoost.Cost</span>
-                            @if (levelBoost.RequiredItems?.Any() == true)
+                            @*@if (levelBoost.RequiredItems?.Any() == true)
                             {
                                 <img src="_content/SurrealCB.CommonUI/icons/reward.svg" />
-                            }
+                            }*@
                         </div>
                     }
                 </div>
@@ -110,7 +110,7 @@
         var b = boost.Boost;
         if (b.Passives.FirstOrDefault() != null)
         {
-            return PassiveHelper.GetPassiveTuple(b.Passives.FirstOrDefault().Passive).Item2;
+            return PassiveHelper.GetPassiveTuple(b.Passives.FirstOrDefault().CardPassive.Passive).Item2;
         }
         //else if (b.Hp < 0 || b.Def < 0 || b.Spd < 0)
         else if (b.StatBoosts.Count > 1 && b.StatBoosts.Any(x => x.Amount < 0))
@@ -122,23 +122,23 @@
         {
             return "strenght";
         }
-        else if (b.StatBoosts.FirstOrDefault().Type == BoostType.HP || b.StatBoosts.FirstOrDefault().Type == BoostType.HPPERC)
+        else if (b.StatBoosts.FirstOrDefault().BoostType == BoostType.HP || b.StatBoosts.FirstOrDefault().BoostType == BoostType.HPPERC)
         {
             return "health";
         }
-        else if (b.StatBoosts.FirstOrDefault().Type == BoostType.ATK || b.StatBoosts.FirstOrDefault().Type == BoostType.ATKPERC)
+        else if (b.StatBoosts.FirstOrDefault().BoostType == BoostType.ATK || b.StatBoosts.FirstOrDefault().BoostType == BoostType.ATKPERC)
         {
             return "sword";
         }
-        else if (b.StatBoosts.FirstOrDefault().Type == BoostType.DEF || b.StatBoosts.FirstOrDefault().Type == BoostType.DEFPERC)
+        else if (b.StatBoosts.FirstOrDefault().BoostType == BoostType.DEF || b.StatBoosts.FirstOrDefault().BoostType == BoostType.DEFPERC)
         {
             return "shield";
         }
-        else if (b.StatBoosts.FirstOrDefault().Type == BoostType.SPD || b.StatBoosts.FirstOrDefault().Type == BoostType.SPDPERC)
+        else if (b.StatBoosts.FirstOrDefault().BoostType == BoostType.SPD || b.StatBoosts.FirstOrDefault().BoostType == BoostType.SPDPERC)
         {
             return "speed";
         }
-        else if (b.StatBoosts.FirstOrDefault().Type == BoostType.IMM || b.StatBoosts.FirstOrDefault().Type == BoostType.IMMPERC)
+        else if (b.StatBoosts.FirstOrDefault().BoostType == BoostType.IMM || b.StatBoosts.FirstOrDefault().BoostType == BoostType.IMMPERC)
         {
             return "wall";
         }
@@ -152,39 +152,39 @@
         var stats = lb.Boost.StatBoosts;
         foreach (var boost in stats)
         {
-            if (boost.Type == BoostType.HP || boost.Type == BoostType.HPPERC)
+            if (boost.BoostType == BoostType.HP || boost.BoostType == BoostType.HPPERC)
             {
                 message += $"Hp +{boost.Amount}";
-                if (boost.Type == BoostType.HPPERC) message += "%";
+                if (boost.BoostType == BoostType.HPPERC) message += "%";
             }
-            if (boost.Type == BoostType.ATK || boost.Type == BoostType.ATKPERC)
+            if (boost.BoostType == BoostType.ATK || boost.BoostType == BoostType.ATKPERC)
             {
                 message += $"Atk +{boost.Amount}";
-                if (boost.Type == BoostType.ATKPERC) message += "%";
+                if (boost.BoostType == BoostType.ATKPERC) message += "%";
             }
-            if (boost.Type == BoostType.DEF || boost.Type == BoostType.DEFPERC)
+            if (boost.BoostType == BoostType.DEF || boost.BoostType == BoostType.DEFPERC)
             {
                 message += $"Def +{boost.Amount}";
-                if (boost.Type == BoostType.DEFPERC) message += "%";
+                if (boost.BoostType == BoostType.DEFPERC) message += "%";
             }
-            if (boost.Type == BoostType.IMM || boost.Type == BoostType.IMMPERC)
+            if (boost.BoostType == BoostType.IMM || boost.BoostType == BoostType.IMMPERC)
             {
                 message += $"Imm +{boost.Amount}%";
-                if (boost.Type == BoostType.IMMPERC) message += "%";
+                if (boost.BoostType == BoostType.IMMPERC) message += "%";
             }
-            if (boost.Type == BoostType.SPD || boost.Type == BoostType.SPDPERC)
+            if (boost.BoostType == BoostType.SPD || boost.BoostType == BoostType.SPDPERC)
             {
                 message += $"Spd Improved {boost.Amount}";
-                if (boost.Type == BoostType.SPDPERC) message += "%";
+                if (boost.BoostType == BoostType.SPDPERC) message += "%";
             }
-            if (boost.Type == BoostType.PASSIVEPERC)
+            if (boost.BoostType == BoostType.PASSIVEPERC)
             {
                 message += $"Passive Improved {boost.Amount}%";
             }
             message += " / ";
         }
 
-        foreach (var p in lb.Boost.Passives)
+        foreach (var p in lb.Boost.Passives.Select(x => x.CardPassive))
         {
             if (message != "") message += " / ";
             message += PassiveHelper.GetPassiveTuple(p.Passive, p.Param1, p.Param2, p.Param3).Item1;

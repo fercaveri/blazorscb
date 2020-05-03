@@ -68,6 +68,34 @@ namespace SurrealCB.Server.Controllers
             return new ApiResponse(Status200OK, "Cards updated successfully", battleCards);
         }
 
+        [HttpGet("start/{userOneId}/{userTwoId}")]
+        public async Task<ApiResponse> StartBattle(Guid userOneId, Guid userTwoId)
+        {
+            var battleCards = new List<BattleCard>();
+            var random = new Random();
+            var user1Cards = await this.userService.GetUserCards(userOneId);
+            for (var i = 0; i < 4; i++)
+            {
+                var pcard = user1Cards[random.Next(0, user1Cards.Count)];
+                battleCards.Add(new BattleCard(pcard)
+                {
+                    Position = i
+                });
+            }
+
+            var user2Cards = await this.userService.GetUserCards(userOneId);
+            for (var i = 0; i < 4; i++)
+            {
+                var pcard = user2Cards[random.Next(0, user2Cards.Count)];
+                battleCards.Add(new BattleCard(pcard)
+                {
+                    Position = i + 4
+                });
+            }
+
+            return new ApiResponse(Status200OK, "Cards updated successfully", battleCards);
+        }
+
         [HttpPost("next")]
         public async Task<ApiResponse> NextTurn([FromBody]List<BattleCard> cards)
         {
