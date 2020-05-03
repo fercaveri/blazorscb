@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using NHibernate.Linq;
 using SurrealCB.Data;
 using SurrealCB.Data.Model;
+using SurrealCB.Data.Repository;
 using SurrealCB.Server.Misc;
 
 namespace SurrealCB.Server
@@ -16,10 +17,10 @@ namespace SurrealCB.Server
     }
     public class CardService : ICardService
     {
-        private readonly SCBDbContext repository;
+        private readonly IRepository repository;
         private readonly IUserService userService;
 
-        public CardService(SCBDbContext repository, IUserService userService)
+        public CardService(IRepository repository, IUserService userService)
         {
             this.repository = repository;
             this.userService = userService;
@@ -27,7 +28,7 @@ namespace SurrealCB.Server
 
         public async Task<List<Card>> GetAll()
         {
-            var cards = await this.repository.Cards.ToListAsync();
+            var cards = await this.repository.Query<Card>().ToListAsync();
             return cards;
         }
 
@@ -40,8 +41,8 @@ namespace SurrealCB.Server
             {
                 throw new ApiException("Gold insufficent", 400);
             }
-            card.ActiveLvlBoosts.Add(new ActiveLevelBoost { LevelBoostId = lb.Id, PlayerCardId = card.Id});
-            await this.repository.UpdateAsync(card);
+            card.ActiveLvlBoosts.Add(new ActiveLevelBoost { LevelBoost = lb/*, PlayerCardId = card.Id*/});
+            await this.repository.SaveAsync(card);
         }
     }
 }

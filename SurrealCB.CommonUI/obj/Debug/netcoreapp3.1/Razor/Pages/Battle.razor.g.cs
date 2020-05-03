@@ -109,27 +109,34 @@ using SurrealCB.Data.Model;
 #nullable disable
 #nullable restore
 #line 15 "C:\Rikito\SurrealCB\SurrealCB.CommonUI\_Imports.razor"
-using SurrealCB.Data.Dto;
+using SurrealCB.Data.Enum;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 16 "C:\Rikito\SurrealCB\SurrealCB.CommonUI\_Imports.razor"
-using Microsoft.AspNetCore.Http;
+using SurrealCB.Data.Dto;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 17 "C:\Rikito\SurrealCB\SurrealCB.CommonUI\_Imports.razor"
-using static Microsoft.AspNetCore.Http.StatusCodes;
+using Microsoft.AspNetCore.Http;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 18 "C:\Rikito\SurrealCB\SurrealCB.CommonUI\_Imports.razor"
+using static Microsoft.AspNetCore.Http.StatusCodes;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 19 "C:\Rikito\SurrealCB\SurrealCB.CommonUI\_Imports.razor"
 using MatBlazor;
 
 #line default
@@ -253,7 +260,7 @@ using MatBlazor;
 #line hidden
 #nullable disable
             ));
-            __builder.AddAttribute(15, "Element", Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<SurrealCB.Data.Model.Element>(
+            __builder.AddAttribute(15, "Element", Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<SurrealCB.Data.Enum.Element>(
 #nullable restore
 #line 13 "C:\Rikito\SurrealCB\SurrealCB.CommonUI\Pages\Battle.razor"
                               card.PlayerCard.Card.Element
@@ -271,7 +278,7 @@ using MatBlazor;
 #line hidden
 #nullable disable
             ));
-            __builder.AddAttribute(17, "Rarity", Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<SurrealCB.Data.Model.Rarity>(
+            __builder.AddAttribute(17, "Rarity", Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<SurrealCB.Data.Enum.Rarity>(
 #nullable restore
 #line 13 "C:\Rikito\SurrealCB\SurrealCB.CommonUI\Pages\Battle.razor"
                                                                                                        card.PlayerCard.Card.Rarity
@@ -307,7 +314,7 @@ using MatBlazor;
 #line hidden
 #nullable disable
             ));
-            __builder.AddAttribute(21, "AType", Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<SurrealCB.Data.Model.AtkType>(
+            __builder.AddAttribute(21, "AType", Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<SurrealCB.Data.Enum.AtkType>(
 #nullable restore
 #line 14 "C:\Rikito\SurrealCB\SurrealCB.CommonUI\Pages\Battle.razor"
                                                                                                            card.PlayerCard.Card.AtkType

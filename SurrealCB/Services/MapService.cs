@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using NHibernate.Linq;
 using SurrealCB.Data;
 using SurrealCB.Data.Model;
+using SurrealCB.Data.Repository;
 
 namespace SurrealCB.Server
 {
@@ -15,22 +16,22 @@ namespace SurrealCB.Server
     }
     public class MapService : IMapService
     {
-        private readonly SCBDbContext repository;
+        private readonly IRepository repository;
 
-        public MapService(SCBDbContext repository)
+        public MapService(IRepository repository)
         {
             this.repository = repository;
         }
 
         public async Task<List<Map>> GetAll()
         {
-            var maps = await this.repository.Maps.ToListAsync();
+            var maps = await this.repository.Query<Map>().ToListAsync();
             return maps;
         }
         
         public async Task<Map> GetById(int id)
         {
-            var map = await this.repository.Maps.FirstOrDefaultAsync(x => x.Id == id);
+            var map = await this.repository.Query<Map>().FirstOrDefaultAsync(x => x.Id == id);
             return map;
         }
     }

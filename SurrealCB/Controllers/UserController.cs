@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using NHibernate.Linq;
 using Microsoft.Extensions.Logging;
 using SurrealCB.Data;
 using SurrealCB.Data.Dto.Account;
 using SurrealCB.Data.Model;
+using SurrealCB.Data.Repository;
 using SurrealCB.Server.Misc;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 
@@ -22,10 +23,10 @@ namespace SurrealCB.Server.Controllers
         private readonly ILogger<CardController> logger;
         private readonly IUserService userService;
         private readonly ICardService cardService;
-        private readonly SCBDbContext repository;
+        private readonly IRepository repository;
 
         public UserController(ILogger<CardController> logger, IUserService userService,
-            ICardService cardService, SCBDbContext repository )
+            ICardService cardService, IRepository repository )
         {
             this.logger = logger;
             this.userService = userService;
@@ -37,7 +38,7 @@ namespace SurrealCB.Server.Controllers
         public async Task<ApiResponse> GetUserProfile()
         {
             var user = await this.userService.GetUser(await (this.userService.GetUserId()));
-            var profileQuery = from userProf in this.repository.UserProfiles
+            var profileQuery = from userProf in this.repository.Query<UserProfile>()
                                where userProf.UserId == user.Id
                                select userProf;
 

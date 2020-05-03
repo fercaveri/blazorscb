@@ -9,7 +9,6 @@ namespace SurrealCB.Data.Model
 {
     public abstract class IEntity
     {
-        [Key]
         public int Id { get; set; }
     }
 }

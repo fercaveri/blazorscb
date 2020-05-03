@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using NHibernate.Linq;
 using SurrealCB.Data;
+using SurrealCB.Data.Enum;
 using SurrealCB.Data.Model;
+using SurrealCB.Data.Repository;
 
 namespace SurrealCB.Server
 {
@@ -17,9 +19,9 @@ namespace SurrealCB.Server
     }
     public class BattleService : IBattleService
     {
-        private readonly SCBDbContext repository;
+        private readonly IRepository repository;
 
-        public BattleService(SCBDbContext repository)
+        public BattleService(IRepository repository)
         {
             this.repository = repository;
         }
@@ -68,7 +70,7 @@ namespace SurrealCB.Server
             for (int i = nextCard.ActiveEffects.Count - 1; i >= 0; i--)
             {
                 var randNum = random.Next(0, 100);
-                var eff = nextCard.ActiveEffects[i];
+                var eff = nextCard.ActiveEffects.ToList()[i];
                 switch (eff.Passive)
                 {
                     case Passive.ELECTRIFY:
@@ -201,7 +203,7 @@ namespace SurrealCB.Server
                 for (int i = card.ActiveEffects.Count - 1; i >= 0; i--)
                 {
                     var randNum = random.Next(0, 100);
-                    var eff = card.ActiveEffects[i];
+                    var eff = card.ActiveEffects.ToList()[i];
                     switch (eff.Passive)
                     {
                         case Passive.BLEED:
@@ -214,7 +216,9 @@ namespace SurrealCB.Server
                             eff.Param2 -= timeElapsed;
                             if (eff.Param2 <= 0)
                             {
-                                card.ActiveEffects.RemoveAt(i);
+                                var ret = card.ActiveEffects.ToList();
+                                ret.RemoveAt(i);
+                                card.ActiveEffects = ret;
                             }
                             break;
                         case Passive.POISON:
@@ -236,7 +240,9 @@ namespace SurrealCB.Server
                             eff.Param3 -= timeElapsed;
                             if (eff.Param3 <= 0)
                             {
-                                card.ActiveEffects.RemoveAt(i);
+                                var ret = card.ActiveEffects.ToList();
+                                ret.RemoveAt(i);
+                                card.ActiveEffects = ret;
                             }
                             break;
                         case Passive.DOOM:
@@ -244,7 +250,9 @@ namespace SurrealCB.Server
                             if (eff.Param1 <= 0)
                             {
                                 card.Hp = 0;
-                                card.ActiveEffects.RemoveAt(i);
+                                var ret = card.ActiveEffects.ToList();
+                                ret.RemoveAt(i);
+                                card.ActiveEffects = ret;
                                 //actions.Add(new BattleAction { Position = card.Position, Type = HealthChange.DEATH });
                             }
                             break;
@@ -256,7 +264,9 @@ namespace SurrealCB.Server
                                 {
                                     actions.Add(this.ApplyDmg(card, (int)eff.Param2, eff.Passive));
                                 }
-                                card.ActiveEffects.RemoveAt(i);
+                                var ret = card.ActiveEffects.ToList();
+                                ret.RemoveAt(i);
+                                card.ActiveEffects = ret;
                             }
                             break;
                         case Passive.HELLFIRE:
@@ -286,7 +296,9 @@ namespace SurrealCB.Server
                             eff.Param1 -= timeElapsed;
                             if (eff.Param1 <= 0)
                             {
-                                card.ActiveEffects.RemoveAt(i);
+                                var ret = card.ActiveEffects.ToList();
+                                ret.RemoveAt(i);
+                                card.ActiveEffects = ret;
                             }
                             break;
                     };
@@ -527,7 +539,7 @@ namespace SurrealCB.Server
                             {
                                 possibleTargetPos = cards.Where(x => x.Position < 4 && x.Hp != 0).Select(x => x.Position).ToArray();
                             }
-                            var healPos = possibleTargetPos[random.Next(0, possibleTargetPos.Length)];
+                            var healPos = possibleTargetPos[random.Next(0, possibleTargetPos.Length - 1)];
                             var transfuseAmount = dmgDone / passive.Param1;
                             this.ApplyHeal(cards.FirstOrDefault(x => x.Position == healPos), (int)transfuseAmount);
                             actions.Add(new BattleAction { Number = (int)passive.Param1, Type = HealthChange.HEAL, Position = healPos });
@@ -578,7 +590,7 @@ namespace SurrealCB.Server
             var tarEffs = tarCard.ActiveEffects;
             for (int i = srcEffs.Count - 1; i >= 0; i--)
             {
-                var eff = srcEffs[i];
+                var eff = srcEffs.ToList()[i];
                 switch (eff.Passive)
                 {
                     case Passive.BLEED:
@@ -589,7 +601,9 @@ namespace SurrealCB.Server
                         }
                         else
                         {
-                            srcEffs.RemoveAt(i);
+                            var ret = srcEffs.ToList();
+                            ret.RemoveAt(i);
+                            srcEffs = ret;
                         }
                         break;
                     case Passive.BOUNCE:
@@ -611,7 +625,7 @@ namespace SurrealCB.Server
 
             for (int i = tarEffs.Count - 1; i >= 0; i--)
             {
-                var eff = tarEffs[i];
+                var eff = tarEffs.ToList()[i];
                 switch (eff.Passive)
                 {
                     case Passive.BLAZE:
@@ -626,7 +640,9 @@ namespace SurrealCB.Server
                         }
                         else
                         {
-                            srcEffs.RemoveAt(i);
+                            var ret = srcEffs.ToList();
+                            ret.RemoveAt(i);
+                            srcEffs = ret;
                         }
                         break;
                     case Passive.ABLAZE:

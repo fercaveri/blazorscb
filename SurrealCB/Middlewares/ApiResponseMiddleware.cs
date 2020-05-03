@@ -45,7 +45,7 @@ namespace SurrealCB.Server.Middlewares
             //_ignorePaths = configuration.GetSection("BlazorBoilerplate:ApiLogging:IgnorePaths").Get<List<string>>();
         }
 
-        public async Task Invoke(HttpContext httpContext, IApiLogService apiLogService, ILogger<ApiResponseMiddleware> logger, UserManager<ApplicationUser> userManager)
+        public async Task Invoke(HttpContext httpContext, IApiLogService apiLogService, ILogger<ApiResponseMiddleware> logger/*, UserManager<ApplicationUser> userManager*/)
         {
             _logger = logger;
             _apiLogService = apiLogService;
@@ -98,9 +98,10 @@ namespace SurrealCB.Server.Middlewares
                                     await responseBody.CopyToAsync(originalBodyStream);
 
                                     //User id = "sub" y default
-                                    ApplicationUser user = httpContext.User.Identity.IsAuthenticated
-                                            ? await userManager.FindByIdAsync(httpContext.User.Claims.Where(c => c.Type == JwtClaimTypes.Subject).First().Value)
-                                            : null;
+                                    //ApplicationUser user = httpContext.User.Identity.IsAuthenticated
+                                    //        ? await userManager.FindByIdAsync(httpContext.User.Claims.Where(c => c.Type == JwtClaimTypes.Subject).First().Value)
+                                    //        : null;
+                                    ApplicationUser user = null;
 
                                     await SafeLog(requestTime,
                                         stopWatch.ElapsedMilliseconds,
@@ -394,7 +395,7 @@ namespace SurrealCB.Server.Middlewares
                 RequestBody = requestBody,
                 ResponseBody = responseBody ?? String.Empty,
                 IPAddress = ipAddress,
-                ApplicationUserId = user == null ? Guid.Empty : user.Id
+                ApplicationUserId = user.Id
             });
         }
 

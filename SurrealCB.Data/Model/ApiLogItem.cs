@@ -36,6 +36,6 @@ namespace SurrealCB.Data.Model
         [MaxLength(45)]
         public string IPAddress { get; set; }
 
-        public Guid? ApplicationUserId { get; set; }
+        public int ApplicationUserId { get; set; }
     }
 }

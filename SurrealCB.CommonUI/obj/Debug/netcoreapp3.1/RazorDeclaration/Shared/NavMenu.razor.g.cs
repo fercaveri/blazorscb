@@ -112,27 +112,34 @@ using SurrealCB.Data.Model;
 #nullable disable
 #nullable restore
 #line 15 "C:\Rikito\SurrealCB\SurrealCB.CommonUI\_Imports.razor"
-using SurrealCB.Data.Dto;
+using SurrealCB.Data.Enum;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 16 "C:\Rikito\SurrealCB\SurrealCB.CommonUI\_Imports.razor"
-using Microsoft.AspNetCore.Http;
+using SurrealCB.Data.Dto;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 17 "C:\Rikito\SurrealCB\SurrealCB.CommonUI\_Imports.razor"
-using static Microsoft.AspNetCore.Http.StatusCodes;
+using Microsoft.AspNetCore.Http;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 18 "C:\Rikito\SurrealCB\SurrealCB.CommonUI\_Imports.razor"
+using static Microsoft.AspNetCore.Http.StatusCodes;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 19 "C:\Rikito\SurrealCB\SurrealCB.CommonUI\_Imports.razor"
 using MatBlazor;
 
 #line default

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SurrealCB.Data.Enum;
 
 namespace SurrealCB.Data.Model
 {
@@ -9,7 +10,7 @@ namespace SurrealCB.Data.Model
         public int Position { get; set; }
         public int Hp { get; set; }
         public double Time { get; set; }
-        public virtual List<ActiveEffect> ActiveEffects { get; set; } = new List<ActiveEffect>();
+        public virtual ICollection<ActiveEffect> ActiveEffects { get; set; } = new List<ActiveEffect>();
         public virtual PlayerCard PlayerCard { get; set; }
 
         public BattleCard(PlayerCard pcard)

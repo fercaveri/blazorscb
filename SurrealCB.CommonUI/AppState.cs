@@ -44,7 +44,7 @@ namespace SurrealCB.CommonUI
 
         public async Task<UserProfileDto> GetUserProfile()
         {
-            if (UserProfile != null && UserProfile.UserId != Guid.Empty)
+            if (UserProfile != null && UserProfile.UserId != 0)
             {
                 return UserProfile;
             }

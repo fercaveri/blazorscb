@@ -7,8 +7,10 @@ using Microsoft.Extensions.Logging;
 using SurrealCB.Data;
 using SurrealCB.Data.Model;
 using SurrealCB.Server.Misc;
-using Microsoft.EntityFrameworkCore;
 using static Microsoft.AspNetCore.Http.StatusCodes;
+using SurrealCB.Data.Repository;
+using SurrealCB.Data.Enum;
+using NHibernate.Linq;
 
 namespace SurrealCB.Server.Controllers
 {
@@ -22,10 +24,10 @@ namespace SurrealCB.Server.Controllers
         private readonly IBattleService battleService;
         private readonly ICardService cardService;
         private readonly IUserService userService;
-        private readonly SCBDbContext repository;
+        private readonly IRepository repository;
 
         public BattleController(ILogger<CardController> logger, IBattleService battleService,
-            ICardService cardService, IUserService userService, SCBDbContext repository)
+            ICardService cardService, IUserService userService, IRepository repository)
         {
             this.logger = logger;
             this.battleService = battleService;
@@ -50,7 +52,7 @@ namespace SurrealCB.Server.Controllers
                 });
             }
 
-            var enemy = await this.repository.Enemies.FirstOrDefaultAsync(x => x.Id == enemyId);
+            var enemy = await this.repository.Query<EnemyNpc>().FirstOrDefaultAsync(x => x.Id == enemyId);
             for (var i = 0; i < enemy.CardCount; i++)
             {
                 var index = i;
@@ -58,7 +60,7 @@ namespace SurrealCB.Server.Controllers
                 {
                     index += 1;
                 }
-                var pcard = enemy.Cards[random.Next(0, enemy.Cards.Count)];
+                var pcard = enemy.Cards.ToList()[random.Next(0, enemy.Cards.Count)];
                 battleCards.Add(new BattleCard(pcard)
                 {
                     Position = index + 4
@@ -69,7 +71,7 @@ namespace SurrealCB.Server.Controllers
         }
 
         [HttpGet("start/{userOneId}/{userTwoId}")]
-        public async Task<ApiResponse> StartBattle(Guid userOneId, Guid userTwoId)
+        public async Task<ApiResponse> StartBattle(int userOneId, int userTwoId)
         {
             var battleCards = new List<BattleCard>();
             var random = new Random();
@@ -158,13 +160,12 @@ namespace SurrealCB.Server.Controllers
         [HttpPost("reward/{id}")]
         public async Task<ApiResponse> ApplyBattleReward(int npcId)
         {
-            var enemy = await this.repository.Enemies.FirstOrDefaultAsync(x => x.Id == npcId);
+            var enemy = await this.repository.Query<EnemyNpc>().FirstOrDefaultAsync(x => x.Id == npcId);
             var userId = await this.userService.GetUserId();
             var user = await this.userService.GetUser(userId);
             user.Gold += enemy.Reward.Gold;
             user.Exp += enemy.Reward.Exp;
-            this.repository.Users.Update(user);
-            await this.repository.SaveChangesAsync();
+            await this.repository.SaveAsync(user);
 
             return new ApiResponse(Status200OK, "Cards updated successfully", user);
         }

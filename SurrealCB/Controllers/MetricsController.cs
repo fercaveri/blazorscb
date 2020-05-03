@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using NHibernate.Linq;
 using Microsoft.Extensions.Logging;
 using SurrealCB.Data;
 using SurrealCB.Data.Dto.Account;
 using SurrealCB.Data.Model;
+using SurrealCB.Data.Repository;
 using SurrealCB.Server.Misc;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 
@@ -22,11 +23,11 @@ namespace SurrealCB.Server.Controllers
         private readonly ILogger<CardController> logger;
         private readonly IUserService userService;
         private readonly ICardService cardService;
-        private readonly SCBDbContext repository;
+        private readonly IRepository repository;
         private readonly IMetricService metricService;
 
         public MetricsController(ILogger<CardController> logger, IUserService userService,
-            ICardService cardService, SCBDbContext repository, IMetricService metricService )
+            ICardService cardService, IRepository repository, IMetricService metricService )
         {
             this.logger = logger;
             this.userService = userService;
@@ -44,7 +45,7 @@ namespace SurrealCB.Server.Controllers
                 var level = random.Next(1, 9);
                 await this.metricService.MakeLevelMetric(level);
             }
-            await this.repository.SaveChangesAsync();
+            //await this.repository.SaveChangesAsync();
             return new ApiResponse(Status200OK, "Finished");
         }
     }

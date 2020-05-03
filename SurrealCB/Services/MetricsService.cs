@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using NHibernate.Linq;
 using SurrealCB.Data;
+using SurrealCB.Data.Enum;
 using SurrealCB.Data.Model;
+using SurrealCB.Data.Repository;
 
 namespace SurrealCB.Server
 {
@@ -14,11 +16,11 @@ namespace SurrealCB.Server
     }
     public class MetricService : IMetricService
     {
-        private readonly SCBDbContext repository;
+        private readonly IRepository repository;
         private readonly IBattleService battleService;
         private readonly IUserService userService;
 
-        public MetricService(SCBDbContext repository, IBattleService battleService, IUserService userService)
+        public MetricService(IRepository repository, IBattleService battleService, IUserService userService)
         {
             this.repository = repository;
             this.battleService = battleService;
@@ -87,19 +89,13 @@ namespace SurrealCB.Server
                 }
             }
             while (battleStatus.Status == BattleEnd.CONTINUE);
-            this.repository.PlayerCards.Add(new PlayerCard
+            await this.repository.SaveCollectionAsync<CardMetric>(cards.Select(card => new CardMetric
             {
-                CardId = cards.FirstOrDefault().PlayerCard.Card.Id
-            });
-            this.repository.SaveChanges();
-            //this.repository.CardMetrics.AddRange(cards.Select(card => new CardMetric
-            //{
-            //    CardId = card.PlayerCard.Card.Id,
-            //    Level = card.PlayerCard.GetLevel(),
-            //    Died = card.Hp == 0,
-            //    Win = card.Position < 4 && battleStatus.Status == BattleEnd.WIN
-            //}));
-            //this.repository.SaveChanges();
+                Card = card.PlayerCard.Card,
+                Level = card.PlayerCard.GetLevel(),
+                Died = card.Hp == 0,
+                Win = card.Position < 4 && battleStatus.Status == BattleEnd.WIN
+            }).ToList());
 
         }
     }

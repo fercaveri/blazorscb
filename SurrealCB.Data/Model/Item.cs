@@ -1,4 +1,5 @@
 using System;
+using SurrealCB.Data.Enum;
 
 namespace SurrealCB.Data.Model
 {

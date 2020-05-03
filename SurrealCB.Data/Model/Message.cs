@@ -11,8 +11,7 @@ namespace SurrealCB.Data.Model
         public string UserName { get; set; }
         [Required]
         public string Text { get; set; }
-        public DateTime When { get; set; }
-        public Guid UserID { get; set; }
+        public DateTime MessageDate { get; set; }
         public virtual ApplicationUser Sender { get; set; }
     }
 }

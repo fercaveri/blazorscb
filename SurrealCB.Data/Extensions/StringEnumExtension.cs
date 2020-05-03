@@ -12,7 +12,7 @@ namespace SurrealCB.Data.Extensions
         {
             string description = null;
 
-            if (e is Enum)
+            if (e.GetType().IsEnum)
             {
                 Type type = e.GetType();
                 Array values = System.Enum.GetValues(type);

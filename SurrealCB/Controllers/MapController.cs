@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using SurrealCB.Data;
 using SurrealCB.Data.Model;
 using SurrealCB.Server.Misc;
-using Microsoft.EntityFrameworkCore;
+using NHibernate.Linq;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 
 namespace SurrealCB.Server.Controllers

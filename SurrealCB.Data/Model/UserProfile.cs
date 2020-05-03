@@ -7,7 +7,7 @@ namespace SurrealCB.Data.Model
 {
     public class UserProfile : IEntity
     {
-        public Guid UserId { get; set; }
+        public virtual int UserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
         public string LastPageVisited { get; set; } = "/";
         public bool IsNavOpen { get; set; } = true;

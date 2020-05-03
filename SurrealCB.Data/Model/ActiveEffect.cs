@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using SurrealCB.Data.Enum;
 
 namespace SurrealCB.Data.Model
 {

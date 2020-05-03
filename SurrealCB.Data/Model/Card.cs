@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using SurrealCB.Data.Enum;
 
 namespace SurrealCB.Data.Model
 {
@@ -12,7 +13,7 @@ namespace SurrealCB.Data.Model
         public AtkType AtkType { get; set; }
         public Element Element { get; set; }
         public virtual CardPassive Passive { get; set; }
-        public virtual List<LevelBoost> LevelBoosts { get; set; }
+        public virtual ICollection<LevelBoost> LevelBoosts { get; set; }
         public int Value { get; set; }
         public int BaseExp { get; set; }
         public int RuneSlots { get; set; }

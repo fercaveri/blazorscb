@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using NHibernate.Linq;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using SurrealCB.Data.Dto;
 using SurrealCB.Data.Model;
 using SurrealCB.Data.Shared;
+using SurrealCB.Data.Repository;
 
 namespace SurrealCB.Server.Services
 {
@@ -19,30 +20,30 @@ namespace SurrealCB.Server.Services
     {
         Task Log(ApiLogItem apiLogItem);
         Task<ApiResponse> Get();
-        Task<ApiResponse> GetByApplictionUserId(Guid applicationUserId);
+        Task<ApiResponse> GetByApplictionUserId(int applicationUserId);
     }
 
     public class ApiLogService : IApiLogService
     {
-        private readonly SCBDbContext _db;
-        private readonly DbContextOptionsBuilder<SCBDbContext> _optionsBuilder;
+        private readonly IRepository _db;
+        //private readonly DbContextOptionsBuilder<SCBDbContext> _optionsBuilder;
         private readonly IMapper _autoMapper;
-        private readonly UserManager<ApplicationUser> _userManager;
+        //private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserSession _userSession;
 
-        public ApiLogService(IConfiguration configuration, SCBDbContext db, IMapper autoMapper, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, 
+        public ApiLogService(IConfiguration configuration, IRepository db, IMapper autoMapper, IHttpContextAccessor httpContextAccessor, 
             IUserSession userSession)
         {
             _db = db;
             _autoMapper = autoMapper;
-            _userManager = userManager;
+            //_userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
             _userSession = userSession;
 
             // Calling Log from the API Middlware results in a disposed ApplicationDBContext. This is here to build a DB Context for logging API Calls
             // If you have a better solution please let me know.
-            _optionsBuilder = new DbContextOptionsBuilder<SCBDbContext>();
+            //_optionsBuilder = new DbContextOptionsBuilder<SCBDbContext>();
 
             //if (Convert.ToBoolean(configuration["BlazorBoilerplate:UsePostgresServer"] ?? "false"))
             //{
@@ -50,7 +51,7 @@ namespace SurrealCB.Server.Services
             //}
             //else if (Convert.ToBoolean(configuration["BlazorBoilerplate:UseSqlServer"] ?? "false"))
             //{
-                _optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection")); //SQL Server Database
+                //_optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection")); //SQL Server Database
             //}
             //else
             //{
@@ -60,7 +61,7 @@ namespace SurrealCB.Server.Services
 
         public async Task Log(ApiLogItem apiLogItem)
         {
-            if (apiLogItem.ApplicationUserId != Guid.Empty)
+            if (apiLogItem.ApplicationUserId != 0)
             {
                 //TODO populate _userSession??
 
@@ -73,26 +74,25 @@ namespace SurrealCB.Server.Services
             }
             else
             {
-                apiLogItem.ApplicationUserId = null;
+                apiLogItem.ApplicationUserId = 0;
             }
 
-            using (SCBDbContext _dbContext = new SCBDbContext(_optionsBuilder.Options, _userSession))
-            {
-                _dbContext.ApiLogs.Add(apiLogItem);
-                await _dbContext.SaveChangesAsync();
-            }
+            //using (SCBDbContext _dbContext = new SCBDbContext(_optionsBuilder.Options, _userSession))
+            //{
+                await _db.SaveAsync(apiLogItem);
+            //}
         }
 
         public async Task<ApiResponse> Get()
         {
-            return new ApiResponse(Status200OK, "Retrieved Api Log", await _autoMapper.ProjectTo<ApiLogItemDto>(_db.ApiLogs).ToListAsync());
+            return new ApiResponse(Status200OK, "Retrieved Api Log", await _autoMapper.ProjectTo<ApiLogItemDto>(_db.Query<ApiLogItem>()).ToListAsync());
         }
 
-        public async Task<ApiResponse> GetByApplictionUserId(Guid applicationUserId)
+        public async Task<ApiResponse> GetByApplictionUserId(int applicationUserId)
         {
             try
             {
-                return new ApiResponse(Status200OK, "Retrieved Api Log", await _autoMapper.ProjectTo<ApiLogItemDto>(_db.ApiLogs.Where(a => a.ApplicationUserId == applicationUserId)).ToListAsync());
+                return new ApiResponse(Status200OK, "Retrieved Api Log", await _autoMapper.ProjectTo<ApiLogItemDto>(_db.Query<ApiLogItem>().Where(a => a.ApplicationUserId == applicationUserId)).ToListAsync());
             }
             catch (Exception ex)
             {

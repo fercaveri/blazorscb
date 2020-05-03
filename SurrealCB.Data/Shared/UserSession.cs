@@ -8,7 +8,7 @@ namespace SurrealCB.Data.Shared
 {
     public interface IUserSession
     {
-        Guid UserId { get; set; }
+        int UserId { get; set; }
         int TenantId { get; set; }
         List<string> Roles { get; set; }
         string UserName { get; set; }
@@ -18,7 +18,7 @@ namespace SurrealCB.Data.Shared
     public class UserSession : IUserSession
     {
         public bool IsAuthenticated { get; set; }
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
         public string UserName { get; set; }
         public int TenantId { get; set; }
         public string Email { get; set; }

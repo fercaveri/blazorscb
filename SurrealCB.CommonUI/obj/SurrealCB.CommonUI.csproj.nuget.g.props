@@ -23,6 +23,11 @@
   </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <Import Project="$(NuGetPackageRoot)toolbelt.blazor.loadingbar\11.0.0.1\buildTransitive\Toolbelt.Blazor.LoadingBar.props" Condition="Exists('$(NuGetPackageRoot)toolbelt.blazor.loadingbar\11.0.0.1\buildTransitive\Toolbelt.Blazor.LoadingBar.props')" />
+    <Import Project="$(NuGetPackageRoot)entityframework\6.3.0\buildTransitive\EntityFramework.props" Condition="Exists('$(NuGetPackageRoot)entityframework\6.3.0\buildTransitive\EntityFramework.props')" />
     <Import Project="$(NuGetPackageRoot)matblazor\2.2.0\buildTransitive\MatBlazor.props" Condition="Exists('$(NuGetPackageRoot)matblazor\2.2.0\buildTransitive\MatBlazor.props')" />
   </ImportGroup>
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <PkgEntityFramework Condition=" '$(PkgEntityFramework)' == '' ">C:\Users\fjc39603\.nuget\packages\entityframework\6.3.0</PkgEntityFramework>
+    <PkgSystem_Data_SQLite_EF6 Condition=" '$(PkgSystem_Data_SQLite_EF6)' == '' ">C:\Users\fjc39603\.nuget\packages\system.data.sqlite.ef6\1.0.112.2</PkgSystem_Data_SQLite_EF6>
+  </PropertyGroup>
 </Project>

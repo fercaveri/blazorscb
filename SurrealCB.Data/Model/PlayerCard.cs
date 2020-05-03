@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using SurrealCB.Data.Enum;
 
 namespace SurrealCB.Data.Model
 {
@@ -10,10 +11,8 @@ namespace SurrealCB.Data.Model
         public int CurrentExp { get; set; }
         public virtual ICollection<Rune> Runes { get; set; }
         public virtual ICollection<ActiveLevelBoost> ActiveLvlBoosts { get; set; }
-        public int CardId { get; set; }
         public virtual Card Card { get; set; }
-        public int? EnemyNpcId { get; set; }
-        public Guid? ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
         public virtual List<CardPassive> GetPassives()
         {
             //TODO: FIX NULL PASSIVE
@@ -88,13 +87,7 @@ namespace SurrealCB.Data.Model
 
         public List<Rune> GetRuneList()
         {
-            var runes = this.Runes;
-            var diff = this.Card.RuneSlots - runes.Count;
-            for (var i = 0; i < diff; i++)
-            {
-                runes.Add(null);
-            }
-            return runes.ToList();
+            return this.Runes.ToList();
         }
 
         public double BoostStat(double amount, BoostType type)

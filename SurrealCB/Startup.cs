@@ -20,6 +20,7 @@ using SurrealCB.CommonUI;
 using SurrealCB.CommonUI.Services;
 using SurrealCB.Data;
 using SurrealCB.Data.Model;
+using SurrealCB.Data.Repository;
 using SurrealCB.Data.Shared;
 using SurrealCB.Server.Authorization;
 using SurrealCB.Server.Mappings;
@@ -51,16 +52,16 @@ namespace SurrealCB.Server
             services.AddScoped<IMetricService, MetricService>();
             services.AddScoped<IUserSession, UserSession>();
 
-            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
-                .AddRoles<IdentityRole<Guid>>()
-                .AddEntityFrameworkStores<SCBDbContext>()
-                .AddDefaultTokenProviders();
+            //services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
+            //    .AddRoles<IdentityRole<Guid>>()
+            //    .AddEntityFrameworkStores<SCBDbContext>()
+            //    .AddDefaultTokenProviders();
 
-            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>,
-                AdditionalUserClaimsPrincipalFactory>();
+            //services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>,
+            //    AdditionalUserClaimsPrincipalFactory>();
 
             services.AddTransient<IApiLogService, ApiLogService>();
-            services.AddTransient<ISeeder, Seeder>();
+            services.AddTransient<ISeeder, SCBSeeder>();
 
             var automapperConfig = new MapperConfiguration(configuration =>
             {
@@ -81,9 +82,11 @@ namespace SurrealCB.Server
                 setup.SerializerSettings.Converters.Add(new StringEnumConverter());
                 setup.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
-            services.AddDbContext<SCBDbContext>(options =>
-                    options.UseLazyLoadingProxies()
-                           .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<IRepositoryConfiguration, SCBNHibernateConfiguration>();
+            services.AddScoped<IRepository, NHibernateRepository>();
+            //services.AddDbContext<SCBDbContext>(options =>
+            //        options.UseLazyLoadingProxies()
+            //               .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMatToaster(config =>
             {
                 config.Position = MatToastPosition.BottomRight;
@@ -96,14 +99,8 @@ namespace SurrealCB.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider provider)
         {
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var databaseInitializer = serviceScope.ServiceProvider.GetService<ISeeder>();
-                databaseInitializer.SeedAsync().Wait();
-            }
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -123,6 +120,22 @@ namespace SurrealCB.Server
                 endpoints.MapControllers();
                 endpoints.MapFallbackToPage("/index");
             });
+
+            var nh = provider.GetService<IRepositoryConfiguration>();
+
+            nh.Configure(Configuration["NhibernateConfig:ConnectionString"],
+                Configuration.GetValue("NhibernateConfig:ShowSQL", false),
+                Configuration.GetValue<System.Data.IsolationLevel>("NhibernateConfig:Isolation"),
+                Configuration.GetValue<string>("NhibernateConfig:SQLiteFileName", null));
+
+            // loading initial data and updating schema only if specified in appsettings.json
+            if (Configuration.GetValue<bool>("NHibernateConfig:UpdateSchema", false))
+            {
+                nh.UpdateSchema();
+
+                var seeder = provider.GetService<ISeeder>();
+                seeder.SeedAsync().GetAwaiter().GetResult();
+            }
         }
     }
 }

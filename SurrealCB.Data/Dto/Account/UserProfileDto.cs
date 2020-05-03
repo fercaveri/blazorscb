@@ -8,7 +8,7 @@ namespace SurrealCB.Data.Dto.Account
     public class UserProfileDto
     {
         [Key]
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
         public long Id { get; set; }
         [Required]
         public string LastPageVisited { get; set; } = "/";

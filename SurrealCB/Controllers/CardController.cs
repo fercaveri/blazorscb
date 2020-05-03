@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using NHibernate.Linq;
 using Microsoft.Extensions.Logging;
 using SurrealCB.Data;
+using SurrealCB.Data.Model;
+using SurrealCB.Data.Repository;
 using SurrealCB.Server.Misc;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 
@@ -20,10 +22,10 @@ namespace SurrealCB.Server.Controllers
         private readonly ILogger<CardController> logger;
         private readonly IUserService userService;
         private readonly ICardService cardService;
-        private readonly SCBDbContext repository;
+        private readonly IRepository repository;
 
         public CardController(ILogger<CardController> logger, IUserService userService,
-            ICardService cardService, SCBDbContext repository )
+            ICardService cardService, IRepository repository )
         {
             this.logger = logger;
             this.userService = userService;
@@ -48,15 +50,15 @@ namespace SurrealCB.Server.Controllers
         [HttpGet("player/{id}")]
         public async Task<ApiResponse> GetPlayerCard(int id)
         {
-            var playerCard = await this.repository.PlayerCards.FirstOrDefaultAsync(x => x.Id == id);
+            var playerCard = await this.repository.Query<PlayerCard>().FirstOrDefaultAsync(x => x.Id == id);
             return new ApiResponse(Status200OK, "Get All Cards Successful", playerCard);
         }
 
         [HttpGet("player/levelboost/{cardid}/{boostid}")]
         public async Task<ApiResponse> ActivateLevelBoost(int cardid, int boostid)
         {
-            var playerCard = await this.repository.PlayerCards.FirstOrDefaultAsync(x => x.Id == cardid);
-            var levelBoost = await this.repository.LevelBoosts.FirstOrDefaultAsync(x => x.Id == boostid);
+            var playerCard = await this.repository.Query<PlayerCard>().FirstOrDefaultAsync(x => x.Id == cardid);
+            var levelBoost = await this.repository.Query<LevelBoost>().FirstOrDefaultAsync(x => x.Id == boostid);
             try
             {
                 await this.cardService.ActivateLevelBoost(playerCard, levelBoost);
