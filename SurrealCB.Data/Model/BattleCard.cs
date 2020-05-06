@@ -93,10 +93,16 @@ namespace SurrealCB.Data.Model
                     case Passive.BERSEKER:
                         speed -= (int)activeEff.Param2;
                         break;
+                    case Passive.INUNDATE:
+                        speed += (int)activeEff.Param1;
+                        break;
+                    case Passive.FRENZY:
+                        speed -= (int)activeEff.Param1;
+                        break;
                 }
 
             }
-            return speed;
+            return Math.Max(0.3, speed);
         }
     }
 }

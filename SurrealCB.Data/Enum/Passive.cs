@@ -49,6 +49,9 @@ namespace SurrealCB.Data.Enum
         CONFUSSION, //La carta golpea al azar a cualquiera del tablero durante X segundos,
         HELLFIRE, //Cada Y segundos dania a todos con X
         TRANSFUSE, //Al golpear, un X% del danio es transferido a un aliado para curarlo
+        DEVIATE, //Desvia los ataques por X segundos
+        INUNDATE, //Hace que su speed total sea un X mayor por golpe
+        FRENZY, //Incrementa el speed por cada ataque
 
         //HACER ESTAS LOGICAS
         RUNEBREAKER, //Deshabilita las runas enemigas
@@ -94,6 +97,7 @@ namespace SurrealCB.Data.Enum
         SHURIKEN, //Inflije X danio real y rebota, reduciendo X danio por golpe hasta 0
         SLOWDOWN, //Reduce hasta morir
         SPEEDSTEAL, //Chupa time total stackea hasta morir
+        TICTOC, //Que mate una carta al azar cada X ataques (guardar ataques en variable)
 
         //TODO: NO PASIVAS PERO PUEDE SER FUEGO Y POISON ALL o BLEED
     }

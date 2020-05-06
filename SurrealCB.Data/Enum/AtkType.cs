@@ -9,6 +9,7 @@ namespace SurrealCB.Data.Enum
     {
         NORMAL = 0,
         RANDOM,
+        LOWEST_HP,
         ALL,
         HEAL,
         MAGIC

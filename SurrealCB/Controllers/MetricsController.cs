@@ -39,13 +39,37 @@ namespace SurrealCB.Server.Controllers
         [HttpGet("level")]
         public async Task<ApiResponse> DoMetrics()
         {
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < 4000; i++)
             {
                 var random = new Random();
                 var level = random.Next(1, 9);
-                await this.metricService.MakeLevelMetric(level);
+                await this.metricService.MakeLevelMetricBalanced(level);
             }
-            //await this.repository.SaveChangesAsync();
+            for (var i = 0; i < 8000; i++)
+            {
+                var random = new Random();
+                var level = random.Next(1, 9);
+                await this.metricService.MakeLevelMetricRarity(level, Data.Enum.Rarity.COMMON);
+            }
+            for (var i = 0; i < 4000; i++)
+            {
+                var random = new Random();
+                var level = random.Next(1, 9);
+                await this.metricService.MakeLevelMetricRarity(level, Data.Enum.Rarity.RARE);
+            }
+            for (var i = 0; i < 2000; i++)
+            {
+                var random = new Random();
+                var level = random.Next(1, 9);
+                await this.metricService.MakeLevelMetricRarity(level, Data.Enum.Rarity.SPECIAL);
+            }
+            for (var i = 0; i < 500; i++)
+            {
+                var random = new Random();
+                var level = random.Next(1, 9);
+                await this.metricService.MakeLevelMetricRarity(level, Data.Enum.Rarity.LEGENDARY);
+            }
+            await this.repository.GetSession().FlushAsync();
             return new ApiResponse(Status200OK, "Finished");
         }
     }

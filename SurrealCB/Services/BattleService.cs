@@ -12,10 +12,12 @@ namespace SurrealCB.Server
 {
     public interface IBattleService
     {
-        Task<ICollection<BattleAction>> PerformAttack(BattleCard srcCard, BattleCard tarCard, ICollection<BattleCard> cards);
+        Task<ICollection<BattleAction>> PerformAttack(BattleCard srcCard, ICollection<BattleCard> cards, int tarPos = -1);
+        Task<ICollection<BattleAction>> PerformBasicAttack(BattleCard srcCard, BattleCard tarCard, ICollection<BattleCard> cards);
         Task<ICollection<BattleAction>> AttackAll(BattleCard srcCard, ICollection<BattleCard> cards);
         Task<BattleStatus> NextTurn(ICollection<BattleCard> cards);
         Task<BattleEnd> CheckWinOrLose(ICollection<BattleCard> cards, int srcPos);
+        HealthChange GetActionType(Passive p);
     }
     public class BattleService : IBattleService
     {
@@ -90,13 +92,91 @@ namespace SurrealCB.Server
             return Task.FromResult(battleStatus);
         }
 
-        public Task<ICollection<BattleAction>> PerformAttack(BattleCard srcCard, BattleCard tarCard, ICollection<BattleCard> cards)
+        public async Task<ICollection<BattleAction>> PerformAttack(BattleCard srcCard, ICollection<BattleCard> cards, int tarPos = -1)
         {
+            var tarCard = cards.Where(x => x.Position == tarPos).FirstOrDefault();
+            if (srcCard.PlayerCard.Card.AtkType == AtkType.RANDOM)
+            {
+                while (tarPos == -1)
+                {
+                    var random = new Random();
+                    int tryPos = -1;
+                    List<int> currentPositions;
+                    if (srcCard.Position < 4)
+                    {
+                        currentPositions = cards.Where(x => x.Position > 3 && x.Hp > 0).Select(x => x.Position).ToList();
+                    }
+                    else
+                    {
+                        currentPositions = cards.Where(x => x.Position < 4 && x.Hp > 0).Select(x => x.Position).ToList();
+                    }
+                    tryPos = currentPositions[random.Next(0, currentPositions.Count())];
+                    var tryCard = cards.FirstOrDefault(x => x.Position == tryPos);
+                    if (tryCard != null)
+                    {
+                        tarPos = tryCard.Position;
+                        tarCard = tryCard;
+                    }
+                }
+            }
+            else if (srcCard.PlayerCard.Card.AtkType == AtkType.LOWEST_HP)
+            {
+                if (srcCard.Position < 4)
+                {
+                    tarCard = cards.FirstOrDefault(x => x.Position > 3 && x.Hp == cards.Min(x => x.Hp));
+                }
+                else
+                {
+                    tarCard = cards.FirstOrDefault(x => x.Position < 4 && x.Hp == cards.Min(x => x.Hp));
+                }
+            }
+            else if (srcCard.PlayerCard.Card.AtkType == AtkType.ALL)
+            {
+                return await this.AttackAll(srcCard, cards);
+            }
             if (srcCard.PlayerCard.Card.AtkType == AtkType.HEAL)
             {
-                var status = this.PerformHeal(srcCard, tarCard, cards);
-                return status;
+                return await this.PerformHeal(srcCard, tarCard, cards);
             }
+
+            //TODO: Not confussing ALL attacks, should?
+            if (srcCard.ActiveEffects.Any(x => x.Passive == Passive.CONFUSSION))
+            {
+                var rand = new Random();
+                var randNum = 0;
+                if (srcCard.Position > 3)
+                {
+                    randNum = rand.Next(4, 8);
+                }
+                else
+                {
+                    randNum = rand.Next(0, 4);
+                }
+                var confussion = srcCard.ActiveEffects.FirstOrDefault(x => x.Passive == Passive.CONFUSSION);
+                srcCard.ActiveEffects.Remove(confussion);
+                tarCard = cards.FirstOrDefault(x => x.Position == randNum);
+            }
+            if (tarCard.ActiveEffects.Any(x => x.Passive == Passive.THIEF) || srcCard.ActiveEffects.Any(x => x.Passive == Passive.DEVIATE))
+            {
+                int[] possibleTargetPos;
+                if (srcCard.Position < 4)
+                {
+                    possibleTargetPos = cards.Where(x => x.Position > 3 && x.Hp != 0 && x.Position != tarCard.Position).Select(x => x.Position).ToArray();
+                }
+                else
+                {
+                    possibleTargetPos = cards.Where(x => x.Position < 4 && x.Hp != 0 && x.Position != tarCard.Position).Select(x => x.Position).ToArray();
+                }
+                if (possibleTargetPos.Length == 0) return new List<BattleAction> { };
+                var rand = new Random();
+                var pos = possibleTargetPos[rand.Next(0, possibleTargetPos.Length - 1)];
+                tarCard = cards.FirstOrDefault(x => x.Position == pos);
+            }
+            return await this.PerformBasicAttack(srcCard, tarCard, cards);
+        }
+
+        public Task<ICollection<BattleAction>> PerformBasicAttack(BattleCard srcCard, BattleCard tarCard, ICollection<BattleCard> cards)
+        {
             ICollection<BattleAction> retList = new List<BattleAction>();
             var cancelStatus = this.ShouldCancelAttack(srcCard, tarCard);
             if (cancelStatus != CancelStatus.NONE)
@@ -126,7 +206,7 @@ namespace SurrealCB.Server
                 {
                     var eff = this.DoEff(srcCard.Position, dblAtkPassive.Id, dblAtkPassive.Passive, dblAtkPassive.Param1);
                     srcCard.ActiveEffects.Add(eff);
-                    var newActions = this.PerformAttack(srcCard, tarCard, cards).Result;
+                    var newActions = this.PerformBasicAttack(srcCard, tarCard, cards).Result;
                     foreach (var act in newActions)
                     {
                         retList.Add(act);
@@ -168,7 +248,7 @@ namespace SurrealCB.Server
 
             foreach (var tarCard in targets)
             {
-                retList = new List<BattleAction>(retList.Concat(this.PerformAttack(srcCard, tarCard, cards).Result));
+                retList = new List<BattleAction>(retList.Concat(this.PerformBasicAttack(srcCard, tarCard, cards).Result));
             }
 
             return Task.FromResult(retList);
@@ -276,11 +356,11 @@ namespace SurrealCB.Server
                                 IEnumerable<BattleCard> targets;
                                 if (card.Position < 4)
                                 {
-                                    targets = cards.Where(x => x.Position > 3);
+                                    targets = cards.Where(x => x.Position > 3 && x.Hp > 0);
                                 }
                                 else
                                 {
-                                    targets = cards.Where(x => x.Position < 4);
+                                    targets = cards.Where(x => x.Position < 4 && x.Hp > 0);
                                 }
                                 foreach (var target in targets)
                                 {
@@ -293,6 +373,7 @@ namespace SurrealCB.Server
                             }
                             break;
                         case Passive.THIEF:
+                        case Passive.DEVIATE:
                             eff.Param1 -= timeElapsed;
                             if (eff.Param1 <= 0)
                             {
@@ -452,6 +533,7 @@ namespace SurrealCB.Server
             {
                 foreach (var passive in srcPassives)
                 {
+                    int[] possibleTargetPos;
                     randNum = random.Next(0, 100);
                     switch (passive.Passive)
                     {
@@ -467,6 +549,7 @@ namespace SurrealCB.Server
                         case Passive.STUN:
                         case Passive.ELECTRIFY:
                         case Passive.CONFUSSION:
+                        case Passive.DEVIATE:
                             var eff = tarCard.ActiveEffects.FirstOrDefault(x => x.Passive == passive.Passive);
                             if (eff != null)
                             {
@@ -500,6 +583,7 @@ namespace SurrealCB.Server
                             }
                             break;
                         case Passive.BLOWMARK:
+                        case Passive.INUNDATE:
                             var mark = tarCard.ActiveEffects.FirstOrDefault(x => x.Passive == passive.Passive && x.FromPosition == srcCard.Position);
                             if (mark != null)
                             {
@@ -508,6 +592,17 @@ namespace SurrealCB.Server
                             else
                             {
                                 tarCard.ActiveEffects.Add(DoEff(srcCard.Position, passive.Id, passive.Passive, passive.Param1, passive.Param2, passive.Param3));
+                            }
+                            break;
+                        case Passive.FRENZY:
+                            var frenzy = srcCard.ActiveEffects.FirstOrDefault(x => x.Passive == passive.Passive && x.FromPosition == srcCard.Position);
+                            if (frenzy != null)
+                            {
+                                frenzy.Param1 += passive.Param1;
+                            }
+                            else
+                            {
+                                srcCard.ActiveEffects.Add(DoEff(srcCard.Position, passive.Id, passive.Passive, passive.Param1, passive.Param2, passive.Param3));
                             }
                             break;
                         case Passive.OBLIVION:
@@ -530,15 +625,15 @@ namespace SurrealCB.Server
                             actions.Add(new BattleAction { Number = (int)passive.Param1, Type = HealthChange.HEAL, Position = srcCard.Position });
                             break;
                         case Passive.TRANSFUSE:
-                            int[] possibleTargetPos;
                             if (srcCard.Position < 4)
                             {
-                                possibleTargetPos = cards.Where(x => x.Position > 3 && x.Hp != 0).Select(x => x.Position).ToArray();
+                                possibleTargetPos = cards.Where(x => x.Position > 3 && x.Hp != 0 && x.Position != srcCard.Position).Select(x => x.Position).ToArray();
                             }
                             else
                             {
-                                possibleTargetPos = cards.Where(x => x.Position < 4 && x.Hp != 0).Select(x => x.Position).ToArray();
+                                possibleTargetPos = cards.Where(x => x.Position < 4 && x.Hp != 0 && x.Position != srcCard.Position).Select(x => x.Position).ToArray();
                             }
+                            if (possibleTargetPos.Length == 0) break;
                             var healPos = possibleTargetPos[random.Next(0, possibleTargetPos.Length - 1)];
                             var transfuseAmount = dmgDone / passive.Param1;
                             this.ApplyHeal(cards.FirstOrDefault(x => x.Position == healPos), (int)transfuseAmount);
@@ -555,6 +650,19 @@ namespace SurrealCB.Server
                             var timeSteal = Math.Round((tarCard.GetSpd() - tarCard.Time) / passive.Param1, 2, MidpointRounding.AwayFromZero);
                             srcCard.Time = Math.Max(0, srcCard.Time - timeSteal);
                             tarCard.Time += timeSteal;
+                            break;
+                        case Passive.BOUNCE:
+                            if (srcCard.Position < 4)
+                            {
+                                possibleTargetPos = cards.Where(x => x.Position > 3 && x.Hp != 0 && x.Position != tarCard.Position).Select(x => x.Position).ToArray();
+                            }
+                            else
+                            {
+                                possibleTargetPos = cards.Where(x => x.Position < 4 && x.Hp != 0 && x.Position != tarCard.Position).Select(x => x.Position).ToArray();
+                            }
+                            if (possibleTargetPos.Length == 0) break;
+                            var targetPos = possibleTargetPos[random.Next(0, possibleTargetPos.Length - 1)];
+                            actions.Add(this.ApplyDmg(cards.FirstOrDefault(x => x.Position == targetPos), (int)passive.Param1, passive.Passive));
                             break;
                     };
                 }
@@ -605,20 +713,6 @@ namespace SurrealCB.Server
                             ret.RemoveAt(i);
                             srcEffs = ret;
                         }
-                        break;
-                    case Passive.BOUNCE:
-                        int[] possibleTargetPos;
-                        if (srcCard.Position < 4)
-                        {
-                            possibleTargetPos = cards.Where(x => x.Position > 3 && x.Hp != 0).Select(x => x.Position).ToArray();
-                        }
-                        else
-                        {
-                            possibleTargetPos = cards.Where(x => x.Position < 4 && x.Hp != 0).Select(x => x.Position).ToArray();
-                        }
-                        var random = new Random();
-                        var targetPos = possibleTargetPos[random.Next(0, possibleTargetPos.Length)];
-                        actions.Add(this.ApplyDmg(cards.FirstOrDefault(x => x.Position == targetPos), (int)eff.Param1, eff.Passive));
                         break;
                 };
             }
@@ -690,7 +784,7 @@ namespace SurrealCB.Server
             {
                 finalDmg = 999;
             }
-            if (src == Element.LIGHT && tar == Element.DARK )
+            if (src == Element.LIGHT && tar == Element.DARK)
             {
                 srcCard.Hp = Math.Min(srcCard.GetHp(), srcCard.Hp + srcCard.PlayerCard.Card.Tier);
             }

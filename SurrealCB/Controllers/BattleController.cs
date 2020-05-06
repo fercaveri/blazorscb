@@ -109,50 +109,12 @@ namespace SurrealCB.Server.Controllers
         public async Task<ApiResponse> Perform([FromBody]List<BattleCard> cards, int srcPos, int tarPos)
         {
             var srcCard = cards.Where(x => x.Position == srcPos).FirstOrDefault();
-            var tarCard = cards.Where(x => x.Position == tarPos).FirstOrDefault();
-            if (tarPos == -1)
-            {
-                if (srcCard.PlayerCard.Card.AtkType == AtkType.RANDOM)
-                {
-                    while (tarPos == -1)
-                    {
-                        var random = new Random();
-                        int tryPos = -1;
-                        List<int> currentPositions;
-                        if (srcPos < 4)
-                        {
-                            currentPositions = cards.Where(x => x.Position > 3 && x.Hp > 0).Select(x => x.Position).ToList();
-                        }
-                        else
-                        {
-                            currentPositions = cards.Where(x => x.Position < 4 && x.Hp > 0).Select(x => x.Position).ToList();
-                        }
-                        tryPos = currentPositions[random.Next(0, currentPositions.Count())];
-                        var tryCard = cards.FirstOrDefault(x => x.Position == tryPos);
-                        if (tryCard != null)
-                        {
-                            tarPos = tryCard.Position;
-                            tarCard = tryCard;
-                        }
-                    }
-                }
-                else if (srcCard.PlayerCard.Card.AtkType == AtkType.ALL)
-                {
-                    var act = await this.battleService.AttackAll(srcCard, cards);
-                    var end = await this.battleService.CheckWinOrLose(cards, srcPos);
-                    return new ApiResponse(Status200OK, "Damage applied successfully", new BattleStatus { Cards = cards, Actions = act, NextPosition = -1, Status = end });
-                }
-                else
-                {
-                    return new ApiResponse(Status400BadRequest, "Wrong request");
-                }
-            }
             if (srcCard == null ||
-                srcCard.PlayerCard.Card.AtkType != AtkType.ALL && srcCard.PlayerCard.Card.AtkType != AtkType.RANDOM && tarCard == null)
+                srcCard.PlayerCard.Card.AtkType != AtkType.ALL && srcCard.PlayerCard.Card.AtkType != AtkType.RANDOM)
             {
                 return new ApiResponse(Status400BadRequest, "Wrong request");
             }
-            var actions = await this.battleService.PerformAttack(srcCard, tarCard, cards);
+            var actions = await this.battleService.PerformAttack(srcCard, cards, tarPos);
             var shouldEnd = await this.battleService.CheckWinOrLose(cards, srcPos);
             return new ApiResponse(Status200OK, "Damage applied successfully", new BattleStatus { Cards = cards, Actions = actions, NextPosition = -1, Status = shouldEnd });
         }
