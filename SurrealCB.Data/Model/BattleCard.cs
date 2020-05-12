@@ -10,11 +10,13 @@ namespace SurrealCB.Data.Model
         public int Position { get; set; }
         public int Hp { get; set; }
         public double Time { get; set; }
+        public int Shield { get; set; }
         public virtual ICollection<ActiveEffect> ActiveEffects { get; set; } = new List<ActiveEffect>();
         public virtual PlayerCard PlayerCard { get; set; }
 
         public BattleCard(PlayerCard pcard)
         {
+            var starterPassives = new[] { Passive.HELLFIRE, Passive.STRIKER };
             this.PlayerCard = pcard;
             this.Hp = pcard.GetHp();
             this.Time = pcard.GetSpd();
@@ -22,17 +24,21 @@ namespace SurrealCB.Data.Model
             {
                 this.Time = 0;
             }
-            var hellfire = this.GetPassives().FirstOrDefault(x => x.Passive == Passive.HELLFIRE);
-            if (hellfire != null)
+
+            foreach (var passive in starterPassives)
             {
-                this.ActiveEffects.Add(new ActiveEffect
+                var selected = this.GetPassives().FirstOrDefault(x => x.Passive == passive);
+                if (selected != null)
                 {
-                    FromPosition = this.Position,
-                    Passive = Passive.HELLFIRE,
-                    Param1 = hellfire.Param1,
-                    Param2 = hellfire.Param2,
-                    Param3 = hellfire.Param3
-                });
+                    this.ActiveEffects.Add(new ActiveEffect
+                    {
+                        FromPosition = this.Position,
+                        Passive = selected.Passive,
+                        Param1 = selected.Param1,
+                        Param2 = selected.Param2,
+                        Param3 = selected.Param3
+                    });
+                }
             }
         }
 

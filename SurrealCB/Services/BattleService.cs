@@ -42,6 +42,7 @@ namespace SurrealCB.Server
                     switch (passive.Passive)
                     {
                         case Passive.FREEZE:
+                        case Passive.COLDING:
                             if (cardTimeElapsed < passive.Param2)
                             {
                                 cardTimeElapsed -= cardTimeElapsed / passive.Param1;
@@ -177,6 +178,7 @@ namespace SurrealCB.Server
 
         public Task<ICollection<BattleAction>> PerformBasicAttack(BattleCard srcCard, BattleCard tarCard, ICollection<BattleCard> cards)
         {
+            var random = new Random();
             ICollection<BattleAction> retList = new List<BattleAction>();
             var cancelStatus = this.ShouldCancelAttack(srcCard, tarCard);
             if (cancelStatus != CancelStatus.NONE)
@@ -184,23 +186,50 @@ namespace SurrealCB.Server
                 return Task.FromResult(retList);
             }
             var dmg = this.CalculateDmg(srcCard, tarCard);
-            var extraDmg = this.CalculateExtraDmg(srcCard, tarCard);
+            var extraDmg = this.CalculateExtraDmg(srcCard, tarCard, dmg);
             if (tarCard.GetPassives().Any(x => x.Passive == Passive.GHOST))
             {
                 dmg = extraDmg = 0;
+            }
+            var deflect = tarCard.GetPassives().FirstOrDefault(x => x.Passive == Passive.DEFLECT);
+            if (deflect != null)
+            {
+                BattleCard deflectTarget = null;
+                var nextNum = random.Next(0, 100);
+                if (nextNum < deflect.Param1)
+                {
+                    if (srcCard.Position < 4)
+                    {
+                        var allyCount = cards.Count(x => x.Position > 3 && x.Hp > 0 && x.Position != srcCard.Position);
+                        if (allyCount > 0)
+                        {
+                            var targetIndex = random.Next(0, allyCount);
+                            deflectTarget = cards.Where(x => x.Position > 3 && x.Hp > 0 && x.Position != srcCard.Position).ToList()[targetIndex];
+                        }
+                    }
+                    else
+                    {
+                        var allyCount = cards.Count(x => x.Position < 4 && x.Hp > 0 && x.Position != srcCard.Position);
+                        if (allyCount > 0)
+                        {
+                            var targetIndex = random.Next(0, allyCount);
+                            deflectTarget = cards.Where(x => x.Position < 4 && x.Hp > 0 && x.Position != srcCard.Position).ToList()[targetIndex];
+                        }
+                    }
+                    if (deflectTarget != null)
+                    {
+                        return this.PerformBasicAttack(srcCard, deflectTarget, cards);
+                    }
+                }
             }
             retList = retList.Concat(this.CalculateEffectsOnAttack(srcCard, tarCard, cards, dmg)).ToList();
             retList = retList.Concat(this.ApplyAttackStatus(srcCard, tarCard, dmg, cards)).ToList();
             tarCard.Hp = tarCard.Hp - dmg - extraDmg;
             if (tarCard.Hp < 0) tarCard.Hp = 0;
 
-            var dmgType = tarCard.Hp == 0 ? HealthChange.DEATH : HealthChange.DAMAGE;
-            retList.Add(new BattleAction { Number = dmg + extraDmg, Position = tarCard.Position, Type = dmgType });
-
             var dblAtkPassive = srcCard.GetPassives().FirstOrDefault(x => x.Passive == Passive.DOUBLE_ATTACK);
             if (dblAtkPassive != null && !srcCard.ActiveEffects.Any(x => x.Passive == Passive.DOUBLE_ATTACK))
             {
-                var random = new Random();
                 var randNum = random.Next(0, 100);
                 if (randNum < dblAtkPassive.Param1)
                 {
@@ -214,6 +243,14 @@ namespace SurrealCB.Server
                     srcCard.ActiveEffects.Remove(eff);
                 }
             }
+
+            var dmgType = tarCard.Hp == 0 ? HealthChange.DEATH : HealthChange.DAMAGE;
+            retList.Add(new BattleAction { Number = dmg + extraDmg, Position = tarCard.Position, Type = dmgType });
+            if (dmgType == HealthChange.DEATH)
+            {
+                retList = retList.Concat(this.TriggerDeathPassive(tarCard, cards, srcCard.Position)).ToList();
+            }
+
             return Task.FromResult(retList);
         }
 
@@ -227,6 +264,22 @@ namespace SurrealCB.Server
             }
             tarCard.Hp = Math.Min(tarCard.GetHp(), tarCard.Hp + srcCard.GetAtk());
             retList.Add(new BattleAction { Number = srcCard.GetAtk(), Position = tarCard.Position, Type = HealthChange.HEAL });
+
+            var passives = srcCard.GetPassives();
+            if (passives.Any(x => x.Passive == Passive.DISPELL))
+            {
+                tarCard.ActiveEffects = new List<ActiveEffect>();
+            }
+            var shield = passives.FirstOrDefault(x => x.Passive == Passive.SHIELD);
+            if (shield != null)
+            {
+                tarCard.Shield += (int)shield.Param1;
+                if (tarCard.Shield > tarCard.GetHp() / 2)
+                {
+                    tarCard.Shield = tarCard.GetHp() / 2;
+                }
+                retList.Add(new BattleAction { Number = (int)shield.Param1, Position = tarCard.Position, Type = HealthChange.SHIELD });
+            }
             retList = retList.Concat(this.CalculateEffectsOnAttack(srcCard, tarCard, cards, 0)).ToList();
 
             return Task.FromResult(retList);
@@ -290,9 +343,11 @@ namespace SurrealCB.Server
                         case Passive.BLAZE:
                         case Passive.STUN:
                         case Passive.FREEZE:
+                        case Passive.COLDING:
                         case Passive.BLIND:
                         case Passive.ELECTRIFY:
                         case Passive.SCORCHED:
+                        case Passive.INTENSIFY:
                             eff.Param2 -= timeElapsed;
                             if (eff.Param2 <= 0)
                             {
@@ -382,7 +437,61 @@ namespace SurrealCB.Server
                                 card.ActiveEffects = ret;
                             }
                             break;
+                        case Passive.STRIKER:
+                            List<BattleCard> stargets;
+                            if (card.Position < 4)
+                            {
+                                stargets = cards.Where(x => x.Position > 3 && x.Hp > 0).ToList();
+                            }
+                            else
+                            {
+                                stargets = cards.Where(x => x.Position < 4 && x.Hp > 0).ToList();
+                            }
+                            var starget = stargets[random.Next(0, stargets.Count() - 1)];
+                            actions.Add(this.ApplyDmg(starget, (int)eff.Param1, eff.Passive));
+                            var reteff = card.ActiveEffects.ToList();
+                            reteff.RemoveAt(i);
+                            card.ActiveEffects = reteff;
+                            break;
+                        case Passive.INCINERATE:
+                            eff.Param2 -= timeElapsed;
+                            if (eff.Param2 <= 0)
+                            {
+                                actions.Add(this.ApplyDmg(card, (int)eff.Param1, eff.Passive));
+                                eff.Param2 = cards.FirstOrDefault(x => x.Position == eff.FromPosition).GetPassives().FirstOrDefault(x => x.Passive == Passive.INCINERATE).Param2;
+                            }
+                            break;
+                        case Passive.VENOM:
+                            var venomTime = timeElapsed;
+                            do
+                            {
+                                var backParam2 = eff.Param2;
+                                eff.Param2 -= venomTime;
+                                venomTime -= backParam2;
+                                if (eff.Param2 <= 0)
+                                {
+                                    eff.Param2 = cards.FirstOrDefault(x => x.Position == eff.FromPosition).GetPassives().FirstOrDefault(x => x.Passive == eff.Passive).Param2;
+                                    actions.Add(this.ApplyDmg(card, (int)eff.Param1, eff.Passive));
+                                    eff.Param1 -= eff.Param3;
+                                }
+
+                            }
+                            while (venomTime / eff.Param2 > 1 && eff.Param1 > 0);
+
+                            if (eff.Param1 <= 0)
+                            {
+                                var ret = card.ActiveEffects.ToList();
+                                ret.RemoveAt(i);
+                                card.ActiveEffects = ret;
+                            }
+                            break;
                     };
+                    if (card.Hp == 0)
+                    {
+                        actions.Add(new BattleAction { Position = card.Position, Type = HealthChange.DEATH });
+                        actions = actions.Concat(this.TriggerDeathPassive(card, cards, eff.FromPosition)).ToList();
+                        i = 0;
+                    }
                 }
                 var passives = card.GetPassives();
                 foreach (var passive in passives)
@@ -396,10 +505,6 @@ namespace SurrealCB.Server
                             }
                             break;
                     }
-                }
-                if (card.Hp == 0)
-                {
-                    actions.Add(new BattleAction { Position = card.Position, Type = HealthChange.DEATH });
                 }
             }
             return actions;
@@ -492,11 +597,12 @@ namespace SurrealCB.Server
             return finalDmg;
         }
 
-        public int CalculateExtraDmg(BattleCard srcCard, BattleCard tarCard)
+        public int CalculateExtraDmg(BattleCard srcCard, BattleCard tarCard, int dmgDone = 0)
         {
             var dmg = 0;
-            var passives = srcCard.PlayerCard.GetPassives();
-            foreach (var passive in passives)
+            var srcPassives = srcCard.PlayerCard.GetPassives();
+            var tarPassives = tarCard.PlayerCard.GetPassives();
+            foreach (var passive in srcPassives)
             {
                 switch (passive.Passive)
                 {
@@ -542,6 +648,7 @@ namespace SurrealCB.Server
                             tarCard.Time = Math.Round(tarCard.Time, 2, MidpointRounding.AwayFromZero);
                             break;
                         case Passive.POISON:
+                        case Passive.VENOM:
                         case Passive.BLIND:
                         case Passive.BLEED:
                         case Passive.FREEZE:
@@ -550,6 +657,7 @@ namespace SurrealCB.Server
                         case Passive.ELECTRIFY:
                         case Passive.CONFUSSION:
                         case Passive.DEVIATE:
+                        case Passive.INTENSIFY:
                             var eff = tarCard.ActiveEffects.FirstOrDefault(x => x.Passive == passive.Passive);
                             if (eff != null)
                             {
@@ -559,6 +667,7 @@ namespace SurrealCB.Server
                             break;
                         case Passive.BLAZE:
                         case Passive.BURNOUT:
+                        case Passive.INCINERATE:
                             if (!(srcCard.PlayerCard.Card.Element == Element.FIRE && tarCard.PlayerCard.Card.Element == Element.WATER))
                             {
                                 var fireEff = tarCard.ActiveEffects.FirstOrDefault(x => x.Passive == passive.Passive);
@@ -664,6 +773,59 @@ namespace SurrealCB.Server
                             var targetPos = possibleTargetPos[random.Next(0, possibleTargetPos.Length - 1)];
                             actions.Add(this.ApplyDmg(cards.FirstOrDefault(x => x.Position == targetPos), (int)passive.Param1, passive.Passive));
                             break;
+                        case Passive.SPIKE_ARMOR:
+                            var dmg = (int)Math.Round(dmgDone / passive.Param1);
+                            actions.Add(this.ApplyDmg(srcCard, dmg, Passive.SPIKE_ARMOR));
+                            break;
+                        case Passive.COLDING:
+                            var colding = tarCard.ActiveEffects.FirstOrDefault(x => x.Passive == passive.Passive && x.FromPosition == srcCard.Position);
+                            if (colding != null)
+                            {
+                                colding.Param1 += passive.Param1;
+                            }
+                            else
+                            {
+                                tarCard.ActiveEffects.Add(DoEff(srcCard.Position, passive.Id, passive.Passive, passive.Param1, passive.Param2, passive.Param3));
+                            }
+                            break;
+                        case Passive.MARKDOWN:
+                            var markdown = tarCard.ActiveEffects.FirstOrDefault(x => x.Passive == passive.Passive && x.FromPosition == srcCard.Position);
+                            if (markdown != null)
+                            {
+                                markdown.Param1 += passive.Param1;
+                                if (markdown.Param1 == cards.FirstOrDefault(x => x.Position == markdown.FromPosition).GetPassives().FirstOrDefault(x => x.Passive == Passive.MARKDOWN).Param1)
+                                {
+                                    actions.Add(this.ApplyDmg(srcCard, (int)markdown.Param2, markdown.Passive));
+                                    tarCard.ActiveEffects.Remove(markdown);
+                                }
+                            }
+                            else
+                            {
+                                tarCard.ActiveEffects.Add(DoEff(srcCard.Position, passive.Id, passive.Passive, passive.Param1, passive.Param2, passive.Param3));
+                            }
+                            break;
+                        case Passive.CLEAVE:
+                            BattleCard leftCard;
+                            BattleCard rightCard;
+                            if (srcCard.Position < 4)
+                            {
+                                leftCard = cards.FirstOrDefault(x => x.Position > 3 && x.Position == tarCard.Position - 1 && x.Hp > 0);
+                                rightCard = cards.FirstOrDefault(x => x.Position > 3 && x.Position == tarCard.Position + 1 && x.Hp > 0);
+                            }
+                            else
+                            {
+                                leftCard = cards.FirstOrDefault(x => x.Position < 4 && x.Position == tarCard.Position - 1 && x.Hp > 0);
+                                rightCard = cards.FirstOrDefault(x => x.Position < 4 && x.Position == tarCard.Position + 1 && x.Hp > 0);
+                            }
+                            if (leftCard != null)
+                            {
+                                actions.Add(this.ApplyDmg(leftCard, (int)(dmgDone * passive.Param1 / 100), passive.Passive));
+                            }
+                            if (rightCard != null)
+                            {
+                                actions.Add(this.ApplyDmg(rightCard, (int)(dmgDone * passive.Param1 / 100), passive.Passive));
+                            }
+                            break;
                     };
                 }
             }
@@ -750,6 +912,48 @@ namespace SurrealCB.Server
             return actions;
         }
 
+        public ICollection<BattleAction> TriggerDeathPassive(BattleCard srcCard, ICollection<BattleCard> cards, int killerPosition)
+        {
+            var srcPassives = srcCard.PlayerCard.GetPassives();
+            var actions = new List<BattleAction>();
+            var killer = cards.FirstOrDefault(x => x.Position == killerPosition);
+            foreach (var passive in srcPassives)
+            {
+                switch (passive.Passive)
+                {
+                    case Passive.ENERGYBOMB:
+                        actions.Add(this.ApplyDmg(killer, (int)passive.Param1, Passive.ENERGYBOMB));
+                        break;
+                    case Passive.REAPER:
+                        BattleCard reaperTarget = null;
+                        if (srcCard.Position < 4)
+                        {
+                            var enemyCount = cards.Count(x => x.Position > 3 && x.Hp > 0);
+                            if (enemyCount > 1)
+                            {
+                                reaperTarget = cards.FirstOrDefault(x => x.Position > 3 && x.Hp == cards.Where(x => x.Position > 3).Max(x => x.Hp));
+                            }
+                        }
+                        else
+                        {
+                            var enemyCount = cards.Count(x => x.Position < 4 && x.Hp > 0);
+                            if (enemyCount > 1)
+                            {
+                                reaperTarget = cards.FirstOrDefault(x => x.Position < 4 && x.Hp == cards.Where(x => x.Position < 4).Max(x => x.Hp));
+                            }
+                        }
+                        if (reaperTarget != null)
+                        {
+                            reaperTarget.Hp = 0;
+                            actions.Add(new BattleAction { Position = reaperTarget.Position, Type = HealthChange.DEATH });
+                        }
+
+                        break;
+                };
+            }
+            return actions;
+        }
+
         public int ApplyElementToDmg(BattleCard srcCard, BattleCard tarCard, int dmg, int def)
         {
             var src = srcCard.PlayerCard.Card.Element;
@@ -797,11 +1001,28 @@ namespace SurrealCB.Server
 
         public BattleAction ApplyDmg(BattleCard card, int dmg, Passive passive = Passive.NONE)
         {
+            var intensify = card.ActiveEffects.FirstOrDefault(x => x.Passive == Passive.INTENSIFY);
+            if (intensify != null && passive != Passive.NONE)
+            {
+                dmg += (int)Math.Round(dmg * intensify.Param1 / 100);
+            }
             if (card.GetPassives().Any(x => x.Passive == Passive.FLAMMABLE))
             {
                 dmg = dmg * 2;
             }
-            card.Hp -= dmg;
+            if (passive == Passive.NONE && card.Shield > 0)
+            {
+                card.Shield -= dmg;
+                if (card.Shield < 0)
+                {
+                    card.Hp += card.Shield;
+                    card.Shield = 0;
+                }
+            }
+            else
+            {
+                card.Hp -= dmg;
+            }
             if (card.Hp < 0) card.Hp = 0;
             var action = new BattleAction
             {
@@ -845,8 +1066,11 @@ namespace SurrealCB.Server
             Passive.SCORCHED => HealthChange.BLAZE,
             Passive.MELT => HealthChange.BLAZE,
             Passive.HELLFIRE => HealthChange.BLAZE,
+            Passive.INCINERATE => HealthChange.BLAZE,
             Passive.POISON => HealthChange.POISON,
             Passive.POISONUS => HealthChange.POISON,
+            Passive.VENOM => HealthChange.POISON,
+            Passive.ENERGYBOMB => HealthChange.DAMAGE, //CHECK IF NEED CHANGE
             Passive.BLEED => HealthChange.BLEED,
             _ => HealthChange.DAMAGE,
         };

@@ -995,15 +995,19 @@ ul.breadcrumb {
 }
 
     .battle-container .mdc-linear-progress {
-        height: 12px !important;
+        height: 8px !important;
     }
 
     .battle-container .mdc-linear-progress__bar-inner {
-        border-top: 12px solid !important;
+        border-top: 8px solid !important;
     }
 
     .battle-container .battle-card .speed-bar .mdc-linear-progress__bar-inner {
         border-color: blue !important;
+    }
+
+    .battle-container .battle-card .shield-bar .mdc-linear-progress__bar-inner {
+        border-color: lightseagreen !important;
     }
 
     .battle-container .health-green .mdc-linear-progress__bar-inner {

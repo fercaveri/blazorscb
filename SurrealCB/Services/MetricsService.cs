@@ -79,7 +79,7 @@ namespace SurrealCB.Server
                         // && !(target.GetPassives().Any(x => x.Passive == Passive.GHOST) && card.GetPassives().Any(x => this.battleService.GetActionType(x.Passive) != HealthChange.DAMAGE) &&
                         //    nextPosition < 4 ? cards.Where(x => x.Position > 3 && x.Position != nextPosition && x.Hp != 0).Any() : cards.Where(x => x.Position < 4 && x.Position != nextPosition && x.Hp != 0).Any()
                         //));
-                        await this.battleService.PerformAttack(card, cards.FirstOrDefault(x => x.Position == who), cards);
+                        await this.battleService.PerformAttack(card, cards, cards.FirstOrDefault(x => x.Position == who).Position);
                         battleStatus.Status = await this.battleService.CheckWinOrLose(cards, nextPosition);
                         if (dontStuck >= 25)
                         {

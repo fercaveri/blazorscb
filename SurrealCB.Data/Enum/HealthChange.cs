@@ -9,6 +9,7 @@ namespace SurrealCB.Data.Enum
     {
         DAMAGE = 0,
         HEAL,
+        SHIELD,
         DEATH,
         POISON,
         BLAZE,

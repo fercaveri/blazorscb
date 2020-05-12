@@ -7,38 +7,39 @@
 <div class="battle-container">
     @foreach (BattleCard card in this.cards)
     {
-        <div class="battle-card @(nextPosition == card.Position ? "active" : "") battle-pos-@card.Position @(card.Hp == 0 ? "battle-death" : "") health-@GetHealthStatus(card)"
-             @onclick="() => PlayerPerform(card.Position)">
-            <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.Hp" Imm="@card.GetImm()" Name="@card.PlayerCard.GetName()"
-                    Element="@card.PlayerCard.Card.Element" Tier="@card.PlayerCard.Card.Tier" Rarity="@card.PlayerCard.Card.Rarity" Level="card.PlayerCard.GetLevel()"
-                    ImgSrc="@card.PlayerCard.Card.ImgSrc" Passives="@card.PlayerCard.GetPassives()" AType="card.PlayerCard.Card.AtkType"></UICard>
-            <MatProgressBar Progress="@GetHpBar(card)"></MatProgressBar>
-            <MatProgressBar Progress="@GetSpeedBar(card)" Class="speed-bar"></MatProgressBar>
-            @if (Actions.Any(x => x.Position == card.Position))
+    <div class="battle-card @(nextPosition == card.Position ? "active" : "") battle-pos-@card.Position @(card.Hp == 0 ? "battle-death" : "") health-@GetHealthStatus(card)"
+         @onclick="() => PlayerPerform(card.Position)">
+        <UICard Atk="@card.GetAtk()" Def="@card.GetDef()" Spd="@card.GetSpd()" Hp="@card.Hp" Imm="@card.GetImm()" Name="@card.PlayerCard.GetName()"
+                Element="@card.PlayerCard.Card.Element" Tier="@card.PlayerCard.Card.Tier" Rarity="@card.PlayerCard.Card.Rarity" Level="card.PlayerCard.GetLevel()"
+                ImgSrc="@card.PlayerCard.Card.ImgSrc" Passives="@card.PlayerCard.GetPassives()" AType="card.PlayerCard.Card.AtkType"></UICard>
+        <MatProgressBar Progress="@GetHpBar(card)"></MatProgressBar>
+        <MatProgressBar Progress="@GetSpeedBar(card)" Class="speed-bar"></MatProgressBar>
+        <MatProgressBar Progress="@GetShieldBar(card)" Class="shield-bar"></MatProgressBar>
+        @if (Actions.Any(x => x.Position == card.Position))
+        {
+            if (Actions.FirstOrDefault(x => x.Position == card.Position).Type == HealthChange.DEATH)
             {
-                if (Actions.FirstOrDefault(x => x.Position == card.Position).Type == HealthChange.DEATH)
-                {
-                    <div class="battle-card-dmg card-death">
-                        <img src="_content/SurrealCB.CommonUI/icons/skull.svg">
-                    </div>
-                }
-                else
-                {
-                    <div class="battle-card-dmg dmg-@Actions.FirstOrDefault(x => x.Position == card.Position).Type">
-                        @Actions.FirstOrDefault(x => x.Position == card.Position).Number
-                    </div>
-                }
-            }
-            @if (card.Hp > 0 && card.ActiveEffects?.Count > 0)
-            {
-                <div class="battle-card-effects">
-                    @foreach (var passive in card.ActiveEffects.Select(x => x.Passive))
-                    {
-                        <img class="icon-@PassiveHelper.GetPassiveTuple(passive).Item2" src="_content/SurrealCB.CommonUI/icons/@(PassiveHelper.GetPassiveTuple(passive).Item2).svg">
-                    }
+                <div class="battle-card-dmg card-death">
+                    <img src="_content/SurrealCB.CommonUI/icons/skull.svg">
                 </div>
             }
-        </div>
+            else
+            {
+                <div class="battle-card-dmg dmg-@Actions.FirstOrDefault(x => x.Position == card.Position).Type">
+                    @Actions.FirstOrDefault(x => x.Position == card.Position).Number
+                </div>
+            }
+        }
+        @if (card.Hp > 0 && card.ActiveEffects?.Count > 0)
+        {
+            <div class="battle-card-effects">
+                @foreach (var passive in card.ActiveEffects.Select(x => x.Passive))
+                {
+                    <img class="icon-@PassiveHelper.GetPassiveTuple(passive).Item2" src="_content/SurrealCB.CommonUI/icons/@(PassiveHelper.GetPassiveTuple(passive).Item2).svg">
+                }
+            </div>
+        }
+    </div>
     }
 
     <MatDialog IsOpen="@(battleStatus != BattleEnd.CONTINUE)">
@@ -219,12 +220,18 @@
         return card.Time / card.GetSpd();
     }
 
+    private double GetShieldBar(BattleCard card)
+    {
+        if (card.Time == 0 || card.Hp == 0) return 0;
+        return (double)((double)card.Shield / (double)(card.GetHp() / 2));
+    }
+
     private string GetDialogTitle() =>
-        this.battleStatus switch
-        {
-            BattleEnd.WIN => "You win",
-            BattleEnd.LOSE => "You lose",
-            BattleEnd.DRAW => "You draw",
-            _ => "You win",
-        };
+    this.battleStatus switch
+    {
+        BattleEnd.WIN => "You win",
+        BattleEnd.LOSE => "You lose",
+        BattleEnd.DRAW => "You draw",
+        _ => "You win",
+    };
 }
